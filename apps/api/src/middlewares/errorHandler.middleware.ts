@@ -1,16 +1,11 @@
 import { ErrorCode } from "@repo/shared/errors";
 import logger from "../utils/logger.js";
 
-import { Request, Response, NextFunction } from "express";
+import { ErrorRequestHandler } from "express";
 
 import { CustomError } from "../utils/CustomError.js";
 
-export const errorHandler = (
-  err: unknown,
-  req: Request,
-  res: Response,
-  _next: NextFunction
-) => {
+export const errorHandler: ErrorRequestHandler = (err, req, res, _next) => {
   if (err instanceof CustomError) {
     logger.error(err.message, { errorCode: err.errorCode });
 
