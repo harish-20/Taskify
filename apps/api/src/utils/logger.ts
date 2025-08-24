@@ -11,7 +11,10 @@ class Logger {
   };
 
   private format(level: LogLevel, args: any[]) {
-    const timestamp = new Date().toISOString();
+    const timestamp = new Date().toLocaleString("en", {
+      dateStyle: "short",
+      timeStyle: "medium",
+    });
     const color = this.colors[level];
 
     console.log(`${color}[${level}]${this.reset} ${timestamp} -`, ...args);
