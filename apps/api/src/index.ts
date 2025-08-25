@@ -15,7 +15,7 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.send("Backend is running");
+  res.send("Taskify sending vibes...😎");
 });
 
 app.use("/api/v1", router);

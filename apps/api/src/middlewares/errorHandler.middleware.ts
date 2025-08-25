@@ -3,7 +3,7 @@ import logger from "../utils/logger.js";
 
 import { ErrorRequestHandler } from "express";
 
-import { CustomError } from "../utils/CustomError.js";
+import { CustomError, InvalidArgument } from "../utils/CustomError.js";
 
 export const errorHandler: ErrorRequestHandler = (err, req, res, _next) => {
   if (err instanceof CustomError) {
@@ -13,6 +13,7 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, _next) => {
       success: false,
       code: err.errorCode,
       message: err.message,
+      ...(err instanceof InvalidArgument ? { errors: err.errors } : {}),
     });
   }
 
