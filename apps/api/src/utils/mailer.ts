@@ -1,46 +1,78 @@
+import {
+  FROM_EMAIL,
+  FRONTEND_URL,
+  GMAIL_APP_PASSWORD,
+  GMAIL_EMAIL,
+} from "../configs/index.js";
+
+import { fileURLToPath } from "node:url";
 import nodemailer from "nodemailer";
+import ejs from "ejs";
+import path from "node:path";
 
 interface SendMailOptions {
   to: string;
   subject: string;
   html: string;
+  text?: string;
 }
 
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT),
-  secure: Number(process.env.SMTP_PORT) === 465,
+  service: "gmail",
   auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
+    user: GMAIL_EMAIL,
+    pass: GMAIL_APP_PASSWORD,
   },
 });
 
-export const sendMail = async ({ to, subject, html }: SendMailOptions) => {
+export const sendMail = async ({
+  to,
+  subject,
+  html,
+  text,
+}: SendMailOptions) => {
   await transporter.sendMail({
-    from: `"Your App" <${process.env.SMTP_USER}>`,
+    from: FROM_EMAIL,
     to,
     subject,
     html,
+    text,
+    // We dont want this to be important tagged
+    headers: {
+      "X-Priority": "3",
+      "X-MSMail-Priority": "Normal",
+      Importance: "Normal",
+    },
   });
 };
 
-export const sendMagicLink = async (to: string, token: string) => {
-  const frontendUrl = process.env.FRONTEND_URL;
-  if (!frontendUrl) throw new Error("FRONTEND_URL not set in env");
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-  const magicLink = `${frontendUrl}/verify?token=${token}`;
+export const sendMagicLink = async (
+  name: string,
+  to: string,
+  token: string
+) => {
+  const magicLink = `${FRONTEND_URL}/verify?token=${token}`;
 
-  const html = `
-    <p>Click the link below to verify your account:</p>
-    <p><a href="${magicLink}">${magicLink}</a></p>
-    <p>If you did not request this, you can ignore this email.</p>
-  `;
+  const templatePath = path.join(
+    __dirname,
+    "../templates/verificationEmail.ejs"
+  );
+  const html = await ejs.renderFile(templatePath, {
+    subject: "Welcome to Taskify — confirm your email",
+    name: name,
+    action_url: magicLink,
+    action_text: "Verify Email",
+  });
+
+  const text = `Click this link to verify your account: ${magicLink}`;
 
   await sendMail({
     to,
-    subject: "Your Magic Link",
+    subject: "Welcome to Taskify — confirm your email",
     html,
+    text,
   });
 
   return magicLink;

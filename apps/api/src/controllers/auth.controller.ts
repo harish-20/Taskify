@@ -35,7 +35,7 @@ export const registerUser: RequestHandler<{}, any, RegisterBody> = async (
       expiresAt,
     });
 
-    await sendMagicLink(email, magicToken);
+    await sendMagicLink(name, email, magicToken);
 
     res.status(201).send({
       success: true,
