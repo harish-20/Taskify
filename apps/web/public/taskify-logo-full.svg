@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="960" height="256" viewBox="0 0 960 256" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title>Taskify Logo</title>
+  <desc>Icon with gradient followed by the wordmark 'taskify' in a modern rounded sans look.</desc>
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="256" y2="256" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#7C3AED"/>
+      <stop offset="50%" stop-color="#4F46E5"/>
+      <stop offset="100%" stop-color="#06B6D4"/>
+    </linearGradient>
+  </defs>
+  <!-- Icon -->
+  <g>
+    <rect x="16" y="16" width="224" height="224" rx="56" fill="url(#g)"/>
+    <g transform="translate(56,56)">
+      <rect x="60" y="28" width="24" height="116" rx="12" fill="white"/>
+      <rect x="20" y="20" width="104" height="24" rx="12" fill="white" opacity="0.95"/>
+      <path d="M14 92 L54 126 L120 54" fill="none" stroke="white" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+  </g>
+  <!-- Wordmark -->
+  <g transform="translate(272,48)">
+    <!-- Use text for easy font overrides; defaults to a system rounded sans -->
+    <style>
+      .w { font: 700 120px/1.1 ui-rounded, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif; letter-spacing: -2px; }
+      .sub { font: 500 24px/1.2 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; }
+    </style>
+    <text class="w" x="0" y="120" fill="#111827">taskify</text>
+    <text class="sub" x="6" y="156" fill="#6B7280">get things done</text>
+  </g>
+</svg>

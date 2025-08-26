@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title>Taskify App Icon</title>
+  <desc>Rounded square gradient with a clean checkmark forming a stylized T monogram.</desc>
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="256" y2="256" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#7C3AED"/>
+      <stop offset="50%" stop-color="#4F46E5"/>
+      <stop offset="100%" stop-color="#06B6D4"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="12" stdDeviation="12" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+  <rect x="16" y="16" width="224" height="224" rx="56" fill="url(#g)" filter="url(#shadow)"/>
+  <!-- Stylized T + check -->
+  <g transform="translate(56,56)">
+    <!-- T stem -->
+    <rect x="60" y="28" width="24" height="116" rx="12" fill="white"/>
+    <!-- T top (as a subtle rounded bar) -->
+    <rect x="20" y="20" width="104" height="24" rx="12" fill="white" opacity="0.95"/>
+    <!-- Check mark overlayed to evoke 'done' -->
+    <path d="M14 92 L54 126 L120 54" fill="none" stroke="white" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <!-- Spark for action vibe -->
+  <g transform="translate(190,34)" opacity="0.9">
+    <circle cx="0" cy="0" r="6" fill="white"/>
+    <circle cx="18" cy="8" r="4" fill="white" opacity="0.7"/>
+  </g>
+</svg>
