@@ -1,8 +1,13 @@
+// passport strategies
+import "./auth/passport.js";
+//
+
 import { PORT } from "./configs/index.js";
 import logger from "./utils/logger.js";
 
 import express from "express";
 import cors from "cors";
+import passport from "passport";
 
 import { errorHandler } from "./middlewares/errorHandler.middleware.js";
 
@@ -13,6 +18,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(passport.initialize());
 
 app.get("/", (req, res) => {
   res.send("Taskify sending vibes...😎");

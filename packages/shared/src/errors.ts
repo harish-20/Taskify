@@ -4,8 +4,10 @@ export enum ErrorCode {
   UNAUTHORIZED = "UNAUTHORIZED",
   FORBIDDEN = "FORBIDDEN",
   INTERNAL_ERROR = "INTERNAL_ERROR",
+  ACCOUNT_NOT_EXISTS = "ACCOUNT_NOT_EXISTS",
   EMAIL_ALREADY_EXISTS = "EMAIL_ALREADY_EXISTS",
   DIFFERENT_PROVIDER_ACCOUNT = "DIFFERENT_PROVIDER_ACCOUNT",
+  INVALID_PASSWORD = "INVALID_PASSWORD",
 }
 
 export const ErrorMessages: Record<ErrorCode, string> = {
@@ -17,4 +19,6 @@ export const ErrorMessages: Record<ErrorCode, string> = {
   [ErrorCode.EMAIL_ALREADY_EXISTS]: "Email is already registered",
   [ErrorCode.DIFFERENT_PROVIDER_ACCOUNT]:
     "This email is registered with a different provider",
+  [ErrorCode.INVALID_PASSWORD]: "The password you entered is incorrect",
+  [ErrorCode.ACCOUNT_NOT_EXISTS]: "The account is not exists",
 };

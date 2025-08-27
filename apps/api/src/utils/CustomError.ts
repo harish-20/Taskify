@@ -1,4 +1,5 @@
 import { ErrorCode, ErrorMessages } from "@repo/shared/errors";
+import { AuthProvider } from "../models/user.model.js";
 
 export class CustomError extends Error {
   statusCode: number = 500;
@@ -31,6 +32,14 @@ export class NotFound extends CustomError {
   }
 }
 
+export class AccountNotExists extends CustomError {
+  statusCode = 404;
+  errorCode = ErrorCode.ACCOUNT_NOT_EXISTS;
+  constructor(message = ErrorMessages[ErrorCode.ACCOUNT_NOT_EXISTS]) {
+    super(message);
+  }
+}
+
 export class EmailAlreadyExists extends CustomError {
   statusCode = 400;
   errorCode = ErrorCode.EMAIL_ALREADY_EXISTS;
@@ -42,7 +51,20 @@ export class EmailAlreadyExists extends CustomError {
 export class DifferentProviderAccount extends CustomError {
   statusCode = 400;
   errorCode = ErrorCode.DIFFERENT_PROVIDER_ACCOUNT;
-  constructor(message = ErrorMessages[ErrorCode.DIFFERENT_PROVIDER_ACCOUNT]) {
+  linkedProvider: AuthProvider | undefined;
+  constructor(
+    message = ErrorMessages[ErrorCode.DIFFERENT_PROVIDER_ACCOUNT],
+    linkedProvider: AuthProvider
+  ) {
+    super(message);
+    this.linkedProvider = linkedProvider;
+  }
+}
+
+export class InvalidPassword extends CustomError {
+  statusCode = 401;
+  errorCode = ErrorCode.INVALID_PASSWORD;
+  constructor(message = ErrorMessages[ErrorCode.INVALID_PASSWORD]) {
     super(message);
   }
 }

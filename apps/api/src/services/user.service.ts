@@ -36,7 +36,7 @@ export const createUser = async (input: CreateUserInput): Promise<IUser> => {
   if (provider === AuthProvider.LOCAL) {
     if (!password)
       throw new InvalidArgument("Password is required for local signup");
-    passwordHash = await bcrypt.hash(password, 10);
+    passwordHash = await bcrypt.hash(password, 12);
   }
 
   const user = await User.create({
