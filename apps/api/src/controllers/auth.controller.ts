@@ -2,27 +2,42 @@ import {
   generateAccessToken,
   generateRefreshToken,
 } from "../utils/verifyToken.js";
-import { getMilliSeconds } from "../utils/getMilliSeconds.js";
-import { InvalidArgument } from "../utils/CustomError.js";
+import { InvalidArgument, NotFound } from "../utils/CustomError.js";
 import { sendMagicLink } from "../utils/mailer.js";
 import { sendResponse } from "../utils/response.js";
+import { getMilliSeconds } from "../utils/getMilliSeconds.js";
 
 import { ApiResponse } from "@repo/shared/types";
-
 import { registerSchema, RegisterBody } from "../schemas/auth.schema.js";
-
-import crypto from "node:crypto";
 import { RequestHandler } from "express";
 
-import { createUser } from "../services/user.service.js";
-import { MagicToken } from "../models/magicToken.model.js";
-import { IUser } from "../models/user.model.js";
+import {
+  createUser,
+  findUserById,
+  setAccountStatus,
+} from "../services/user.service.js";
+import { AccountStatus, IUser } from "../models/user.model.js";
 
-export const registerUser: RequestHandler<{}, any, RegisterBody> = async (
-  req,
-  res,
-  next
-) => {
+import { Response } from "express";
+import {
+  createMagicToken,
+  verifyMagicToken,
+} from "../services/magicToken.service.js";
+
+export const setRefreshTokenCookie = (res: Response, refreshToken: string) => {
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    maxAge: getMilliSeconds({ days: 7 }),
+  });
+};
+
+export const registerUser: RequestHandler<
+  {},
+  ApiResponse,
+  RegisterBody
+> = async (req, res, next) => {
   try {
     const validation = registerSchema.safeParse(req.body);
     if (!validation.success) {
@@ -31,22 +46,9 @@ export const registerUser: RequestHandler<{}, any, RegisterBody> = async (
     }
 
     const { name, email, password } = validation.data;
-
     const user = await createUser({ name, email, password });
 
-    const magicToken = crypto.randomBytes(32).toString("hex");
-    const hashedToken = crypto
-      .createHash("sha256")
-      .update(magicToken)
-      .digest("hex");
-    const expiresAt = new Date(Date.now() + getMilliSeconds({ minutes: 15 }));
-
-    await MagicToken.create({
-      userId: user._id,
-      token: hashedToken,
-      expiresAt,
-    });
-
+    const magicToken = await createMagicToken(user.id);
     await sendMagicLink(name, email, magicToken);
 
     const payload: ApiResponse = {
@@ -60,27 +62,51 @@ export const registerUser: RequestHandler<{}, any, RegisterBody> = async (
   }
 };
 
-export const signinUser: RequestHandler<{}, any, { user: IUser }> = async (
-  req,
-  res,
-  next
-) => {
+export const signinUser: RequestHandler<
+  {},
+  ApiResponse,
+  { user: IUser }
+> = async (req, res, next) => {
   try {
     const user = req.user as IUser;
+    const accessToken = generateAccessToken(user);
+    const refreshToken = generateRefreshToken(user);
+
+    setRefreshTokenCookie(res, refreshToken);
+
+    const payload: ApiResponse = {
+      success: true,
+      message: "Signin successful",
+      data: { user, accessToken },
+    };
+    return sendResponse(res, 200, payload);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const verifyMagicLink: RequestHandler<
+  {},
+  ApiResponse,
+  { token: string }
+> = async (req, res, next) => {
+  try {
+    const { token } = req.body;
+    if (!token) throw new InvalidArgument("Token is required");
+
+    const userId = await verifyMagicToken(token as string);
+    if (!userId) throw new NotFound("Invalid or expired token");
+
+    const user = await setAccountStatus(userId, AccountStatus.ACTIVE);
 
     const accessToken = generateAccessToken(user);
     const refreshToken = generateRefreshToken(user);
 
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: getMilliSeconds({ days: 7 }),
-    });
+    setRefreshTokenCookie(res, refreshToken);
 
     const payload: ApiResponse = {
       success: true,
-      message: "Signin successfull",
+      message: "Magic link verified successfully",
       data: { user, accessToken },
     };
     return sendResponse(res, 200, payload);

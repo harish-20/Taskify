@@ -1,7 +1,11 @@
 import { Router } from "express";
 import passport from "passport";
 
-import { registerUser, signinUser } from "../controllers/auth.controller.js";
+import {
+  registerUser,
+  signinUser,
+  verifyMagicLink,
+} from "../controllers/auth.controller.js";
 
 const authRouter = Router();
 
@@ -11,5 +15,6 @@ authRouter.post(
   passport.authenticate("local", { session: false }),
   signinUser
 );
+authRouter.post("/verify", verifyMagicLink);
 
 export default authRouter;
