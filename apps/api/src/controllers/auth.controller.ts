@@ -35,11 +35,15 @@ export const registerUser: RequestHandler<{}, any, RegisterBody> = async (
     const user = await createUser({ name, email, password });
 
     const magicToken = crypto.randomBytes(32).toString("hex");
+    const hashedToken = crypto
+      .createHash("sha256")
+      .update(magicToken)
+      .digest("hex");
     const expiresAt = new Date(Date.now() + getMilliSeconds({ minutes: 15 }));
 
     await MagicToken.create({
       userId: user._id,
-      token: magicToken,
+      token: hashedToken,
       expiresAt,
     });
 
