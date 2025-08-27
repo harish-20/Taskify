@@ -5,6 +5,9 @@ import {
 import { getMilliSeconds } from "../utils/getMilliSeconds.js";
 import { InvalidArgument } from "../utils/CustomError.js";
 import { sendMagicLink } from "../utils/mailer.js";
+import { sendResponse } from "../utils/response.js";
+
+import { ApiResponse } from "@repo/shared/types";
 
 import { registerSchema, RegisterBody } from "../schemas/auth.schema.js";
 
@@ -42,11 +45,12 @@ export const registerUser: RequestHandler<{}, any, RegisterBody> = async (
 
     await sendMagicLink(name, email, magicToken);
 
-    res.status(201).send({
+    const payload: ApiResponse = {
       success: true,
       message: "Registration successful, check your email for magic link",
       data: { id: user.id, name: user.name, email: user.email },
-    });
+    };
+    sendResponse(res, 201, payload);
   } catch (err) {
     next(err);
   }
@@ -70,10 +74,12 @@ export const signinUser: RequestHandler<{}, any, { user: IUser }> = async (
       maxAge: getMilliSeconds({ days: 7 }),
     });
 
-    res.status(200).send({
+    const payload: ApiResponse = {
       success: true,
+      message: "Signin successfull",
       data: { user, accessToken },
-    });
+    };
+    return sendResponse(res, 200, payload);
   } catch (err) {
     next(err);
   }

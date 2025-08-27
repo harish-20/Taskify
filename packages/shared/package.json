@@ -7,7 +7,11 @@
   },
   "exports": {
     "./errors": {
-      "types": "./src/errors.ts",
+      "types": "./dist/errors.d.ts",
+      "default": "./dist/errors.js"
+    },
+    "./types": {
+      "types": "./dist/api-response.d.ts",
       "default": "./dist/errors.js"
     }
   },
