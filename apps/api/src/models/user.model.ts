@@ -49,7 +49,7 @@ const userSchema = new Schema<IUser>(
   }
 );
 
-userSchema.index({ email: 1, provider: 1 }, { unique: true });
+userSchema.index({ email: 1 }, { unique: true });
 userSchema.index({ provider: 1, providerId: 1 }, { unique: true });
 
 export const User = model<IUser>("User", userSchema);
