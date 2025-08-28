@@ -15,6 +15,12 @@ authRouter.post(
   passport.authenticate("local", { session: false }),
   signinUser
 );
+authRouter.post(
+  "/google",
+  passport.authenticate("google", { session: false }),
+  signinUser
+);
+
 authRouter.post("/verify", verifyMagicLink);
 
 export default authRouter;

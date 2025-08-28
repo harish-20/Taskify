@@ -1,4 +1,5 @@
 import {
+  DifferentProviderAccount,
   EmailAlreadyExists,
   InvalidArgument,
   NotFound,
@@ -6,6 +7,7 @@ import {
 
 import { Types } from "mongoose";
 import bcrypt from "bcrypt";
+import { Profile } from "passport-google-oauth20";
 
 import {
   User,
@@ -57,6 +59,35 @@ export const createUser = async (input: CreateUserInput): Promise<IUser> => {
         ? AccountStatus.VERIFICATION_EMAIL_SENT
         : AccountStatus.ACTIVE,
   });
+
+  return user;
+};
+
+export const handleGoogleUser = async (profile: Profile) => {
+  const user = await User.findOne({ providerId: profile.id }).lean<IUser>();
+
+  if (user?.provider && user.provider !== AuthProvider.GOOGLE) {
+    throw new DifferentProviderAccount(
+      `This email is already logged in with ${user.provider}`,
+      user.provider
+    );
+  }
+
+  if (!user) {
+    if (profile.emails?.[0].value) {
+      const user = await createUser({
+        email: profile.emails[0].value,
+        name: profile.displayName || "User",
+        avatarUrl: profile.photos?.[0].value || "",
+        provider: AuthProvider.GOOGLE,
+        providerId: profile.id,
+      });
+
+      return user;
+    } else {
+      throw new NotFound("Email not found on google auth");
+    }
+  }
 
   return user;
 };
