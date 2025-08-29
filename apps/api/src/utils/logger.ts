@@ -10,14 +10,16 @@ class Logger {
     DEBUG: "\x1b[36m", // cyan
   };
 
+  private gray = "\x1b[90m"; // gray for timestamp
+
   private format(level: LogLevel, args: any[]) {
-    const timestamp = new Date().toLocaleString("en", {
-      dateStyle: "short",
-      timeStyle: "medium",
-    });
+    const now = new Date();
     const color = this.colors[level];
 
-    console.log(`${color}[${level}]${this.reset} ${timestamp} -`, ...args);
+    console.log(
+      `${color}[${level}]${this.reset} ${this.gray}${now.toLocaleString()}${this.reset} -`,
+      ...args
+    );
   }
 
   info(...args: any[]) {
