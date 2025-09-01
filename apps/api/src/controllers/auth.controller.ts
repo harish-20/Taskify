@@ -9,7 +9,9 @@ import { getMilliSeconds } from "../utils/getMilliSeconds.js";
 
 import { ApiResponse } from "@repo/shared/types";
 import { registerSchema, RegisterBody } from "../schemas/auth.schema.js";
-import { RequestHandler } from "express";
+
+import { RequestHandler, Response } from "express";
+import jwt from "jsonwebtoken";
 
 import {
   createUser,
@@ -18,7 +20,6 @@ import {
 } from "../services/user.service.js";
 import { AccountStatus, IUser } from "../models/user.model.js";
 
-import { Response } from "express";
 import {
   createMagicToken,
   verifyMagicToken,
@@ -109,6 +110,45 @@ export const verifyMagicLink: RequestHandler<
       message: "Magic link verified successfully",
       data: { user, accessToken },
     };
+    return sendResponse(res, 200, payload);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const refreshAccessToken: RequestHandler<{}, ApiResponse> = async (
+  req,
+  res,
+  next
+) => {
+  try {
+    const refreshToken = req.cookies.refreshToken;
+    if (!refreshToken) throw new InvalidArgument("Refresh token is required");
+
+    let decoded: any;
+    try {
+      decoded = jwt.verify(
+        refreshToken,
+        process.env.JWT_REFRESH_SECRET as string
+      );
+    } catch (err) {
+      throw new InvalidArgument("Invalid or expired refresh token");
+    }
+
+    const user = await findUserById(decoded.id);
+    if (!user) throw new NotFound("User not found");
+
+    const newAccessToken = generateAccessToken(user);
+    const newRefreshToken = generateRefreshToken(user);
+
+    setRefreshTokenCookie(res, newRefreshToken);
+
+    const payload: ApiResponse = {
+      success: true,
+      message: "Token refreshed successfully",
+      data: { user, accessToken: newAccessToken },
+    };
+
     return sendResponse(res, 200, payload);
   } catch (err) {
     next(err);
