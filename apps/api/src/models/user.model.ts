@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, model } from "mongoose";
+import { Schema, Document, model, Types } from "mongoose";
 
 export enum AccountStatus {
   INVITE_SENT = "INVITE_SENT",
@@ -14,6 +14,13 @@ export enum AuthProvider {
   LINKEDIN = "linkedin",
 }
 
+export enum UserRole {
+  ADMIN = "admin",
+  MANAGER = "manager",
+  LEAD = "lead",
+  MEMBER = "member",
+}
+
 export interface IUser extends Document {
   email: string;
   passwordHash?: string;
@@ -22,13 +29,16 @@ export interface IUser extends Document {
   name: string;
   avatarUrl?: string;
   status: AccountStatus;
+  role: UserRole;
+  bio?: string;
+  organizationId: Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
 }
 
 const userSchema = new Schema<IUser>(
   {
-    email: { type: String, required: true, lowercase: true },
+    email: { type: String, required: true, lowercase: true, trim: true },
     passwordHash: { type: String },
     provider: {
       type: String,
@@ -36,12 +46,23 @@ const userSchema = new Schema<IUser>(
       required: true,
     },
     providerId: { type: String, required: true },
-    name: { type: String, required: true },
+    name: { type: String, required: true, trim: true },
     avatarUrl: { type: String },
     status: {
       type: String,
       enum: Object.values(AccountStatus),
       default: AccountStatus.INVITE_SENT,
+    },
+    role: {
+      type: String,
+      enum: Object.values(UserRole),
+      default: UserRole.MEMBER,
+    },
+    bio: { type: String },
+    organizationId: {
+      type: Schema.Types.ObjectId,
+      ref: "Organization",
+      required: true,
     },
   },
   {
