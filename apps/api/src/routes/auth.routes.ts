@@ -1,7 +1,11 @@
 import { Router } from "express";
 import passport from "passport";
 
+import { validateRequest } from "../middlewares/validate.middleware.js";
+import { registerSchema } from "../schemas/auth.schema.js";
+
 import {
+  refreshAccessToken,
   registerUser,
   signinUser,
   verifyMagicLink,
@@ -9,7 +13,8 @@ import {
 
 const authRouter = Router();
 
-authRouter.post("/register", registerUser);
+authRouter.post("/register", validateRequest(registerSchema), registerUser);
+authRouter.post("/refresh", refreshAccessToken);
 authRouter.post(
   "/login",
   passport.authenticate("local", { session: false }),

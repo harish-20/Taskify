@@ -1,6 +1,5 @@
 // passport strategies
 import "./auth/passport.js";
-//
 
 import { PORT } from "./configs/index.js";
 import logger from "./utils/logger.js";
@@ -11,7 +10,7 @@ import passport from "passport";
 
 import { errorHandler } from "./middlewares/errorHandler.middleware.js";
 
-import router from "./routes/index.route.js";
+import router from "./routes/index.routes.js";
 import connectDB from "./db/connectDB.js";
 
 const app = express();
