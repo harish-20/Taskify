@@ -35,7 +35,9 @@ export const createUser = async (input: CreateUserInput): Promise<IUser> => {
     avatarUrl,
   } = input;
 
-  const existingUser = await User.findOne({ email, provider });
+  const normalizedEmail = email.trim().toLowerCase();
+
+  const existingUser = await User.findOne({ email: normalizedEmail, provider });
   if (existingUser) {
     throw new EmailAlreadyExists();
   }
@@ -49,7 +51,7 @@ export const createUser = async (input: CreateUserInput): Promise<IUser> => {
 
   const user = await User.create({
     name,
-    email,
+    email: normalizedEmail,
     passwordHash,
     provider,
     providerId,
@@ -93,7 +95,7 @@ export const handleGoogleUser = async (profile: Profile) => {
 };
 
 export const findUserById = async (userId: Types.ObjectId | string) => {
-  const user = await User.findById(userId).lean<IUser>();
+  const user = await User.findById(userId, { passwordHash: -1 }).lean<IUser>();
   if (!user) {
     throw new NotFound("User not found");
   }
@@ -110,7 +112,7 @@ export const setAccountStatus = async (
       status: accountStatus,
     },
     { new: true }
-  ).lean<IUser>();
+  );
 
   if (!user) {
     throw new NotFound("User not found");

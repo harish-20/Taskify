@@ -1,4 +1,4 @@
-import { InvalidArgument } from "../utils/CustomError.js";
+import { Unauthorized } from "../utils/CustomError.js";
 
 import { RequestHandler } from "express";
 import jwt from "jsonwebtoken";
@@ -9,20 +9,29 @@ export const authMiddleware: RequestHandler = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      throw new InvalidArgument("Authorization token is required");
+      throw new Unauthorized("Authorization token is required");
     }
 
     const token = authHeader.split(" ")[1];
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as {
-      id: string;
-      email: string;
-    };
+    let decoded: { id: string; email: string };
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET as string) as {
+        id: string;
+        email: string;
+      };
+    } catch {
+      throw new Unauthorized("Invalid or expired access token");
+    }
 
-    req.user = await findUserById(decoded.id);
+    const user = await findUserById(decoded.id);
+    if (!user) {
+      throw new Unauthorized("User not found or no longer exists");
+    }
 
+    req.userObj = user;
     return next();
   } catch (err) {
-    return next(new InvalidArgument("Invalid or expired access token"));
+    return next(err);
   }
 };

@@ -32,6 +32,22 @@ export class NotFound extends CustomError {
   }
 }
 
+export class Unauthorized extends CustomError {
+  statusCode = 401;
+  errorCode = ErrorCode.UNAUTHORIZED;
+  constructor(message = ErrorMessages[ErrorCode.UNAUTHORIZED]) {
+    super(message);
+  }
+}
+
+export class Forbidden extends CustomError {
+  statusCode = 403;
+  errorCode = ErrorCode.FORBIDDEN;
+  constructor(message = ErrorMessages[ErrorCode.FORBIDDEN]) {
+    super(message);
+  }
+}
+
 export class AccountNotExists extends CustomError {
   statusCode = 404;
   errorCode = ErrorCode.ACCOUNT_NOT_EXISTS;

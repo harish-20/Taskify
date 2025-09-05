@@ -1,4 +1,4 @@
-import { IUser } from "../models/user.model";
+import { IUser } from "../models/user.model.ts";
 
 /**
  * Extends Express Request type to include the authenticated user.
@@ -13,7 +13,7 @@ import { IUser } from "../models/user.model";
 declare global {
   namespace Express {
     interface Request {
-      user?: IUser;
+      userObj?: IUser;
     }
   }
 }
