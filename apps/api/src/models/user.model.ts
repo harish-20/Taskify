@@ -22,6 +22,7 @@ export enum UserRole {
 }
 
 export interface IUser extends Document {
+  _id: Types.ObjectId;
   email: string;
   passwordHash?: string;
   provider: AuthProvider;

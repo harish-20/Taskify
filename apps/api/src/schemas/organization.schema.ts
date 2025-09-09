@@ -18,7 +18,6 @@ const addressSchema = z.object({
 export const createOrganizationSchema = z.object({
   name: z.string().min(1, "Organization name is required").trim(),
   description: z.string().trim().optional(),
-  owner: z.string().regex(MONGO_DB_ID_RX, "Invalid owner ID"),
   members: z
     .array(z.string().regex(MONGO_DB_ID_RX, "Invalid member ID"))
     .optional(),
@@ -40,3 +39,5 @@ export const createOrganizationSchema = z.object({
 });
 
 export const updateOrganizationSchema = createOrganizationSchema.partial();
+
+export type OrganizationSchema = z.infer<typeof createOrganizationSchema>;

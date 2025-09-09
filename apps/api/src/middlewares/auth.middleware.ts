@@ -1,3 +1,4 @@
+import { JWT_ACCESS_SECRET } from "../configs/index.js";
 import { Unauthorized } from "../utils/CustomError.js";
 
 import { RequestHandler } from "express";
@@ -16,7 +17,7 @@ export const authMiddleware: RequestHandler = async (req, res, next) => {
 
     let decoded: { id: string; email: string };
     try {
-      decoded = jwt.verify(token, process.env.JWT_SECRET as string) as {
+      decoded = jwt.verify(token, JWT_ACCESS_SECRET as string) as {
         id: string;
         email: string;
       };
