@@ -30,7 +30,6 @@ export interface ITask extends Document {
   dueDate?: Date;
   assignees: Types.ObjectId[];
   createdBy: Types.ObjectId;
-  teamId: Types.ObjectId;
   organizationId: Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
@@ -58,7 +57,6 @@ const taskSchema = new Schema<ITask>(
     dueDate: { type: Date },
     assignees: [{ type: Schema.Types.ObjectId, ref: "User" }],
     createdBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    teamId: { type: Schema.Types.ObjectId, ref: "Team", required: true },
     organizationId: {
       type: Schema.Types.ObjectId,
       ref: "Organization",

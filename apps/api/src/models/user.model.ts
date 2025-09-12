@@ -33,6 +33,7 @@ export interface IUser extends Document {
   role: UserRole;
   bio?: string;
   organizationId: Types.ObjectId;
+  teamId: Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -64,6 +65,10 @@ const userSchema = new Schema<IUser>(
       type: Schema.Types.ObjectId,
       ref: "Organization",
       required: true,
+    },
+    teamId: {
+      type: Schema.Types.ObjectId,
+      ref: "Team",
     },
   },
   {
