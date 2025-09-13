@@ -18,9 +18,8 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, _next) => {
       message: err.message,
       ...(err instanceof InvalidArgument ? { errors: err.errors } : {}),
     };
-    sendResponse(res, err.statusCode, payload);
+    return sendResponse(res, err.statusCode, payload);
   }
-
   logger.error("Unexpected error", err);
 
   const payload: ApiResponse = {
@@ -28,5 +27,5 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, _next) => {
     code: ErrorCode.INTERNAL_ERROR,
     message: "Unexpected server error",
   };
-  sendResponse(res, 500, payload);
+  return sendResponse(res, 500, payload);
 };
