@@ -10,7 +10,12 @@ import { CustomError, InvalidArgument } from "../utils/CustomError.js";
 
 export const errorHandler: ErrorRequestHandler = (err, req, res, _next) => {
   if (err instanceof CustomError) {
-    logger.error(err.message, { errorCode: err.errorCode });
+    logger.error(`Programatic error [${err.errorCode}] - ${err.message}\n`, {
+      path: req.originalUrl,
+      method: req.method,
+      statusCode: err.statusCode,
+      stack: err.stack,
+    });
 
     const payload: ApiResponse = {
       success: false,
@@ -20,7 +25,13 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, _next) => {
     };
     return sendResponse(res, err.statusCode, payload);
   }
-  logger.error("Unexpected error", err);
+
+  logger.error("Unexpected error", {
+    path: req.originalUrl,
+    method: req.method,
+    stack: err.stack,
+    error: err.message ?? err,
+  });
 
   const payload: ApiResponse = {
     success: false,
