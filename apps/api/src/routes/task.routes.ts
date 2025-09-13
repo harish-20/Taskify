@@ -7,8 +7,13 @@ import { authMiddleware } from "../middlewares/auth.middleware.js";
 
 import { createTask } from "../controllers/task.controller.js";
 
-const router = Router();
+const taskRouter = Router();
 
-router.post("/", authMiddleware, validateRequest(createTaskSchema), createTask);
+taskRouter.post(
+  "/",
+  authMiddleware,
+  validateRequest(createTaskSchema),
+  createTask
+);
 
-export default router;
+export default taskRouter;

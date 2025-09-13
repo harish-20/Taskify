@@ -31,6 +31,7 @@ export interface ITask extends Document {
   assignees: Types.ObjectId[];
   createdBy: Types.ObjectId;
   organizationId: Types.ObjectId;
+  tags: string[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -62,10 +63,12 @@ const taskSchema = new Schema<ITask>(
       ref: "Organization",
       required: true,
     },
+    tags: [{ type: String, trim: true, lowercase: true }],
   },
   { timestamps: true }
 );
 
-taskSchema.index({ teamId: 1, title: 1 });
+taskSchema.index({ title: 1 });
+taskSchema.index({ tags: 1 });
 
 export const Task = model<ITask>("Task", taskSchema);
