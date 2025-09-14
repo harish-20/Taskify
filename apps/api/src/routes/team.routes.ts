@@ -5,10 +5,11 @@ import { validateRequest } from "../middlewares/validate.middleware.js";
 
 import { createTeamSchema } from "../schemas/team.schema.js";
 
-import { registerTeam } from "../controllers/team.controller.js";
+import { getTeam, registerTeam } from "../controllers/team.controller.js";
 
 const teamRouter = Router();
 
+teamRouter.get("/", authMiddleware, getTeam);
 teamRouter.post(
   "/",
   authMiddleware,

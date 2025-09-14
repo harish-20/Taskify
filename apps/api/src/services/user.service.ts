@@ -95,7 +95,7 @@ export const handleGoogleUser = async (profile: Profile) => {
 };
 
 export const findUserById = async (userId: Types.ObjectId | string) => {
-  const user = await User.findById(userId, { passwordHash: -1 }).lean<IUser>();
+  const user = await User.findById(userId, { passwordHash: 0 }).lean<IUser>();
   if (!user) {
     throw new NotFound("User not found");
   }
