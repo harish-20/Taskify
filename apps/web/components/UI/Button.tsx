@@ -6,10 +6,12 @@ const buttonStyles = cva(
   {
     variants: {
       variant: {
-        primary: "bg-black text-white hover:bg-primary focus:ring-primary",
+        primary: "bg-black text-white hover:bg-neutral-700 focus:ring-primary",
         secondary:
-          "bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-400",
-        text: "bg-transparent text-blue-600 hover:underline focus:ring-blue-400",
+          "bg-primary-light text-primary hover:bg-primary-light-hover focus:ring-primary",
+        "secondary-dark":
+          "bg-gray-200 text-gray-600 hover:bg-gray-300 focus:ring-gray-400",
+        text: "bg-transparent text-primary hover:bg-primary-light focus:ring-blue-400",
       },
       size: {
         sm: "px-2 py-1 text-sm",
