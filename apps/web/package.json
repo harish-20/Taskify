@@ -12,18 +12,20 @@
   },
   "dependencies": {
     "@repo/ui": "*",
+    "motion": "^12.23.14",
     "next": "^15.5.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },
   "devDependencies": {
-    "@repo/shared": "*",
     "@repo/eslint-config": "*",
+    "@repo/shared": "*",
     "@repo/typescript-config": "*",
     "@types/node": "^22.15.3",
     "@types/react": "19.1.0",
     "@types/react-dom": "19.1.1",
     "eslint": "^9.33.0",
+    "tailwindcss": "^4.1.13",
     "typescript": "5.9.2"
   }
 }
