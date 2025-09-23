@@ -9,11 +9,11 @@ const buttonStyles = cva(
   {
     variants: {
       variant: {
-        primary: "bg-black text-white hover:bg-neutral-700 focus:ring-primary",
+        primary: "bg-black text-white hover:bg-neutral-700 focus:ring-gray-600",
         secondary:
           "bg-primary-light text-primary hover:bg-primary-light-hover focus:ring-primary",
         "secondary-dark":
-          "bg-gray-200 text-gray-600 hover:bg-gray-300 focus:ring-primary",
+          "bg-gray-200 text-gray-600 hover:bg-gray-300 focus:ring-gray-600",
         text: "bg-transparent text-primary hover:bg-primary-light focus:ring-primary",
       },
       size: {
@@ -22,11 +22,11 @@ const buttonStyles = cva(
         lg: "px-6 py-3 text-lg",
       },
       loading: {
-        true: "cursor-wait",
+        true: "pointer-events-none",
         false: "",
       },
       disabled: {
-        true: "cursor-not-allowed opacity-50",
+        true: "opacity-50 pointer-events-none",
         false: "",
       },
     },
@@ -79,7 +79,7 @@ const Button: React.FC<ButtonProps> = (props) => {
           </motion.div>
         )}
       </AnimatePresence>
-      <span className={loading ? "opacity-40" : ""}>{children}</span>
+      <span>{children}</span>
     </button>
   );
 };
