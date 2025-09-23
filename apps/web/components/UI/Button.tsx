@@ -5,7 +5,7 @@ import Spinner from "./Spinner";
 import { AnimatePresence, motion } from "motion/react";
 
 const buttonStyles = cva(
-  "relative overflow-clip inline-flex items-center justify-center font-medium rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2",
+  "relative overflow-clip inline-flex items-center justify-center font-medium rounded-md transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2",
   {
     variants: {
       variant: {
