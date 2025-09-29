@@ -1,14 +1,13 @@
 "use client";
 
-interface TextInputProps {
+import { InputHTMLAttributes } from "react";
+
+interface TextInputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
-  id?: string;
-  value: string;
-  onChange: React.ChangeEventHandler<HTMLInputElement>;
-  disabled?: boolean;
   className?: string;
   labelClass?: string;
   containerClass?: string;
+  error?: string;
 }
 
 const TextInput: React.FC<TextInputProps> = (props) => {
@@ -16,17 +15,19 @@ const TextInput: React.FC<TextInputProps> = (props) => {
     label,
     value,
     onChange,
+    error,
     disabled = false,
     id = "",
     className = "",
     labelClass = "",
     containerClass = "",
+    ...otherProps
   } = props;
 
   return (
     <div className={`flex flex-col gap-1 ${containerClass}`}>
       {label && (
-        <label className={` text-dark-gary ${labelClass}`} htmlFor={id}>
+        <label className={` text-dark-gray ${labelClass}`} htmlFor={id}>
           {label}
         </label>
       )}
@@ -36,7 +37,10 @@ const TextInput: React.FC<TextInputProps> = (props) => {
         value={value}
         onChange={onChange}
         disabled={disabled}
+        {...otherProps}
       />
+
+      {error && <p className="text-xs text-red-500">{error}</p>}
     </div>
   );
 };
