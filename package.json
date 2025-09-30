@@ -36,6 +36,7 @@
   ],
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
+    "axios": "^1.12.2",
     "bcrypt": "^6.0.0",
     "class-variance-authority": "^0.7.1",
     "clx": "^1.0.0",
