@@ -9,7 +9,7 @@ const SigninTitle = () => {
       </Title>
 
       <div className="text-sm text-gray-600">
-        Do you have an account?{" "}
+        New to taskify?{" "}
         <Link className="text-primary" href="/signup">
           Sign up
         </Link>

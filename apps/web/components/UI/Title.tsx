@@ -7,7 +7,7 @@ import { motion } from "motion/react";
 const titleStyles = cva("transition-all", {
   variants: {
     variant: {
-      primary: "text-black",
+      primary: "text-gray-800",
       secondary: "text-gray-600",
       accent: "text-primary",
     },

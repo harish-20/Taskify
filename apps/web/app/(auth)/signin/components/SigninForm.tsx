@@ -1,4 +1,3 @@
-import { FormEventHandler } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -6,7 +5,6 @@ import TextInput from "@/components/UI/TextInput";
 import Button from "@/components/UI/Button";
 
 import SigninSchema, { SigninType } from "../schemas/SigninSchema";
-import { infer } from "zod";
 
 const SigninForm = () => {
   const {
@@ -27,6 +25,7 @@ const SigninForm = () => {
       <TextInput
         label="Email"
         id="email"
+        placeholder="name@example.com"
         {...register("email")}
         error={errors.email?.message}
       />
@@ -34,6 +33,7 @@ const SigninForm = () => {
         label="Password"
         type="password"
         id="password"
+        placeholder="At least 8 characters"
         {...register("password")}
         error={errors.password?.message}
       />
