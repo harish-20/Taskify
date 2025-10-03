@@ -5,6 +5,8 @@ import { FC, PropsWithChildren } from "react";
 
 import AuthLayout from "@/layouts/AuthLayout";
 
+import { AuthStoreProvider } from "@/lib/providers/auth-store-provider";
+
 import "@/app/globals.css";
 
 const inter = Inter();
@@ -19,7 +21,9 @@ const Layout: FC<PropsWithChildren> = ({ children }) => {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <AuthLayout>{children}</AuthLayout>
+        <AuthStoreProvider>
+          <AuthLayout>{children}</AuthLayout>
+        </AuthStoreProvider>
       </body>
     </html>
   );
