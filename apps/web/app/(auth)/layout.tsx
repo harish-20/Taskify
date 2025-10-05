@@ -8,6 +8,7 @@ import AuthLayout from "@/layouts/AuthLayout";
 import { AuthStoreProvider } from "@/lib/providers/auth-store-provider";
 
 import "@/app/globals.css";
+import AuthGuard from "@/components/auth/AuthGuard";
 
 const inter = Inter();
 
@@ -22,7 +23,9 @@ const Layout: FC<PropsWithChildren> = ({ children }) => {
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <AuthStoreProvider>
-          <AuthLayout>{children}</AuthLayout>
+          <AuthGuard mode="unauth">
+            <AuthLayout>{children}</AuthLayout>
+          </AuthGuard>
         </AuthStoreProvider>
       </body>
     </html>
