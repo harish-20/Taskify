@@ -2,25 +2,36 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/lib/providers/auth-store-provider";
+
+import { customLocalStorage } from "@/lib/services/localStorage";
+
+type AuthMode = "auth" | "unauth";
 
 interface AuthGuardProps {
+  mode: AuthMode;
   children: React.ReactNode;
 }
 
-export default function AuthGuard({ children }: AuthGuardProps) {
+const AuthGuard: React.FC<AuthGuardProps> = (props) => {
+  const { mode, children } = props;
+
   const router = useRouter();
-  const accessToken = useAuthStore((state) => state.accessToken);
 
   useEffect(() => {
-    if (!accessToken) {
-      router.replace("/signin");
+    const accessToken = customLocalStorage.getValue("accessToken");
+    if (mode === "auth") {
+      if (!accessToken) {
+        router.replace("/signin");
+      }
     }
-  }, [accessToken, router]);
-
-  if (!accessToken) {
-    return null;
-  }
+    if (mode === "unauth") {
+      if (accessToken) {
+        router.replace("/dashboard");
+      }
+    }
+  }, [router]);
 
   return <>{children}</>;
-}
+};
+
+export default AuthGuard;
