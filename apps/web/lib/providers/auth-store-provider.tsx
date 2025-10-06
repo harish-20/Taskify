@@ -3,7 +3,7 @@
 import { type ReactNode, createContext, useRef, useContext } from "react";
 import { useStore } from "zustand";
 
-import createAuthStore, { AuthStore } from "../store/auth-store";
+import createAuthStore, { AuthStore } from "../store/auth";
 
 export type AuthStoreApi = ReturnType<typeof createAuthStore>;
 

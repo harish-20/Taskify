@@ -67,7 +67,7 @@ const Button: React.FC<ButtonProps> = (props) => {
             animate={{ opacity: [0, 1] }}
             transition={{ duration: 0.5 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 bg-white/30 flex items-center justify-center"
+            className="absolute inset-0 bg-white/50 flex items-center justify-center"
           >
             <motion.div
               animate={{ translateY: [100, 0] }}

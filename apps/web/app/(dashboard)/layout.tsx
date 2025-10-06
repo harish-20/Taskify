@@ -21,7 +21,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => (
   <html lang="en" suppressHydrationWarning>
     <body className={inter.className}>
       <AuthStoreProvider>
-        <AuthGuard>{children}</AuthGuard>
+        <AuthGuard mode="auth">{children}</AuthGuard>
       </AuthStoreProvider>
     </body>
   </html>
