@@ -3,7 +3,7 @@ import axios from "axios";
 import { customLocalStorage } from "../localStorage";
 
 export const Api = axios.create({
-  baseURL: process.env.API_ENDPOINT,
+  baseURL: process.env.NEXT_PUBLIC_API_ENDPOINT,
 });
 
 Api.interceptors.request.use((config) => {
@@ -13,5 +13,20 @@ Api.interceptors.request.use((config) => {
 
   return config;
 });
+
+Api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const message =
+      error.response?.data?.message ||
+      "Something went wrong. Please try again.";
+
+    return Promise.reject({
+      status: error.response?.status,
+      message,
+      data: error.response?.data,
+    });
+  }
+);
 
 export default Api;
