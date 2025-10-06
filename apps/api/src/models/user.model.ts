@@ -64,7 +64,6 @@ const userSchema = new Schema<IUser>(
     organizationId: {
       type: Schema.Types.ObjectId,
       ref: "Organization",
-      required: true,
     },
     teamId: {
       type: Schema.Types.ObjectId,
