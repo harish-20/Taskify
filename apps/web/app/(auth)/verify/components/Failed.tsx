@@ -1,5 +1,6 @@
-import Cross from "@/components/icons/Cross";
 import { motion } from "motion/react";
+
+import Cross from "@/components/icons/Cross";
 
 const Failed = () => {
   return (

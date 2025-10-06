@@ -1,20 +1,25 @@
 "use client";
 
+import { PropsWithChildren } from "react";
+import { AnimatePresence, HTMLMotionProps, motion } from "motion/react";
 import { cva, VariantProps } from "class-variance-authority";
+
 import Spinner from "./Spinner";
-import { AnimatePresence, motion } from "motion/react";
+
+import Done from "../icons/Done";
 
 const buttonStyles = cva(
-  "relative overflow-clip inline-flex items-center justify-center font-medium rounded-md transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2",
+  "relative overflow-clip inline-flex items-center justify-center font-medium rounded-md transition-colors cursor-pointer",
   {
     variants: {
       variant: {
-        primary: "bg-black text-white hover:bg-neutral-700 focus:ring-gray-600",
+        primary:
+          "bg-black text-white hover:bg-neutral-700 focus:bg-neutral-700",
         secondary:
-          "bg-primary-light text-primary hover:bg-primary-light-hover focus:ring-primary",
+          "bg-primary-light text-primary hover:bg-primary-light-hover focus:bg-primary-light-hover",
         "secondary-dark":
-          "bg-gray-200 text-gray-600 hover:bg-gray-300 focus:ring-gray-600",
-        text: "bg-transparent text-primary hover:bg-primary-light focus:ring-primary",
+          "bg-gray-200 text-gray-600 hover:bg-gray-300 focus:bg-gray-300",
+        text: "bg-transparent text-primary hover:bg-primary-light focus:bg-primary-light",
       },
       size: {
         sm: "px-2 py-1 text-sm",
@@ -39,9 +44,11 @@ const buttonStyles = cva(
   }
 );
 
-type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> &
+type ButtonProps = HTMLMotionProps<"button"> &
+  PropsWithChildren &
   VariantProps<typeof buttonStyles> & {
     loading?: boolean;
+    done?: boolean;
   };
 
 const Button: React.FC<ButtonProps> = (props) => {
@@ -50,18 +57,31 @@ const Button: React.FC<ButtonProps> = (props) => {
     size,
     className,
     loading = false,
+    done = false,
     disabled = false,
     children,
     ...otherProps
   } = props;
 
   return (
-    <button
+    <motion.button
       className={buttonStyles({ variant, size, loading, disabled, className })}
       disabled={loading || disabled}
+      whileTap={{ scale: 0.97 }}
+      transition={{ duration: 0.1 }}
       {...otherProps}
     >
       <AnimatePresence>
+        {done && (
+          <div className="absolute flex items-center justify-center w-full h-full bg-black">
+            <Done
+              className="h-5 w-5"
+              animate={{ pathLength: [0, 1] }}
+              transition={{ delay: 0.2 }}
+            />
+          </div>
+        )}
+
         {loading && (
           <motion.div
             animate={{ opacity: [0, 1] }}
@@ -80,7 +100,7 @@ const Button: React.FC<ButtonProps> = (props) => {
         )}
       </AnimatePresence>
       <span>{children}</span>
-    </button>
+    </motion.button>
   );
 };
 

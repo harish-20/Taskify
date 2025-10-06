@@ -1,7 +1,22 @@
+import { ErrorCode } from "@repo/shared/errors";
+
 import { StateCreator } from "zustand";
+
 import { signin, signup } from "@/lib/services/api/auth";
 import { customLocalStorage } from "@/lib/services/localStorage";
+
 import { AuthStore } from "./types";
+
+const getErrorMessage = (code: ErrorCode) => {
+  const messageMap: Partial<Record<ErrorCode, string>> = {
+    INVALID_PASSWORD: "The password you entered is incorrect",
+    ACCOUNT_NOT_EXISTS: "No account found for this email address",
+    DIFFERENT_PROVIDER_ACCOUNT:
+      "This email is linked to a different sign-in method",
+  };
+
+  return messageMap[code] || "Something went wrong. Please try again later.";
+};
 
 export const authAsyncActions: StateCreator<
   AuthStore,
@@ -20,7 +35,7 @@ export const authAsyncActions: StateCreator<
         customLocalStorage.setValue("accessToken", accessToken);
       }
     } catch (err: any) {
-      const message = err?.message || "Something went wrong. Please try again.";
+      const message = getErrorMessage(err.data.code);
       set({ signinError: message });
     } finally {
       set({ isSigningIn: false });

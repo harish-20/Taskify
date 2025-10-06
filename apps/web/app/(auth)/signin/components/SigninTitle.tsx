@@ -1,5 +1,6 @@
-import Title from "@/components/UI/Title";
 import Link from "next/link";
+
+import Title from "@/components/UI/Title";
 
 const SigninTitle = () => {
   return (
