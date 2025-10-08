@@ -1,35 +1,50 @@
 "use client";
 
+import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import TextInput from "@/components/UI/TextInput";
 import Button from "@/components/UI/Button";
 import FadeIn from "@/components/animations/FadeIn";
+import ErrorText from "@/components/UI/ErrorText";
+
+import SignupDone from "./SignupDone";
 
 import { useAuthStore } from "@/lib/providers/auth-store-provider";
 
 import SignupSchema, { SignupType } from "../schemas/SignupSchema";
-import ErrorText from "@/components/UI/ErrorText";
 
 const SignupForm = () => {
   const signupWithEmail = useAuthStore((state) => state.signupWithEmail);
   const isSigningUp = useAuthStore((state) => state.isSigningUp);
   const clearErrors = useAuthStore((state) => state.clearErrors);
   const error = useAuthStore((state) => state.signupError);
+  const isSignupDone = useAuthStore((state) => state.isSignupDone);
 
   const {
     register,
     formState: { errors },
     handleSubmit: formSubmit,
+    reset,
   } = useForm({
     resolver: zodResolver(SignupSchema),
   });
+
+  useEffect(() => {
+    if (isSignupDone) {
+      reset();
+    }
+  }, [isSignupDone]);
 
   const handleSubmit: SubmitHandler<SignupType> = async (data) => {
     clearErrors();
     signupWithEmail(data.name, data.email, data.password);
   };
+
+  if (isSignupDone) {
+    return <SignupDone />;
+  }
 
   return (
     <FadeIn className="w-full" startDelay={0.2}>

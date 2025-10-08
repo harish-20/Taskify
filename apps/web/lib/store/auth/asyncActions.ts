@@ -49,6 +49,9 @@ export const authAsyncActions: StateCreator<
       const response = await signup(name, email, password);
       if (response.data) {
         set({ isSignupDone: true });
+        setTimeout(() => {
+          set({ isSignupDone: false });
+        }, 5000);
       }
     } catch (err: any) {
       const message = getErrorMessage(err.data.code);
