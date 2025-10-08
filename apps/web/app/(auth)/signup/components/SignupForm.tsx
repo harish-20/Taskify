@@ -10,10 +10,12 @@ import FadeIn from "@/components/animations/FadeIn";
 import { useAuthStore } from "@/lib/providers/auth-store-provider";
 
 import SignupSchema, { SignupType } from "../schemas/SignupSchema";
+import ErrorText from "@/components/UI/ErrorText";
 
 const SignupForm = () => {
   const signupWithEmail = useAuthStore((state) => state.signupWithEmail);
   const isSigningUp = useAuthStore((state) => state.isSigningUp);
+  const clearErrors = useAuthStore((state) => state.clearErrors);
   const error = useAuthStore((state) => state.signupError);
 
   const {
@@ -25,12 +27,13 @@ const SignupForm = () => {
   });
 
   const handleSubmit: SubmitHandler<SignupType> = async (data) => {
+    clearErrors();
     signupWithEmail(data.name, data.email, data.password);
   };
 
   return (
     <FadeIn className="w-full" startDelay={0.2}>
-      {error && <p>{error}</p>}
+      {error && <ErrorText>{error}</ErrorText>}
       <form
         className="flex flex-col w-full gap-3"
         onSubmit={formSubmit(handleSubmit)}

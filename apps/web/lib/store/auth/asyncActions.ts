@@ -13,9 +13,10 @@ const getErrorMessage = (code: ErrorCode) => {
     ACCOUNT_NOT_EXISTS: "No account found for this email address",
     DIFFERENT_PROVIDER_ACCOUNT:
       "This email is linked to a different sign-in method",
+    EMAIL_ALREADY_EXISTS: "An account with this email already exists",
   };
 
-  return messageMap[code] || "Something went wrong. Please try again later.";
+  return messageMap[code] || "Something went wrong.";
 };
 
 export const authAsyncActions: StateCreator<
@@ -50,7 +51,7 @@ export const authAsyncActions: StateCreator<
         set({ isSignupDone: true });
       }
     } catch (err: any) {
-      const message = err?.message || "Something went wrong. Please try again.";
+      const message = getErrorMessage(err.data.code);
       set({ signupError: message });
     } finally {
       set({ isSigningUp: false });
