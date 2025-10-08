@@ -27,8 +27,6 @@ const Done: React.FC<DoneProps> = (props) => {
         stroke="currentColor"
         strokeWidth="20"
         strokeLinecap="round"
-        animate={animate}
-        transition={transition}
       />
 
       <motion.path
@@ -39,7 +37,7 @@ const Done: React.FC<DoneProps> = (props) => {
         strokeLinecap="round"
         strokeLinejoin="round"
         animate={animate}
-        transition={{ ...transition, delay: transition.delay || 0 + 0.4 }}
+        transition={transition}
       />
     </svg>
   );
