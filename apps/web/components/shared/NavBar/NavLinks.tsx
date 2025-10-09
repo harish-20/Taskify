@@ -3,7 +3,14 @@ import Graph from "@/components/icons/Graph";
 
 import NavLink from "./NavLink";
 
-const links = [
+type Link = {
+  id: number;
+  label: string;
+  link: string;
+  Icon: React.FC<NavlinkComponent>;
+};
+
+const links: Link[] = [
   {
     id: 1,
     label: "Home",
