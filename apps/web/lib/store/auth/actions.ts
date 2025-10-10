@@ -1,12 +1,9 @@
 import { StateCreator } from "zustand";
-import { AuthStore } from "./types";
+import { AuthActions, AuthStore } from "./types";
 
-export const authActions: StateCreator<
-  AuthStore,
-  [],
-  [],
-  Partial<AuthStore>
-> = (set) => ({
+export const authActions: StateCreator<AuthStore, [], [], AuthActions> = (
+  set
+) => ({
   setUser: (user) => set({ user }),
   clearAuth: () => set({ user: null }),
   clearErrors: () => set({ signinError: null, signupError: null }),

@@ -5,7 +5,7 @@ import { StateCreator } from "zustand";
 import { signin, signup } from "@/lib/services/api/auth";
 import { customLocalStorage } from "@/lib/services/localStorage";
 
-import { AuthStore } from "./types";
+import { AuthAsyncActions, AuthStore } from "./types";
 
 const getErrorMessage = (code: ErrorCode) => {
   const messageMap: Partial<Record<ErrorCode, string>> = {
@@ -23,7 +23,7 @@ export const authAsyncActions: StateCreator<
   AuthStore,
   [],
   [],
-  Partial<AuthStore>
+  AuthAsyncActions
 > = (set) => ({
   signinWithEmail: async (email, password) => {
     set({ isSigningIn: true });
