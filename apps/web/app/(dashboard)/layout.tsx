@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import { PropsWithChildren } from "react";
 
 import { AuthStoreProvider } from "@/lib/providers/auth-store-provider";
+import ModalProvider from "@/lib/providers/modal-provider";
 
 import AuthGuard from "@/components/auth/AuthGuard";
 
@@ -25,10 +26,16 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => (
   <html lang="en" suppressHydrationWarning>
     <body className={inter.className}>
       <AuthStoreProvider>
-        <AuthGuard mode="auth">
-          <AppLayout>{children}</AppLayout>
-        </AuthGuard>
+        <ModalProvider>
+          <AuthGuard mode="auth">
+            <AppLayout>{children}</AppLayout>
+          </AuthGuard>
+        </ModalProvider>
       </AuthStoreProvider>
+
+      {/* decoupled elements for rendering modals and backdrops through portal */}
+      <div id="modal"></div>
+      <div id="backdrop"></div>
     </body>
   </html>
 );

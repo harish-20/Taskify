@@ -2,6 +2,7 @@ export type AvailableModals = "confirm";
 
 export interface ModalState {
   type: AvailableModals | null;
+  props: Record<any, any>;
 }
 
 export interface ModalActions {

@@ -1,10 +1,11 @@
 "use client";
 
-import * as motion from "motion/react-client";
+import { AnimatePresence, motion } from "motion/react";
 
 import useBreakPoints from "@/lib/hooks/useBreakpoints";
 
 import FullLogo from "@/components/logos/FullLogo";
+import Backdrop from "@/components/UI/Backdrop";
 
 import NavLinks from "./NavLinks";
 
@@ -23,12 +24,9 @@ const NavBar: React.FC<NavBarProps> = (props) => {
       initial={{ width: isDesktop ? "250px" : "0px" }}
       animate={{ width: isDesktop ? (isNavOpen ? "250px" : "0px") : "0px" }}
     >
-      {isNavOpen && (
-        <div
-          className="absolute top-0 left-0 w-screen h-screen bg-black/30 md:hidden"
-          onClick={closeNav}
-        />
-      )}
+      <AnimatePresence>
+        {isNavOpen && !isDesktop && <Backdrop onClose={closeNav} />}
+      </AnimatePresence>
       <motion.div
         className="p-4 bg-light-gray h-full border-r border-r-gray w-[250px] absolute top-0 left-0"
         initial={{ translateX: isDesktop ? "0%" : "-100%" }}

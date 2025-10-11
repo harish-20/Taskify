@@ -5,6 +5,7 @@ import { modalActions } from "./actions";
 
 const initialState: ModalState = {
   type: null,
+  props: {},
 };
 
 const useModalStore = create<ModalStore>((set, get, store) => ({
