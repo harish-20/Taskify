@@ -1,5 +1,6 @@
 import { PropsWithChildren } from "react";
 import { createPortal } from "react-dom";
+import { motion } from "motion/react";
 
 import usePortalTarget from "@/lib/hooks/usePortalTarget";
 
@@ -16,9 +17,13 @@ const BaseModal: React.FC<BaseModalProps> = (props) => {
 
   const modalElement = (
     <>
-      <div className="fixed top-1/2 left-1/2 translate-x-1/2 translate-y-1/2">
+      <motion.div
+        animate={{ translateY: ["-30%", "-70%"], opacity: [0, 1] }}
+        exit={{ translateY: ["-70%", "-30%"], opacity: [1, 0] }}
+        className="z-10 absolute top-1/2 left-1/2 -translate-x-1/2"
+      >
         {children}
-      </div>
+      </motion.div>
 
       <Backdrop onClose={onClose} />
     </>
