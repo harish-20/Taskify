@@ -5,7 +5,7 @@ const usePortalTarget: (elementId: string) => Element | null = (elementId) => {
   const [element, setElement] = useState<Element | null>(null);
 
   useEffect(() => {
-    setElement(document.querySelector(`#${elementId}`));
+    setElement(document.getElementById(elementId));
     setMounted(true);
   }, [elementId]);
 
