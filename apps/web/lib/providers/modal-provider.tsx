@@ -9,7 +9,6 @@ import useModalStore from "../store/modal";
 
 import { AvailableModals } from "../store/modal/types";
 
-// Centralized modal map for scalability
 const modalMap: Record<AvailableModals, React.FC<ModalProps & any>> = {
   confirm: ConfirmModal,
 };
