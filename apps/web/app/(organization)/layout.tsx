@@ -5,6 +5,8 @@ import { PropsWithChildren } from "react";
 
 import OrganizationLayout from "@/layouts/OrganizationLayout";
 
+import AuthGuard from "@/components/auth/AuthGuard";
+
 import "@/app/globals.css";
 
 const inter = Inter();
@@ -20,7 +22,9 @@ interface LayoutProps extends PropsWithChildren {}
 const Layout: React.FC<LayoutProps> = ({ children }) => (
   <html lang="en" suppressHydrationWarning>
     <body className={inter.className}>
-      <OrganizationLayout>{children}</OrganizationLayout>
+      <AuthGuard mode="auth">
+        <OrganizationLayout>{children}</OrganizationLayout>
+      </AuthGuard>
     </body>
   </html>
 );
