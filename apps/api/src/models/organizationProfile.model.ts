@@ -1,22 +1,20 @@
 import { Schema, model, Types, Document } from "mongoose";
 
+export type CompanySize =
+  | "0-20"
+  | "20-50"
+  | "50-100"
+  | "100-200"
+  | "200-500"
+  | "500-1000"
+  | "1000-2000"
+  | "2000+";
+
 export interface IOrganizationProfile extends Document {
   organization: Types.ObjectId;
   industry?: string;
   interests?: string[];
-  location?: {
-    country?: string;
-    city?: string;
-  };
-  size?:
-    | "0-20"
-    | "20-50"
-    | "50-100"
-    | "100-200"
-    | "200-500"
-    | "500-1000"
-    | "1000-2000"
-    | "2000+";
+  size: CompanySize;
 
   metrics?: {
     activeUsers?: number;
@@ -62,11 +60,6 @@ const organizationProfileSchema = new Schema<IOrganizationProfile>(
 
     industry: { type: String },
     interests: [String],
-
-    location: {
-      country: String,
-      city: String,
-    },
 
     size: {
       type: String,

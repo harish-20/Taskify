@@ -1,11 +1,5 @@
 import { Schema, model, Types, Document } from "mongoose";
 
-export enum OrganizationSize {
-  SMALL = "small",
-  MEDIUM = "medium",
-  LARGE = "large",
-}
-
 export enum SubscriptionPlan {
   FREE = "free",
   PRO = "pro",
@@ -17,8 +11,7 @@ export interface IOrganization extends Document {
   description?: string;
   owner: Types.ObjectId;
   members: Types.ObjectId[];
-  industry?: string;
-  website?: string;
+  website: string;
   logoUrl?: string;
   address?: {
     street?: string;
@@ -29,10 +22,9 @@ export interface IOrganization extends Document {
   };
   contactEmail?: string;
   phoneNumber?: string;
-  size?: OrganizationSize;
-  verified: boolean;
   subscriptionPlan: SubscriptionPlan;
   teams: Types.ObjectId[];
+  profile: Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -43,7 +35,6 @@ const organizationSchema = new Schema<IOrganization>(
     description: { type: String, trim: true },
     owner: { type: Schema.Types.ObjectId, ref: "User", required: true },
     members: [{ type: Schema.Types.ObjectId, ref: "User" }],
-    industry: { type: String },
     website: { type: String },
     logoUrl: { type: String },
     address: {
@@ -55,11 +46,6 @@ const organizationSchema = new Schema<IOrganization>(
     },
     contactEmail: { type: String },
     phoneNumber: { type: String },
-    size: {
-      type: String,
-      enum: Object.values(OrganizationSize),
-    },
-    verified: { type: Boolean, default: false },
     subscriptionPlan: {
       type: String,
       enum: Object.values(SubscriptionPlan),
@@ -71,6 +57,10 @@ const organizationSchema = new Schema<IOrganization>(
         ref: "Team",
       },
     ],
+    profile: {
+      type: Schema.Types.ObjectId,
+      ref: "OrganizationProfile",
+    },
   },
   { timestamps: true }
 );
