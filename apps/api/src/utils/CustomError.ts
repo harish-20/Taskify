@@ -48,6 +48,14 @@ export class Forbidden extends CustomError {
   }
 }
 
+export class Conflict extends CustomError {
+  statusCode = 409;
+  errorCode = ErrorCode.CONFLICT;
+  constructor(message = ErrorMessages[ErrorCode.CONFLICT]) {
+    super(message);
+  }
+}
+
 export class AccountNotExists extends CustomError {
   statusCode = 404;
   errorCode = ErrorCode.ACCOUNT_NOT_EXISTS;

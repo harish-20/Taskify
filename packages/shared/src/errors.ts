@@ -3,6 +3,7 @@ export enum ErrorCode {
   NOT_FOUND = "NOT_FOUND",
   UNAUTHORIZED = "UNAUTHORIZED",
   FORBIDDEN = "FORBIDDEN",
+  CONFLICT = "CONFLICT",
   INTERNAL_ERROR = "INTERNAL_ERROR",
   ACCOUNT_NOT_EXISTS = "ACCOUNT_NOT_EXISTS",
   EMAIL_ALREADY_EXISTS = "EMAIL_ALREADY_EXISTS",
@@ -15,6 +16,8 @@ export const ErrorMessages: Record<ErrorCode, string> = {
   [ErrorCode.NOT_FOUND]: "Resource not found",
   [ErrorCode.UNAUTHORIZED]: "You must be logged in",
   [ErrorCode.FORBIDDEN]: "You do not have access to this resource",
+  [ErrorCode.CONFLICT]:
+    "The request could not be completed because a resource with the same unique property already exists.",
   [ErrorCode.INTERNAL_ERROR]: "Something went wrong. Please try again later",
   [ErrorCode.EMAIL_ALREADY_EXISTS]: "Email is already registered",
   [ErrorCode.DIFFERENT_PROVIDER_ACCOUNT]:
