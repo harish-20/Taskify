@@ -1,13 +1,14 @@
 import { ApiResponse } from "@repo/shared/types";
 
-import { Unauthorized } from "../utils/CustomError.js";
+import { Conflict, Unauthorized } from "../utils/CustomError.js";
 import { sendResponse } from "../utils/response.js";
 
 import { RequestHandler } from "express";
 
-import { OrganizationSchema } from "../schemas/organization.schema.js";
+import { CreateOrganizationInput } from "../schemas/organization.schema.js";
 import {
   createOrganization,
+  createOrganizationProfile,
   getOrganization as getOrganizationService,
 } from "../services/organization.service.js";
 
@@ -32,14 +33,38 @@ export const registerOrganization: RequestHandler = async (req, res, next) => {
     if (!user) {
       throw new Unauthorized();
     }
+    if (user.organizationId) {
+      throw new Conflict("Organization is already exist for this user");
+    }
 
-    const orgData = req.body as OrganizationSchema;
-    const organization = await createOrganization(orgData, user._id);
+    const {
+      name,
+      address,
+      contactEmail,
+      description,
+      phoneNumber,
+      website,
+      // profile informations
+      size,
+      techStack,
+      industry,
+      interests,
+    } = req.body as CreateOrganizationInput;
+
+    const organization = await createOrganization(
+      { name, description, address, contactEmail, phoneNumber, website },
+      user._id
+    );
+
+    const organizationProfile = await createOrganizationProfile(
+      { size, techStack, industry, interests },
+      organization.id
+    );
 
     const payload: ApiResponse = {
       success: true,
       message: "Organization registered successfully",
-      data: organization,
+      data: { organization, organizationProfile },
     };
 
     return sendResponse(res, 201, payload);
