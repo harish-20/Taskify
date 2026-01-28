@@ -4,6 +4,9 @@ const pathMap = {
     signup: "/auth/register",
     verifyToken: "/auth/verify",
   },
+  organization: {
+    create: "/organization",
+  },
 };
 
 export default pathMap;
