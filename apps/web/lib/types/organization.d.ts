@@ -65,3 +65,8 @@ interface OrganizationProfile {
   createdAt: Date;
   updatedAt: Date;
 }
+
+type Step = {
+  label: string;
+  Icon: React.FC;
+};
