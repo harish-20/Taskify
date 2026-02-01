@@ -16,7 +16,7 @@ export interface OrganizationForm {
   phoneNumber: string;
   website: string;
   industry: string;
-  size: CompanySize;
+  size: CompanySize | "";
   interests: string[];
   techStack: string[];
 }

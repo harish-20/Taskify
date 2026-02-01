@@ -15,7 +15,7 @@ export const defaultState: OrganizationState = {
     phoneNumber: "",
     website: "",
     industry: "",
-    size: "0-20",
+    size: "",
     interests: [],
     techStack: [],
   },
