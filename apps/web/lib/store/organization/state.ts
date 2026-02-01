@@ -21,6 +21,7 @@ export const defaultState: OrganizationState = {
     techStack: [],
   },
   steps: step_data,
+  prevStep: -1,
   currentStep: 0,
   isLoading: false,
   error: null,

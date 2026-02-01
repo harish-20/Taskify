@@ -10,17 +10,13 @@ import Button from "@/components/UI/Button";
 interface OrganizationFormProps {}
 
 const OrganizationForm: React.FC<OrganizationFormProps> = () => {
-  const { currentStep, setCurrentStep } = useOranization();
-  const prevStep = useRef<number>(-1);
+  const { currentStep, prevStep, setCurrentStep } = useOranization();
   const CurrentStepComponent = stepComponent[currentStep];
 
-  useEffect(() => {
-    prevStep.current = currentStep;
-  }, [currentStep]);
+  const isIntialEntry = prevStep === -1;
 
-  const isIntialEntry = prevStep.current === -1;
-
-  const isFormForward = prevStep.current < currentStep;
+  console.log({ currentStep, prevStep });
+  const isFormForward = prevStep < currentStep;
 
   const handleForward = () => {
     setCurrentStep(currentStep + 1);
@@ -33,8 +29,9 @@ const OrganizationForm: React.FC<OrganizationFormProps> = () => {
   if (CurrentStepComponent)
     return (
       <div className="flex flex-col py-8 w-8/10 lg:w-5/10">
-        <AnimatePresence>
+        <AnimatePresence mode="wait">
           <motion.div
+            key={currentStep}
             className="w-full"
             initial={{
               x: 0,
@@ -45,6 +42,9 @@ const OrganizationForm: React.FC<OrganizationFormProps> = () => {
               y: isIntialEntry ? [300, 0] : [0],
               x: isIntialEntry ? [0, 0] : isFormForward ? [100, 0] : [-100, 0],
               opacity: isIntialEntry ? [0, 100] : [100],
+            }}
+            transition={{
+              type: "keyframes",
             }}
           >
             <CurrentStepComponent />

@@ -16,6 +16,7 @@ export interface OrganizationForm {
 export interface OrganizationState {
   formData: OrganizationForm;
   steps: Step[];
+  prevStep: number;
   currentStep: number;
   isLoading: boolean;
   error: string | null;

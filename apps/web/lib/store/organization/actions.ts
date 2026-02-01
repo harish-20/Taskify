@@ -15,5 +15,9 @@ export const organizationActions: StateCreator<
       },
     });
   },
-  setCurrentStep: (step) => set({ currentStep: step }),
+  setCurrentStep: (step) =>
+    set({
+      currentStep: step,
+      prevStep: step !== get().currentStep ? get().currentStep : get().prevStep,
+    }),
 });
