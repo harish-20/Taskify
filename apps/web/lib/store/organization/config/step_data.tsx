@@ -2,7 +2,7 @@ import Home from "@/components/icons/Home";
 
 export const step_data: Step[] = [
   {
-    label: "Step 1",
+    label: "Organization Details",
     Icon: () => (
       <>
         <Home isActive={false} className="h-6 w-6" />
@@ -10,7 +10,7 @@ export const step_data: Step[] = [
     ),
   },
   {
-    label: "Step 2",
+    label: "Contact Details",
     Icon: () => (
       <>
         <Home isActive={false} className="h-6 w-6" />
@@ -18,7 +18,7 @@ export const step_data: Step[] = [
     ),
   },
   {
-    label: "Step 3",
+    label: "Location & Address",
     Icon: () => (
       <>
         <Home isActive={false} className="h-6 w-6" />
@@ -26,7 +26,15 @@ export const step_data: Step[] = [
     ),
   },
   {
-    label: "Step 4",
+    label: "Technology & Interests",
+    Icon: () => (
+      <>
+        <Home isActive={false} className="h-6 w-6" />
+      </>
+    ),
+  },
+  {
+    label: "Review & Confirm",
     Icon: () => (
       <>
         <Home isActive={false} className="h-6 w-6" />
