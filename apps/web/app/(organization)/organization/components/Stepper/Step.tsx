@@ -31,7 +31,7 @@ const Step: React.FC<StepProps> = ({
   return (
     <div className="flex group">
       <button
-        className="p-2 flex gap-2 cursor-pointer"
+        className="py-2 px-3 flex gap-2 cursor-pointer"
         onClick={() => setCurrentStep(step)}
       >
         <Tooltip content={isActive ? "" : label}>

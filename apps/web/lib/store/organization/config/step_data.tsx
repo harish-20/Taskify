@@ -1,11 +1,15 @@
-import Home from "@/components/icons/Home";
+import Office from "@/components/icons/Office";
+import Contact from "@/components/icons/Contact";
+import Location from "@/components/icons/Location";
+import Technology from "@/components/icons/Technology";
+import Confirm from "@/components/icons/Confirm";
 
 export const step_data: Step[] = [
   {
     label: "Organization Details",
     Icon: () => (
       <>
-        <Home isActive={false} className="h-6 w-6" />
+        <Office className="h-6 w-6" />
       </>
     ),
   },
@@ -13,7 +17,7 @@ export const step_data: Step[] = [
     label: "Contact Details",
     Icon: () => (
       <>
-        <Home isActive={false} className="h-6 w-6" />
+        <Contact className="h-6 w-6" />
       </>
     ),
   },
@@ -21,7 +25,7 @@ export const step_data: Step[] = [
     label: "Location & Address",
     Icon: () => (
       <>
-        <Home isActive={false} className="h-6 w-6" />
+        <Location className="h-6 w-6" />
       </>
     ),
   },
@@ -29,7 +33,7 @@ export const step_data: Step[] = [
     label: "Technology & Interests",
     Icon: () => (
       <>
-        <Home isActive={false} className="h-6 w-6" />
+        <Technology className="h-6 w-6" />
       </>
     ),
   },
@@ -37,7 +41,7 @@ export const step_data: Step[] = [
     label: "Review & Confirm",
     Icon: () => (
       <>
-        <Home isActive={false} className="h-6 w-6" />
+        <Confirm className="h-6 w-6" />
       </>
     ),
   },
