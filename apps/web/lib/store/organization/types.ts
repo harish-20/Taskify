@@ -23,6 +23,7 @@ export interface OrganizationForm {
 
 export interface OrganizationState {
   formData: OrganizationForm;
+  steps: Step[];
   currentStep: number;
   isLoading: boolean;
   error: string | null;
@@ -34,6 +35,7 @@ export interface OrganizationActions {
     key: K,
     value: OrganizationForm[K]
   ) => void;
+  setCurrentStep: (step: number) => void;
 }
 
 export interface OrganizationAsyncActions {

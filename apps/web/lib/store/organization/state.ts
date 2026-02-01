@@ -1,3 +1,4 @@
+import { step_data } from "./config/step_data";
 import { OrganizationState } from "./types";
 
 export const defaultState: OrganizationState = {
@@ -19,6 +20,7 @@ export const defaultState: OrganizationState = {
     interests: [],
     techStack: [],
   },
+  steps: step_data,
   currentStep: 0,
   isLoading: false,
   error: null,

@@ -5,18 +5,18 @@ import Tooltip from "@/components/UI/Tooltip";
 interface StepProps extends Step {
   step: number;
   totalSteps: number;
-  activeStep: number;
-  setActiveStep: Dispatch<SetStateAction<number>>;
+  currentStep: number;
+  setCurrentStep: (step: number) => void;
 }
 
 const Step: React.FC<StepProps> = (props) => {
-  const { label, Icon, step, totalSteps, activeStep, setActiveStep } = props;
-  const isActive = step === activeStep;
+  const { label, Icon, step, totalSteps, currentStep, setCurrentStep } = props;
+  const isActive = step === currentStep;
   return (
     <div className="flex group">
       <button
         className="p-2 flex gap-2 cursor-pointer"
-        onClick={() => setActiveStep(step)}
+        onClick={() => setCurrentStep(step)}
       >
         <Tooltip content={isActive ? "" : label}>
           <div

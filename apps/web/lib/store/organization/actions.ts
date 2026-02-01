@@ -15,4 +15,5 @@ export const organizationActions: StateCreator<
       },
     });
   },
+  setCurrentStep: (step) => set({ currentStep: step }),
 });

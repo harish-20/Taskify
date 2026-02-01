@@ -1,6 +1,6 @@
 import Home from "@/components/icons/Home";
 
-export const test_steps: Step[] = [
+export const step_data: Step[] = [
   {
     label: "Step 1",
     Icon: () => (
