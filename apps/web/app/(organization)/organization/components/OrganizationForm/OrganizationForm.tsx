@@ -53,14 +53,14 @@ const OrganizationForm: React.FC<OrganizationFormProps> = () => {
 
         <div className="flex justify-between my-10">
           <Button
-            className="min-w-[160px]"
+            className="md:min-w-[160px]"
             variant="secondary-dark"
             onClick={handlePrevious}
           >
             Prev
           </Button>
           <Button
-            className="min-w-[160px]"
+            className="md:min-w-[160px]"
             variant="primary"
             onClick={handleForward}
           >
