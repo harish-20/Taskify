@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import Tooltip from "@/components/UI/Tooltip";
 
@@ -9,9 +9,25 @@ interface StepProps extends Step {
   setCurrentStep: (step: number) => void;
 }
 
-const Step: React.FC<StepProps> = (props) => {
-  const { label, Icon, step, totalSteps, currentStep, setCurrentStep } = props;
+const Step: React.FC<StepProps> = ({
+  label,
+  Icon,
+  step,
+  totalSteps,
+  currentStep,
+  setCurrentStep,
+}) => {
   const isActive = step === currentStep;
+
+  const measureRef = useRef<HTMLDivElement>(null);
+  const [contentWidth, setContentWidth] = useState(0);
+
+  useLayoutEffect(() => {
+    if (measureRef.current) {
+      setContentWidth(measureRef.current.scrollWidth);
+    }
+  }, [label]);
+
   return (
     <div className="flex group">
       <button
@@ -20,26 +36,30 @@ const Step: React.FC<StepProps> = (props) => {
       >
         <Tooltip content={isActive ? "" : label}>
           <div
-            className={`flex items-center justify-center w-12 aspect-square rounded-full transition-colors duration-300 delay-150 ${isActive ? "bg-primary text-white" : "text-dark-gray"}`}
+            className={`flex items-center justify-center w-12 aspect-square rounded-full transition-colors duration-300 delay-150 ${
+              isActive ? "bg-primary text-white" : "text-dark-gray"
+            }`}
           >
             <Icon />
           </div>
         </Tooltip>
 
-        <AnimatePresence>
+        <AnimatePresence initial={false}>
           {isActive && (
             <motion.div
               key="step-label"
-              className="overflow-x-hidden"
+              className="overflow-hidden"
               initial={{ width: 0 }}
-              animate={{ width: 120 }}
+              animate={{ width: contentWidth }}
               exit={{ width: 0 }}
             >
-              <div className="w-[120px] text-left flex flex-col gap-1">
-                <div className="text-xs font-semibold text-dark-gray">
+              <div className="flex flex-col gap-1 pr-3 text-left">
+                <div className="text-xs font-semibold text-dark-gray whitespace-nowrap">
                   Step {step}/{totalSteps}
                 </div>
-                <div>{label}</div>
+                <div className="text-sm font-semibold whitespace-nowrap">
+                  {label}
+                </div>
               </div>
             </motion.div>
           )}
@@ -48,6 +68,19 @@ const Step: React.FC<StepProps> = (props) => {
 
       {/* divider */}
       <div className="border my-2 border-gray rounded-lg group-last:hidden" />
+
+      {/* Hidden measurement container */}
+      <div
+        ref={measureRef}
+        className="absolute invisible h-1 whitespace-nowrap"
+      >
+        <div className="flex flex-col gap-1 pr-3">
+          <div className="text-xs font-semibold">
+            Step {step}/{totalSteps}
+          </div>
+          <div className="text-sm font-semibold">{label}</div>
+        </div>
+      </div>
     </div>
   );
 };
