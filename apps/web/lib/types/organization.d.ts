@@ -66,7 +66,17 @@ interface OrganizationProfile {
   updatedAt: Date;
 }
 
+export type CompanySize =
+  | "1-10"
+  | "11-50"
+  | "51-100"
+  | "101-200"
+  | "201-500"
+  | "501-1000"
+  | "1001-2000"
+  | "2000+";
+
 type Step = {
   label: string;
-  Icon: React.FC;
+  Icon: FC<any>;
 };

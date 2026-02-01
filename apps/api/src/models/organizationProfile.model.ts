@@ -1,13 +1,13 @@
 import { Schema, model, Types, Document } from "mongoose";
 
 export type CompanySize =
-  | "0-20"
-  | "20-50"
-  | "50-100"
-  | "100-200"
-  | "200-500"
-  | "500-1000"
-  | "1000-2000"
+  | "1-10"
+  | "11-50"
+  | "51-100"
+  | "101-200"
+  | "201-500"
+  | "501-1000"
+  | "1001-2000"
   | "2000+";
 
 export interface IOrganizationProfile extends Document {

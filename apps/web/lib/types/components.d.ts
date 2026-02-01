@@ -6,3 +6,8 @@ interface NavlinkComponent {
 interface ModalProps {
   onClose: () => void;
 }
+
+export interface SelectOption {
+  label: string;
+  value: string;
+}
