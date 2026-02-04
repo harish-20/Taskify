@@ -29,7 +29,7 @@ const OrganizationForm: React.FC<OrganizationFormProps> = () => {
   if (CurrentStepComponent)
     return (
       <div className="flex flex-col py-8 w-8/10 lg:w-5/10">
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="popLayout">
           <motion.div
             key={currentStep}
             className="w-full"
@@ -46,6 +46,7 @@ const OrganizationForm: React.FC<OrganizationFormProps> = () => {
             transition={{
               type: "keyframes",
             }}
+            exit={{ opacity: [100, 0] }}
           >
             <CurrentStepComponent />
           </motion.div>
