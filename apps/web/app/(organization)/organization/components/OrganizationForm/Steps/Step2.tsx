@@ -14,7 +14,7 @@ const Step2: React.FC = () => {
   };
   return (
     <div className="flex flex-col gap-6">
-      <Title order={3}>Tell us about your organization</Title>
+      <Title order={3}>How can we reach you?</Title>
 
       <TextInput
         label="Contact Email"
@@ -39,11 +39,14 @@ const Step2: React.FC = () => {
         onChange={(e) => setField("website", e.target.value)}
       />
 
-      <div className="border border-gray rounded-xl p-6">
-        <AddressInput
-          value={formData.address}
-          onChange={(address) => setField("address", address)}
-        />
+      <div className="flex flex-col gap-2">
+        <div className="text-sm text-dark-gray">Address</div>
+        <div className="border border-gray rounded-xl p-6">
+          <AddressInput
+            value={formData.address}
+            onChange={(address) => setField("address", address)}
+          />
+        </div>
       </div>
     </div>
   );
