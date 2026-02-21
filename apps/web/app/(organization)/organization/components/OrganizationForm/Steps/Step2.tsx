@@ -9,9 +9,6 @@ import useOrganization from "@/lib/store/organization";
 const Step2: React.FC = () => {
   const { formData, setField } = useOrganization();
 
-  const setAddress = (key: keyof Address, value: string) => {
-    setField("address", { ...formData.address, [key]: value });
-  };
   return (
     <div className="flex flex-col gap-6">
       <Title order={3}>How can we reach you?</Title>
