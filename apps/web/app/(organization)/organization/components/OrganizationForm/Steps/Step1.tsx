@@ -1,8 +1,9 @@
-import { CompanySize } from "@/lib/types/organization";
 import TextInput from "@/components/UI/TextInput";
 import Select from "@/components/UI/Select";
-import useOrganization from "@/lib/store/organization";
 import Title from "@/components/UI/Title";
+
+import useOrganization from "@/lib/store/organization";
+import { CompanySize } from "@/lib/types/organization";
 
 export const COMPANY_SIZE_OPTIONS: {
   label: string;
