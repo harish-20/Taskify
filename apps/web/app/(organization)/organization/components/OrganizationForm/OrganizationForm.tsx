@@ -15,7 +15,6 @@ const OrganizationForm: React.FC<OrganizationFormProps> = () => {
 
   const isIntialEntry = prevStep === -1;
 
-  console.log({ currentStep, prevStep });
   const isFormForward = prevStep < currentStep;
 
   const handleForward = () => {
