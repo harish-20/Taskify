@@ -35,16 +35,6 @@ const Step2: React.FC = () => {
         value={formData.website}
         onChange={(e) => setField("website", e.target.value)}
       />
-
-      <div className="flex flex-col gap-2">
-        <div className="text-sm text-dark-gray">Address</div>
-        <div className="border border-gray rounded-xl p-6">
-          <AddressInput
-            value={formData.address}
-            onChange={(address) => setField("address", address)}
-          />
-        </div>
-      </div>
     </div>
   );
 };
