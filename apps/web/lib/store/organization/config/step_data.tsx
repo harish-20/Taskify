@@ -4,6 +4,8 @@ import Location from "@/components/icons/Location";
 import Technology from "@/components/icons/Technology";
 import Confirm from "@/components/icons/Confirm";
 
+import { Step } from "@/lib/types/organization";
+
 export const step_data: Step[] = [
   {
     label: "Organization Details",
