@@ -9,13 +9,13 @@ export const COMPANY_SIZE_OPTIONS: {
   label: string;
   value: CompanySize;
 }[] = [
-  { label: "1–10 employees", value: "1-10" },
-  { label: "11–50 employees", value: "11-50" },
-  { label: "51–100 employees", value: "51-100" },
-  { label: "101–200 employees", value: "101-200" },
-  { label: "201–500 employees", value: "201-500" },
-  { label: "501–1000 employees", value: "501-1000" },
-  { label: "1001–2000 employees", value: "1001-2000" },
+  { label: "0–20 employees", value: "0-20" },
+  { label: "20–50 employees", value: "20-50" },
+  { label: "50–100 employees", value: "50-100" },
+  { label: "100–200 employees", value: "100-200" },
+  { label: "200–500 employees", value: "200-500" },
+  { label: "500–1000 employees", value: "500-1000" },
+  { label: "1000–2000 employees", value: "1000-2000" },
   { label: "2000+ employees", value: "2000+" },
 ];
 

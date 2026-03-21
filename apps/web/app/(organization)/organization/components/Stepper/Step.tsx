@@ -2,6 +2,7 @@ import { FC, useLayoutEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import Tooltip from "@/components/UI/Tooltip";
 import { Step as StepType } from "@/lib/types/organization";
+import useOranization from "@/lib/store/organization";
 
 interface StepProps extends StepType {
   label: string;
@@ -20,7 +21,20 @@ const Step: React.FC<StepProps> = ({
   currentStep,
   setCurrentStep,
 }) => {
+  const { validateStep } = useOranization();
   const isActive = step === currentStep;
+
+  const isStepAccessible = () => {
+    if (step <= currentStep) return true;
+    if (step === currentStep + 1) return validateStep(currentStep);
+
+    for (let i = 0; i < step; i++) {
+      if (!validateStep(i)) return false;
+    }
+    return validateStep(step);
+  };
+
+  const canNavigate = isStepAccessible();
 
   const measureRef = useRef<HTMLDivElement>(null);
   const [contentWidth, setContentWidth] = useState(0);
@@ -34,13 +48,20 @@ const Step: React.FC<StepProps> = ({
   return (
     <div className="flex group">
       <button
-        className="py-2 px-3 flex gap-2 cursor-pointer"
-        onClick={() => setCurrentStep(step)}
+        className={`py-2 px-3 flex gap-2 transition-opacity duration-300 ${
+          canNavigate ? "cursor-pointer" : "cursor-not-allowed opacity-50"
+        }`}
+        onClick={() => canNavigate && setCurrentStep(step)}
+        disabled={!canNavigate}
       >
         <Tooltip content={isActive ? "" : label}>
           <div
             className={`flex items-center justify-center w-12 aspect-square rounded-full transition-colors duration-300 delay-150 ${
-              isActive ? "bg-primary text-white" : "text-dark-gray"
+              isActive
+                ? "bg-primary text-white"
+                : canNavigate
+                  ? "text-dark-gray hover:bg-gray-100"
+                  : "text-gray-400"
             }`}
           >
             <Icon />
