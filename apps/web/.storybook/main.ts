@@ -17,6 +17,7 @@ const config: StorybookConfig = {
   addons: [],
   framework: getAbsolutePath("@storybook/nextjs-vite"),
   staticDirs: ["..\\public"],
+
   core: {
     builder: "@storybook/builder-vite",
   },
