@@ -5,10 +5,22 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack --port 3000",
+    "storybook": "storybook dev -p 6006",
     "build": "next build",
     "start": "next start",
     "lint": "next lint --max-warnings 0",
-    "check-types": "tsc --noEmit"
+    "check-types": "tsc --noEmit",
+    "build-storybook": "storybook build",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,css,scss,md}": [
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "@repo/ui": "*",
@@ -21,11 +33,16 @@
     "@repo/eslint-config": "*",
     "@repo/shared": "*",
     "@repo/typescript-config": "*",
+    "@storybook/builder-vite": "^10.4.6",
+    "@storybook/nextjs-vite": "^10.4.6",
     "@types/node": "^22.15.3",
     "@types/react": "19.1.0",
     "@types/react-dom": "19.1.1",
     "eslint": "^9.33.0",
+    "eslint-plugin-storybook": "^10.4.6",
+    "storybook": "^10.4.6",
     "tailwindcss": "^4.1.13",
-    "typescript": "5.9.2"
+    "typescript": "5.9.2",
+    "vite": "^8.1.3"
   }
 }

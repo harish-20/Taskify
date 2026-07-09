@@ -12,7 +12,7 @@ export interface Address {
   zip: string;
 }
 
-interface AddressInputProps {
+export interface AddressInputProps {
   value: Address;
   onChange: (value: Address) => void;
 }
