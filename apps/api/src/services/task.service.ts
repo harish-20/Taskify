@@ -6,7 +6,7 @@ import { NotFound } from "../utils/CustomError.js";
 
 export const createTask = async (
   taskData: TaskSchema,
-  userId: Types.ObjectId
+  userId: Types.ObjectId,
 ) => {
   const user = await User.findById(userId);
 
@@ -21,4 +21,15 @@ export const createTask = async (
   });
 
   return task;
+};
+
+export const getTasks = async (userId: Types.ObjectId) => {
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new NotFound("User not found");
+  }
+  const tasks = await Task.find({ createdBy: userId });
+
+  return tasks;
 };

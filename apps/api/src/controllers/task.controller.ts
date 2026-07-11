@@ -1,9 +1,14 @@
-import { RequestHandler } from "express";
-import { Unauthorized } from "../utils/CustomError.js";
-import { createTaskSchema } from "../schemas/task.schema.js";
-import { createTask as createTaskService } from "../services/task.service.js";
 import { ApiResponse } from "@repo/shared/types";
+
+import { Unauthorized } from "../utils/CustomError.js";
 import { sendResponse } from "../utils/response.js";
+
+import { RequestHandler } from "express";
+
+import {
+  createTask as createTaskService,
+  getTasks as getTasksService,
+} from "../services/task.service.js";
 
 export const createTask: RequestHandler = async (req, res, next) => {
   try {
@@ -19,6 +24,26 @@ export const createTask: RequestHandler = async (req, res, next) => {
     };
 
     return sendResponse(res, 201, payload);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getTasks: RequestHandler<{}, { tasks: any[] }> = async (
+  req,
+  res,
+  next,
+) => {
+  try {
+    const user = req.userObj;
+    if (!user) throw new Unauthorized();
+    const tasks = await getTasksService(user._id);
+    const payload: ApiResponse = {
+      success: true,
+      message: "Tasks retrieved successfully",
+      data: tasks,
+    };
+    return sendResponse(res, 200, payload);
   } catch (err) {
     next(err);
   }
