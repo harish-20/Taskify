@@ -1,9 +1,9 @@
-interface NavlinkComponent {
+export interface NavlinkComponent {
   isActive: boolean;
   className: string;
 }
 
-interface ModalProps {
+export interface ModalProps {
   onClose: () => void;
 }
 

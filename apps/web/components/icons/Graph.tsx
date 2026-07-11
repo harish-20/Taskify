@@ -1,11 +1,12 @@
-"use client";
+'use client';
 
-import { motion } from "motion/react";
+import { motion } from 'motion/react';
+import type { NavlinkComponent } from '@/lib/types/components';
 
 interface GraphProps extends NavlinkComponent {}
 
 const Graph: React.FC<GraphProps> = (props) => {
-  const { className = "", isActive } = props;
+  const { className = '', isActive } = props;
 
   return (
     <motion.svg
@@ -17,7 +18,7 @@ const Graph: React.FC<GraphProps> = (props) => {
       className={className}
       initial={{ scale: 1 }}
       animate={isActive ? { scale: 1.1 } : { scale: 1 }}
-      transition={{ type: "spring", stiffness: 300, damping: 10 }}
+      transition={{ type: 'spring', stiffness: 300, damping: 10 }}
     >
       <path
         d="M4 5V19C4 19.5523 4.44772 20 5 20H19"
@@ -37,7 +38,7 @@ const Graph: React.FC<GraphProps> = (props) => {
         animate={isActive ? { pathLength: [0, 1] } : {}}
         transition={{
           duration: 0.8,
-          ease: "easeInOut",
+          ease: 'easeInOut',
         }}
       />
 

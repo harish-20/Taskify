@@ -1,7 +1,8 @@
-import { ApiResponse } from "@repo/shared/types";
+import { ApiResponse } from '@repo/shared/types';
+import type { Organization, OrganizationProfile } from '@/lib/types/organization';
 
-import Api from ".";
-import pathMap from "./pathMap";
+import Api from '.';
+import pathMap from './pathMap';
 
 interface OrganizationResponse {
   organization: Organization;
@@ -26,10 +27,7 @@ export const createOrganization = async (organizationDetails: {
   interests: string[];
   techStack: string[];
 }) => {
-  const response = await Api.post(
-    pathMap.organization.create,
-    organizationDetails,
-  );
+  const response = await Api.post(pathMap.organization.create, organizationDetails);
 
   return response.data;
 };
