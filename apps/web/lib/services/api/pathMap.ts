@@ -7,6 +7,11 @@ const pathMap = {
   organization: {
     create: "/organization",
   },
+  task: {
+    list: "/task",
+    create: "/task",
+    updateStatus: "/task/status",
+  },
 };
 
 export default pathMap;
