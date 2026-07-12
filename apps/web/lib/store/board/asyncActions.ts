@@ -4,7 +4,10 @@ import { getTasks, updateTaskStatus as updateTaskStatusApi } from '@/lib/service
 
 import { BoardAsyncActions, BoardStore } from './types';
 
-export const boardAsyncActions: StateCreator<BoardStore, [], [], BoardAsyncActions> = (set) => ({
+export const boardAsyncActions: StateCreator<BoardStore, [], [], BoardAsyncActions> = (
+  set,
+  get,
+) => ({
   loadTasks: async () => {
     set({ isLoading: true });
 
@@ -18,17 +21,25 @@ export const boardAsyncActions: StateCreator<BoardStore, [], [], BoardAsyncActio
   },
 
   updateTaskStatus: async (taskId, status) => {
+    const prevTask = get().tasks.find((task) => task._id === taskId);
+
+    set((state) => ({
+      tasks: state.tasks.map((task) => (task._id === taskId ? { ...task, status } : task)),
+    }));
+
     try {
       const response = await updateTaskStatusApi(taskId, status);
-      const updatedTask = response.data;
 
-      if (!updatedTask) return;
-
-      set((state) => ({
-        tasks: state.tasks.map((task) => (task._id === taskId ? updatedTask : task)),
-      }));
+      if (!response.success) {
+        throw new Error('Update failed');
+      }
     } catch (error) {
       console.error('Failed to update task status', error);
+      if (!prevTask) return;
+
+      set((state) => ({
+        tasks: [...state.tasks.filter((task) => task._id !== taskId), prevTask],
+      }));
     }
   },
 });

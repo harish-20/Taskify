@@ -1,22 +1,38 @@
 import { motion } from 'motion/react';
 
+import { useDraggable } from '@dnd-kit/react';
+
 import { Task } from '@/lib/types/task';
 
 interface TaskItemProps {
-  handleDragStart: (id: string, e: React.DragEvent<HTMLDivElement>) => void;
-  handleDragEnd: () => void;
   task: Task;
 }
 
-const TaskItem: React.FC<TaskItemProps> = ({ handleDragStart, handleDragEnd, task }) => {
+const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
+  const { ref, isDragging } = useDraggable({
+    id: task._id,
+    data: task,
+  });
+
   return (
     <motion.div
-      draggable
-      onDragStart={(e) =>
-        handleDragStart(task._id, e as unknown as React.DragEvent<HTMLDivElement>)
+      ref={ref}
+      initial={false}
+      className="cursor-grab rounded-xl border border-gray-200 p-6 shadow-sm transition-shadow hover:shadow-md active:cursor-grabbing"
+      animate={
+        isDragging
+          ? {
+              backgroundColor: '#ecfeff',
+              borderColor: '#06b6d4',
+              boxShadow: '0 12px 30px rgba(6, 182, 212, 0.24)',
+            }
+          : {
+              backgroundColor: '#ffffff',
+              borderColor: '#e5e7eb',
+              boxShadow: '0 1px 2px rgba(15, 23, 42, 0.04)',
+            }
       }
-      onDragEnd={handleDragEnd}
-      className="cursor-grab rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md active:cursor-grabbing"
+      transition={{ duration: 2 }}
     >
       {/* Header */}
       <div className="flex items-start gap-3">
