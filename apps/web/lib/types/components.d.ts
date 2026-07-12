@@ -11,3 +11,10 @@ export interface SelectOption {
   label: string;
   value: string;
 }
+
+export type Link = {
+  id: number;
+  label: string;
+  link: string;
+  Icon: React.FC<NavlinkComponent>;
+};

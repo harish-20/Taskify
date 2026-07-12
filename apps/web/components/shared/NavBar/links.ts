@@ -1,5 +1,8 @@
+import { Link } from '@/lib/types/components';
+
 import Home from '@/components/icons/Home';
 import Graph from '@/components/icons/Graph';
+import Board from '@/components/icons/Board';
 
 export const links: Link[] = [
   {
@@ -13,5 +16,11 @@ export const links: Link[] = [
     label: 'Dashboard',
     link: '/dashboard',
     Icon: Graph,
+  },
+  {
+    id: 3,
+    label: 'Board',
+    link: '/board',
+    Icon: Board,
   },
 ];

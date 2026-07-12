@@ -3,13 +3,6 @@ import type { NavlinkComponent } from '@/lib/types/components';
 
 import NavLink from './NavLink';
 
-type Link = {
-  id: number;
-  label: string;
-  link: string;
-  Icon: React.FC<NavlinkComponent>;
-};
-
 const NavLinks = () => {
   return (
     <div className="mt-10 flex flex-col gap-2">
