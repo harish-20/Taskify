@@ -1,16 +1,9 @@
-"use client";
+'use client';
 
-import { useEffect, useRef, useState } from "react";
-import TextInput from "@/components/UI/TextInput";
-import { searchAddress } from "@/lib/services/api/external/address";
-
-export interface Address {
-  street: string;
-  city: string;
-  state: string;
-  country: string;
-  zip: string;
-}
+import { useEffect, useRef, useState } from 'react';
+import type { Address } from '@/lib/types';
+import TextInput from '@/components/UI/TextInput';
+import { searchAddress } from '@/lib/services/api/external/address';
 
 export interface AddressInputProps {
   value: Address;
@@ -23,7 +16,7 @@ interface Suggestion {
 }
 
 const AddressInput: React.FC<AddressInputProps> = ({ value, onChange }) => {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState('');
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -56,7 +49,7 @@ const AddressInput: React.FC<AddressInputProps> = ({ value, onChange }) => {
       const data = await searchAddress({ query }, controller.signal);
       setSuggestions(data);
     } catch (error) {
-      if ((error as any).name !== "AbortError") {
+      if ((error as any).name !== 'AbortError') {
         console.error(error);
       }
     } finally {
@@ -80,11 +73,11 @@ const AddressInput: React.FC<AddressInputProps> = ({ value, onChange }) => {
     const addr = suggestion.address;
 
     onChange({
-      street: addr.road || addr.neighbourhood || addr.suburb || "",
-      city: addr.city || addr.town || addr.village || "",
-      state: addr.state || "",
-      country: addr.country || "",
-      zip: addr.postcode || "",
+      street: addr.road || addr.neighbourhood || addr.suburb || '',
+      city: addr.city || addr.town || addr.village || '',
+      state: addr.state || '',
+      country: addr.country || '',
+      zip: addr.postcode || '',
     });
 
     setQuery(suggestion.display_name);
@@ -120,33 +113,33 @@ const AddressInput: React.FC<AddressInputProps> = ({ value, onChange }) => {
         <TextInput
           label="Street Address"
           value={value.street}
-          onChange={(e) => updateField("street", e.target.value)}
+          onChange={(e) => updateField('street', e.target.value)}
         />
 
         <div className="grid grid-cols-2 gap-4">
           <TextInput
             label="City"
             value={value.city}
-            onChange={(e) => updateField("city", e.target.value)}
+            onChange={(e) => updateField('city', e.target.value)}
           />
 
           <TextInput
             label="State / Province"
             value={value.state}
-            onChange={(e) => updateField("state", e.target.value)}
+            onChange={(e) => updateField('state', e.target.value)}
           />
         </div>
 
         <TextInput
           label="Country"
           value={value.country}
-          onChange={(e) => updateField("country", e.target.value)}
+          onChange={(e) => updateField('country', e.target.value)}
         />
 
         <TextInput
           label="Zip / Postal Code"
           value={value.zip}
-          onChange={(e) => updateField("zip", e.target.value)}
+          onChange={(e) => updateField('zip', e.target.value)}
         />
       </div>
     </div>

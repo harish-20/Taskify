@@ -1,9 +1,9 @@
-interface NavlinkComponent {
+export interface NavlinkComponent {
   isActive: boolean;
   className: string;
 }
 
-interface ModalProps {
+export interface ModalProps {
   onClose: () => void;
 }
 
@@ -11,3 +11,10 @@ export interface SelectOption {
   label: string;
   value: string;
 }
+
+export type Link = {
+  id: number;
+  label: string;
+  link: string;
+  Icon: React.FC<NavlinkComponent>;
+};

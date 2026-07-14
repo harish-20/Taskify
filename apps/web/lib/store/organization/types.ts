@@ -1,5 +1,4 @@
-import { CompanySize, Step } from "@/lib/types/organization";
-import { Address } from "@/components/UI/AddressInput";
+import { Address, CompanySize, Step } from '@/lib/types';
 
 export interface OrganizationForm {
   name: string;
@@ -9,7 +8,7 @@ export interface OrganizationForm {
   phoneNumber: string;
   website: string;
   industry: string;
-  size: CompanySize | "";
+  size: CompanySize | '';
   interests: string[];
   techStack: string[];
 }
@@ -25,10 +24,7 @@ export interface OrganizationState {
 }
 
 export interface OrganizationActions {
-  setField: <K extends keyof OrganizationForm>(
-    key: K,
-    value: OrganizationForm[K],
-  ) => void;
+  setField: <K extends keyof OrganizationForm>(key: K, value: OrganizationForm[K]) => void;
   setCurrentStep: (step: number) => void;
   validateStep: (step: number) => boolean;
 }

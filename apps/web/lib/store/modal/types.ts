@@ -1,4 +1,4 @@
-export type AvailableModals = "confirm";
+export type AvailableModals = 'confirm' | 'add-task';
 
 export interface ModalState {
   type: AvailableModals | null;

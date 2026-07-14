@@ -1,23 +1,23 @@
-import { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Metadata } from 'next';
+import { Inter } from 'next/font/google';
 
-import { PropsWithChildren } from "react";
+import { PropsWithChildren } from 'react';
 
-import { AuthStoreProvider } from "@/lib/providers/auth-store-provider";
-import ModalProvider from "@/lib/providers/modal-provider";
+import { AuthStoreProvider } from '@/lib/providers/auth-store-provider';
+import ModalProvider from '@/lib/providers/modal-provider';
 
-import AuthGuard from "@/components/auth/AuthGuard";
+import AuthGuard from '@/components/auth/AuthGuard';
 
-import AppLayout from "@/layouts/AppLayout";
+import AppLayout from '@/layouts/AppLayout';
 
-import "@/app/globals.css";
+import '@/app/globals.css';
 
 const inter = Inter();
 
 export const metadata: Metadata = {
-  title: "Taskify",
+  title: 'Taskify',
   description:
-    "A simple and powerful task management app to organize your work, track progress, and boost productivity every day.",
+    'A simple and powerful task management app to organize your work, track progress, and boost productivity every day.',
 };
 
 interface DashboardLayoutProps extends PropsWithChildren {}

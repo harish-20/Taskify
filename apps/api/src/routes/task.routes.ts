@@ -5,7 +5,7 @@ import { Router } from "express";
 import { validateRequest } from "../middlewares/validate.middleware.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 
-import { createTask, getTasks } from "../controllers/task.controller.js";
+import { createTask, getTasks, updateTaskStatus } from "../controllers/task.controller.js";
 
 const taskRouter = Router();
 
@@ -16,5 +16,6 @@ taskRouter.post(
   validateRequest(createTaskSchema),
   createTask,
 );
+taskRouter.patch("/status/:taskId", authMiddleware, updateTaskStatus);
 
 export default taskRouter;
