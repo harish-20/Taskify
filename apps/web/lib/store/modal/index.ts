@@ -1,7 +1,7 @@
-import { create } from "zustand";
+import { create } from 'zustand';
 
-import { ModalState, ModalStore } from "./types";
-import { modalActions } from "./actions";
+import { ModalState, ModalStore } from './types';
+import { modalActions } from './actions';
 
 const initialState: ModalState = {
   type: null,

@@ -27,7 +27,7 @@ export const createOrganization = async (organizationDetails: {
   interests: string[];
   techStack: string[];
 }) => {
-  const response = await Api.post(pathMap.organization.create, organizationDetails);
+  const response = await Api.post<ApiResponse>(pathMap.organization.create, organizationDetails);
 
   return response.data;
 };

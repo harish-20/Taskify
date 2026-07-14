@@ -19,8 +19,8 @@ const BaseModal: React.FC<BaseModalProps> = (props) => {
   const modalElement = (
     <>
       <motion.div
-        animate={{ translateY: ['-30%', '-70%'], opacity: [0, 1] }}
-        exit={{ translateY: ['-70%', '-30%'], opacity: [1, 0] }}
+        animate={{ translateY: ['-30%', '-50%'], opacity: [0, 1] }}
+        exit={{ translateY: ['-50%', '-30%'], opacity: [1, 0] }}
         className="z-10 absolute top-1/2 left-1/2 -translate-x-1/2"
       >
         {children}

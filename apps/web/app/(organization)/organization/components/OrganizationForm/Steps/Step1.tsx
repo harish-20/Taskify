@@ -1,22 +1,22 @@
-import TextInput from "@/components/UI/TextInput";
-import Select from "@/components/UI/Select";
-import Title from "@/components/UI/Title";
+import TextInput from '@/components/UI/TextInput';
+import Select from '@/components/UI/CardSelect';
+import Title from '@/components/UI/Title';
 
-import useOrganization from "@/lib/store/organization";
-import { CompanySize } from "@/lib/types/organization";
+import useOrganization from '@/lib/store/organization';
+import { CompanySize } from '@/lib/types/organization';
 
 export const COMPANY_SIZE_OPTIONS: {
   label: string;
   value: CompanySize;
 }[] = [
-  { label: "0–20 employees", value: "0-20" },
-  { label: "20–50 employees", value: "20-50" },
-  { label: "50–100 employees", value: "50-100" },
-  { label: "100–200 employees", value: "100-200" },
-  { label: "200–500 employees", value: "200-500" },
-  { label: "500–1000 employees", value: "500-1000" },
-  { label: "1000–2000 employees", value: "1000-2000" },
-  { label: "2000+ employees", value: "2000+" },
+  { label: '0–20 employees', value: '0-20' },
+  { label: '20–50 employees', value: '20-50' },
+  { label: '50–100 employees', value: '50-100' },
+  { label: '100–200 employees', value: '100-200' },
+  { label: '200–500 employees', value: '200-500' },
+  { label: '500–1000 employees', value: '500-1000' },
+  { label: '1000–2000 employees', value: '1000-2000' },
+  { label: '2000+ employees', value: '2000+' },
 ];
 
 const Step1: React.FC = () => {
@@ -30,7 +30,7 @@ const Step1: React.FC = () => {
         label="Organization Name"
         name="name"
         value={formData.name}
-        onChange={(e) => setField("name", e.target.value)}
+        onChange={(e) => setField('name', e.target.value)}
         placeholder="Enter organization name"
       />
 
@@ -38,7 +38,7 @@ const Step1: React.FC = () => {
         label="Description"
         name="description"
         value={formData.description}
-        onChange={(e) => setField("description", e.target.value)}
+        onChange={(e) => setField('description', e.target.value)}
         placeholder="Brief description of the organization"
       />
 
@@ -46,7 +46,7 @@ const Step1: React.FC = () => {
         label="Industry"
         name="industry"
         value={formData.industry}
-        onChange={(e) => setField("industry", e.target.value)}
+        onChange={(e) => setField('industry', e.target.value)}
         placeholder="e.g. FinTech, HealthTech"
       />
 
@@ -54,7 +54,7 @@ const Step1: React.FC = () => {
         label="Company Size"
         options={COMPANY_SIZE_OPTIONS}
         value={formData.size}
-        onChange={(value) => setField("size", value as CompanySize)}
+        onChange={(value) => setField('size', value as CompanySize)}
       />
     </div>
   );

@@ -4,6 +4,7 @@ import { PropsWithChildren, useMemo } from 'react';
 import { AnimatePresence } from 'motion/react';
 
 import ConfirmModal from '@/components/modal/ConfirmModal';
+import AddTaskModal from '@/components/modal/AddTaskModal/AddTaskModal';
 import type { ModalProps } from '@/lib/types/components';
 
 import useModalStore from '../store/modal';
@@ -12,6 +13,7 @@ import { AvailableModals } from '../store/modal/types';
 
 const modalMap: Record<AvailableModals, React.FC<ModalProps & any>> = {
   confirm: ConfirmModal,
+  'add-task': AddTaskModal,
 };
 
 interface ModalProviderProps extends PropsWithChildren {}
