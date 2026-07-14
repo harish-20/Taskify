@@ -1,10 +1,10 @@
-enum SubscriptionPlan {
-  FREE = "free",
-  PRO = "pro",
-  ENTERPRISE = "enterprise",
+export enum SubscriptionPlan {
+  FREE = 'free',
+  PRO = 'pro',
+  ENTERPRISE = 'enterprise',
 }
 
-interface Organization {
+export interface Organization {
   name: string;
   description?: string;
   owner: string;
@@ -27,7 +27,7 @@ interface Organization {
   updatedAt: Date;
 }
 
-interface OrganizationProfile {
+export interface OrganizationProfile {
   organization: string;
   industry?: string;
   interests?: string[];
@@ -39,12 +39,12 @@ interface OrganizationProfile {
     projectsCreated?: number;
     teamsCreated?: number;
     lastActive?: Date;
-    usageFrequency?: "daily" | "weekly" | "monthly" | "rare";
+    usageFrequency?: 'daily' | 'weekly' | 'monthly' | 'rare';
     retentionScore?: number;
   };
 
   acquisition?: {
-    source?: "referral" | "ads" | "organic" | "partnership" | "other";
+    source?: 'referral' | 'ads' | 'organic' | 'partnership' | 'other';
     campaign?: string;
     signupDate?: Date;
   };
@@ -67,16 +67,16 @@ interface OrganizationProfile {
 }
 
 export type CompanySize =
-  | "0-20"
-  | "20-50"
-  | "50-100"
-  | "100-200"
-  | "200-500"
-  | "500-1000"
-  | "1000-2000"
-  | "2000+";
+  | '0-20'
+  | '20-50'
+  | '50-100'
+  | '100-200'
+  | '200-500'
+  | '500-1000'
+  | '1000-2000'
+  | '2000+';
 
-type Step = {
+export type Step = {
   label: string;
   Icon: FC<any>;
 };

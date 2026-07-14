@@ -18,6 +18,7 @@ export const createTaskSchema = z.object({
     .array(z.string().trim().min(1, "Tag cannot be empty"))
     .optional()
     .default([]),
+  organizationId: z.undefined(),
 });
 
 export type TaskSchema = z.infer<typeof createTaskSchema>;

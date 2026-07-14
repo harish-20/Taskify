@@ -1,5 +1,6 @@
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import type { NavlinkComponent } from '@/lib/types/components';
 
 interface NavLinkProps {
   label: string;
@@ -15,7 +16,7 @@ const NavLink: React.FC<NavLinkProps> = (props) => {
 
   return (
     <Link
-      className={`flex gap-2 items-center py-2 px-3 rounded-lg font-medium transition-colors duration-200  ${isActive ? "bg-gray-200 text-black" : "text-dark-gray hover:bg-gray hover:text-gray-800"}`}
+      className={`flex gap-2 items-center py-2 px-3 rounded-lg font-medium transition-colors duration-200  ${isActive ? 'bg-gray-200 text-black' : 'text-dark-gray hover:bg-gray hover:text-gray-800'}`}
       href={link}
     >
       <Icon className="h-4 w-4" isActive={isActive} />

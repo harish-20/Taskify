@@ -1,5 +1,13 @@
+export type AuthProvider = 'local' | 'google' | 'github' | 'linkedin';
+export type AccountStatus =
+  | 'INVITE_SENT'
+  | 'VERIFICATION_EMAIL_SENT'
+  | 'ACTIVE'
+  | 'INVITE_REJECTED';
+export type UserRole = 'admin' | 'manager' | 'lead' | 'member';
+
 export interface User {
-  _id: Types.ObjectId;
+  _id: string;
   email: string;
   provider: AuthProvider;
   providerId: string;
@@ -8,8 +16,8 @@ export interface User {
   status: AccountStatus;
   role: UserRole;
   bio?: string;
-  organizationId: Types.ObjectId;
-  teamId: Types.ObjectId;
+  organizationId: string;
+  teamId: string;
   createdAt: Date;
   updatedAt: Date;
 }

@@ -1,11 +1,12 @@
-"use client";
+'use client';
 
-import { motion } from "motion/react";
+import { motion } from 'motion/react';
+import type { NavlinkComponent } from '@/lib/types/components';
 
 interface HomeProps extends NavlinkComponent {}
 
 const Home: React.FC<HomeProps> = (props) => {
-  const { className = "", isActive } = props;
+  const { className = '', isActive } = props;
 
   return (
     <motion.svg
@@ -28,13 +29,7 @@ const Home: React.FC<HomeProps> = (props) => {
       }}
     >
       <defs></defs>
-      <g
-        id="Page-1"
-        stroke="none"
-        strokeWidth="1"
-        fill="none"
-        fillRule="evenodd"
-      >
+      <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
         <g
           id="Dribbble-Light-Preview"
           transform="translate(-419.000000, -720.000000)"
