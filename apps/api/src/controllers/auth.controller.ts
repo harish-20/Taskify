@@ -51,7 +51,7 @@ export const registerUser: RequestHandler<
       message: "Registration successful, check your email for magic link",
       data: { id: user.id, name: user.name, email: user.email },
     };
-    sendResponse(res, 201, payload);
+    return sendResponse(res, 201, payload);
   } catch (err) {
     next(err);
   }
@@ -113,7 +113,7 @@ export const verifyMagicLink: RequestHandler<
 export const refreshAccessToken: RequestHandler<{}, ApiResponse> = async (
   req,
   res,
-  next
+  next,
 ) => {
   try {
     const refreshToken = req.cookies.refreshToken;
@@ -123,7 +123,7 @@ export const refreshAccessToken: RequestHandler<{}, ApiResponse> = async (
     try {
       decoded = jwt.verify(
         refreshToken,
-        process.env.JWT_REFRESH_SECRET as string
+        process.env.JWT_REFRESH_SECRET as string,
       );
     } catch (err) {
       throw new InvalidArgument("Invalid or expired refresh token");

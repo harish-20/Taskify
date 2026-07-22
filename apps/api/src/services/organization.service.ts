@@ -14,7 +14,7 @@ export const getOrganization = async () => {
 
 export const createOrganization = async (
   data: Partial<IOrganization>,
-  ownerId: Types.ObjectId
+  ownerId: Types.ObjectId,
 ) => {
   const organization = await Organization.create({
     ...data,
@@ -29,7 +29,7 @@ export const createOrganization = async (
 
 export const createOrganizationProfile = async (
   data: Partial<IOrganizationProfile>,
-  organizationId: Types.ObjectId
+  organizationId: Types.ObjectId,
 ) => {
   const organizationProfile = await OrganizationProfile.create({
     ...data,
@@ -41,4 +41,13 @@ export const createOrganizationProfile = async (
   });
 
   return organizationProfile;
+};
+
+export const getOrganizationUsers = async (organizationId: Types.ObjectId) => {
+  const users = await User.find(
+    { organizationId },
+    { name: 1, email: 1, avatarUrl: 1, role: 1, status: 1 },
+  );
+
+  return users;
 };
