@@ -28,10 +28,8 @@ const Board: React.FC = () => {
     onDragOver(event, manager) {},
     onDragEnd(event, manager) {
       const { operation, canceled } = event;
-      console.log('Drag ended:', operation);
 
       if (canceled) {
-        console.log('Drag cancelled');
         return;
       }
 
