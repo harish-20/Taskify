@@ -1,4 +1,6 @@
 import { motion } from 'motion/react';
+import { useRouter } from 'next/navigation';
+import { useState, useRef } from 'react';
 
 import { useDraggable } from '@dnd-kit/react';
 
@@ -9,16 +11,53 @@ interface TaskItemProps {
 }
 
 const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
+  const router = useRouter();
   const { ref, isDragging } = useDraggable({
     id: task._id,
     data: task,
   });
 
+  const mouseDownPos = useRef<{ x: number; y: number } | null>(null);
+  const [isClickable, setIsClickable] = useState(true);
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    mouseDownPos.current = { x: e.clientX, y: e.clientY };
+    setIsClickable(true);
+  };
+
+  const handleMouseUp = (e: React.MouseEvent) => {
+    if (!mouseDownPos.current || !isClickable || isDragging) return;
+
+    const distance = Math.sqrt(
+      Math.pow(e.clientX - mouseDownPos.current.x, 2) +
+        Math.pow(e.clientY - mouseDownPos.current.y, 2),
+    );
+
+    // If distance is less than 5px, treat it as a click
+    if (distance < 5) {
+      router.push(`/task/${task._id}`);
+    }
+
+    mouseDownPos.current = null;
+  };
+
+  const handleMouseMove = () => {
+    // If mouse moves while dragging, it's likely a drag operation
+    if (isDragging) {
+      setIsClickable(false);
+    }
+  };
+
   return (
     <motion.div
       ref={ref}
       initial={false}
-      className="cursor-grab rounded-xl border border-gray-200 p-6 shadow-sm transition-shadow hover:shadow-md active:cursor-grabbing"
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
+      onMouseMove={handleMouseMove}
+      className={`rounded-xl border border-gray-200 p-6 shadow-sm transition-shadow hover:shadow-md ${
+        isDragging ? 'active:cursor-grabbing' : 'cursor-pointer hover:border-primary'
+      }`}
       animate={
         isDragging
           ? {
