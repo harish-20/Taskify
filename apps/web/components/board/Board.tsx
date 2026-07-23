@@ -22,9 +22,7 @@ const Board: React.FC = () => {
   useDragDropMonitor({
     onBeforeDragStart(event, manager) {},
     onDragStart(event, manager) {},
-    onDragMove(event, manager) {
-      console.log('Current position:', event.operation.position);
-    },
+    onDragMove(event, manager) {},
     onDragOver(event, manager) {},
     onDragEnd(event, manager) {
       const { operation, canceled } = event;
