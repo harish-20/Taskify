@@ -32,7 +32,6 @@ const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
               boxShadow: '0 1px 2px rgba(15, 23, 42, 0.04)',
             }
       }
-      transition={{ duration: 2 }}
     >
       {/* Header */}
       <div className="flex items-start gap-3">

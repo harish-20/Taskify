@@ -6,6 +6,7 @@ import { authMiddleware } from "../middlewares/auth.middleware.js";
 import {
   getOrganization,
   registerOrganization,
+  getOrganizationUsers,
 } from "../controllers/organization.controller.js";
 import { createOrganizationSchema } from "../schemas/organization.schema.js";
 
@@ -16,7 +17,8 @@ organizationRouter.post(
   "/",
   authMiddleware,
   validateRequest(createOrganizationSchema),
-  registerOrganization
+  registerOrganization,
 );
+organizationRouter.get("/users", authMiddleware, getOrganizationUsers);
 
 export default organizationRouter;

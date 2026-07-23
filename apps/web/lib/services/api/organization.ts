@@ -31,3 +31,9 @@ export const createOrganization = async (organizationDetails: {
 
   return response.data;
 };
+
+export const getOrganizationUsers = async () => {
+  const response = await Api.get<ApiResponse>(pathMap.organization.getOrganizationUsers);
+
+  return response.data;
+};

@@ -1,16 +1,17 @@
 const pathMap = {
   auth: {
-    signin: "/auth/login",
-    signup: "/auth/register",
-    verifyToken: "/auth/verify",
+    signin: '/auth/login',
+    signup: '/auth/register',
+    verifyToken: '/auth/verify',
   },
   organization: {
-    create: "/organization",
+    create: '/organization',
+    getOrganizationUsers: '/organization/user',
   },
   task: {
-    list: "/task",
-    create: "/task",
-    updateStatus: "/task/status",
+    list: '/task',
+    create: '/task',
+    updateStatus: '/task/status',
   },
 };
 
