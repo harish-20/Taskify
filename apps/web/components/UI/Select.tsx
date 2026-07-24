@@ -5,17 +5,17 @@ import { ChevronDown, Check } from 'lucide-react';
 
 import useClickOutside from '@/lib/hooks/useClickoutside';
 
-export interface SelectOption {
+export interface SelectOption<T extends string> {
   label: string;
-  value: string;
+  value: T;
   icon?: ReactNode;
 }
 
-interface SelectProps {
+interface SelectProps<T extends string> {
   label?: string;
-  options: SelectOption[];
-  value?: string;
-  onChange: (value: string) => void;
+  options: SelectOption<T>[];
+  value?: T;
+  onChange: (value: T) => void;
   placeholder?: string;
   error?: string;
   disabled?: boolean;
@@ -24,7 +24,7 @@ interface SelectProps {
   containerClass?: string;
 }
 
-const Select: React.FC<SelectProps> = ({
+const Select = <T extends string>({
   label,
   options,
   value,
@@ -35,7 +35,7 @@ const Select: React.FC<SelectProps> = ({
   className = '',
   labelClass = '',
   containerClass = '',
-}) => {
+}: SelectProps<T>) => {
   const [open, setOpen] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
