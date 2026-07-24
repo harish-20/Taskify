@@ -1,33 +1,35 @@
-import { ReactNode, useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { ReactNode, useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 
 interface TooltipProps {
   content: ReactNode;
   children: ReactNode;
-  position?: "top" | "bottom" | "left" | "right";
+  position?: 'top' | 'bottom' | 'left' | 'right';
+  alwaysVisible?: boolean;
 }
 
 const Tooltip: React.FC<TooltipProps> = ({
   content,
   children,
-  position = "top",
+  position = 'top',
+  alwaysVisible,
 }) => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(alwaysVisible);
 
   const positionClasses: Record<string, string> = {
-    top: "bottom-full mb-1 left-1/2 -translate-x-1/2",
-    bottom: "top-full mt-1 left-1/2 -translate-x-1/2",
-    left: "right-full mr-1 top-1/2 -translate-y-1/2",
-    right: "left-full ml-1 top-1/2 -translate-y-1/2",
+    top: 'bottom-full mb-1 left-1/2 -translate-x-1/2',
+    bottom: 'top-full mt-1 left-1/2 -translate-x-1/2',
+    left: 'right-full mr-1 top-1/2 -translate-y-1/2',
+    right: 'left-full ml-1 top-1/2 -translate-y-1/2',
   };
 
   return (
     <div
       className="relative inline-flex"
       onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
+      onMouseLeave={() => setOpen(alwaysVisible)}
       onFocus={() => setOpen(true)}
-      onBlur={() => setOpen(false)}
+      onBlur={() => setOpen(alwaysVisible)}
     >
       {children}
 
