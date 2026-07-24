@@ -71,7 +71,9 @@ const Button: React.FC<ButtonProps> = (props) => {
     >
       <AnimatePresence>
         {done && (
-          <div className="absolute flex items-center justify-center w-full h-full bg-black">
+          <div
+            className={`absolute flex items-center justify-center w-full h-full ${variant === 'primary' ? 'bg-black' : 'bg-primary-light'}`}
+          >
             <Done
               className="h-5 w-5"
               animate={{ pathLength: [0, 1] }}
