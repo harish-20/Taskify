@@ -4,7 +4,7 @@ import {
   Sparkles,
   CheckSquare,
   ChevronDown,
-  Minus,
+  Equal,
   ChevronUp,
   ChevronsUp,
   Circle,
@@ -22,7 +22,7 @@ export const TaskTypeIcons = {
 
 export const TaskPriorityIcons = {
   low: ChevronDown,
-  medium: Minus,
+  medium: Equal,
   high: ChevronUp,
   critical: ChevronsUp,
 };

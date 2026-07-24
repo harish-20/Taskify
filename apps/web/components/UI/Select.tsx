@@ -81,7 +81,7 @@ const Select = <T extends string>({
 
         <ChevronDown
           size={18}
-          className={`transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
+          className={`ml-2 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
         />
       </button>
 

@@ -24,7 +24,7 @@ const TaskDetailLayout: React.FC<TaskDetailLayoutProps> = ({ task, onTaskUpdate 
         </div>
 
         {/* Right Sidebar (25-30%) */}
-        <div className="w-80 flex-shrink-0">
+        <div className="w-3/12 flex-shrink-0">
           <TaskDetailsPanel task={task} onTaskUpdate={onTaskUpdate} />
         </div>
       </div>

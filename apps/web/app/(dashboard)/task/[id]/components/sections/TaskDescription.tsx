@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Edit2, Check } from 'lucide-react';
+import { RichTextEditor } from '@/components/UI/RichTextEditor/RichTextEditor';
 
 interface TaskDescriptionProps {
   description: string;
@@ -12,6 +13,12 @@ interface TaskDescriptionProps {
 const TaskDescription: React.FC<TaskDescriptionProps> = ({ description, onUpdate, isSaving }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [content, setContent] = useState(description);
+
+  useEffect(() => {
+    if (!isEditing) {
+      setContent(description);
+    }
+  }, [description, isEditing]);
 
   const handleSave = async () => {
     await onUpdate(content);
@@ -35,11 +42,10 @@ const TaskDescription: React.FC<TaskDescriptionProps> = ({ description, onUpdate
 
       {isEditing ? (
         <div className="space-y-3">
-          <textarea
+          <RichTextEditor
             value={content}
-            onChange={(e) => setContent(e.target.value)}
-            placeholder="Add a description... Supports markdown"
-            className="w-full min-h-64 p-3 border-2 border-gray-200 rounded-lg focus:border-black outline-none resize-none"
+            onChange={setContent}
+            placeholder="Add a description..."
           />
           <div className="flex gap-2">
             <button
@@ -64,7 +70,7 @@ const TaskDescription: React.FC<TaskDescriptionProps> = ({ description, onUpdate
       ) : (
         <div className="prose prose-sm max-w-none text-gray-600 min-h-24">
           {description ? (
-            <p className="whitespace-pre-wrap text-gray-700">{description}</p>
+            <div dangerouslySetInnerHTML={{ __html: description }} />
           ) : (
             <p className="text-gray-400 italic">No description yet</p>
           )}
