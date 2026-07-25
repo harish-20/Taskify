@@ -59,12 +59,7 @@ const TaskDetailsPanel: React.FC<TaskDetailsPanelProps> = ({ task, onTaskUpdate 
           id="assignees-input"
           availableUsers={organizationUsers}
           users={task.assignees}
-          onChange={(selectedUsers) =>
-            handleFieldUpdate(
-              'assignees',
-              selectedUsers.map((user) => user._id),
-            )
-          }
+          onChange={(selectedUsers) => handleFieldUpdate('assignees', selectedUsers)}
           editable
         />
       </Card>

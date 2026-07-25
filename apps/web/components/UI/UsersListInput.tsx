@@ -29,20 +29,25 @@ const UsersListInput: React.FC<UsersListProps> = ({
   labelClass = '',
   id,
 }) => {
+  const overlapOffsetBySize = { sm: 14, md: 24, lg: 28 } as const;
+
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
+  const [optimisticUsers, setOptimisticUsers] = useState(users);
   const [highlightedIndex, setHighlightedIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const [animatedUser, setAnimatedUser] = useState<TaskUser | null>(null);
-  const [animationFrom, setAnimationFrom] = useState<{ top: number; right: number } | null>(null);
-  const [animationTo, setAnimationTo] = useState<{ top: number; right: number } | null>(null);
+  const [animationFrom, setAnimationFrom] = useState<{ top: number; left: number } | null>(null);
+  const [animationTo, setAnimationTo] = useState<{ top: number; left: number } | null>(null);
 
   const rootRef = useRef<HTMLDivElement>(null);
   const stackRef = useRef<HTMLDivElement>(null);
+  const addButtonRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
   const userItemsRefs = useRef<(HTMLDivElement | null)[]>(Array(availableUsers.length).fill(null));
   const animationTimeoutRef = useRef<number | null>(null);
+  const optimisticPendingRef = useRef<{ base: string; expected: string } | null>(null);
 
   const isInteractive = editable && !disabled;
 
@@ -73,7 +78,31 @@ const UsersListInput: React.FC<UsersListProps> = ({
     };
   }, []);
 
-  const selectedIds = useMemo(() => new Set(users.map((user) => user._id)), [users]);
+  const usersIdentity = useMemo(() => users.map((user) => user._id).join('|'), [users]);
+
+  useEffect(() => {
+    const pending = optimisticPendingRef.current;
+
+    if (!pending) {
+      setOptimisticUsers(users);
+      return;
+    }
+
+    if (usersIdentity === pending.base) {
+      return;
+    }
+
+    setOptimisticUsers(users);
+
+    if (usersIdentity === pending.expected || usersIdentity !== pending.base) {
+      optimisticPendingRef.current = null;
+    }
+  }, [users, usersIdentity]);
+
+  const selectedIds = useMemo(
+    () => new Set(optimisticUsers.map((user) => user._id)),
+    [optimisticUsers],
+  );
 
   const filteredUsers = useMemo(
     () => availableUsers.filter((user) => matchesSearch(user, debouncedQuery)),
@@ -86,17 +115,31 @@ const UsersListInput: React.FC<UsersListProps> = ({
     return [...selected, ...notSelected];
   }, [filteredUsers, selectedIds]);
 
-  const visibleUsers = users.slice(0, Math.max(1, maxVisible));
-  const hiddenUsers = users.slice(Math.max(1, maxVisible));
-
-  const placeholder = editable ? 'Assign users' : 'Unassigned';
+  const visibleUsers = optimisticUsers.slice(0, Math.max(1, maxVisible));
+  const hiddenUsers = optimisticUsers.slice(Math.max(1, maxVisible));
 
   const toggleUser = (user: TaskUser, sourceIndex?: number) => {
     if (!onChange || disabled) return;
 
     const exists = selectedIds.has(user._id);
+    const nextUsers = exists
+      ? optimisticUsers.filter((selectedUser) => selectedUser._id !== user._id)
+      : [...optimisticUsers, user];
+    const nextIdentity = nextUsers.map((nextUser) => nextUser._id).join('|');
+
+    setOptimisticUsers(nextUsers);
+    optimisticPendingRef.current = {
+      base: usersIdentity,
+      expected: nextIdentity,
+    };
+
     if (exists) {
-      onChange(users.filter((selectedUser) => selectedUser._id !== user._id));
+      try {
+        onChange(nextUsers);
+      } catch {
+        setOptimisticUsers(users);
+        optimisticPendingRef.current = null;
+      }
       return;
     }
 
@@ -111,20 +154,40 @@ const UsersListInput: React.FC<UsersListProps> = ({
       const rootRect = rootElement.getBoundingClientRect();
       const sourceRect = sourceElement.getBoundingClientRect();
       const stackRect = stackElement.getBoundingClientRect();
+      const addButtonRect = addButtonRef.current?.getBoundingClientRect();
+
+      const sourceCenterX = sourceRect.left + sourceRect.width / 2;
+      const sourceCenterY = sourceRect.top + sourceRect.height / 2;
+
+      const fallbackTargetCenterX = stackRect.right - overlapOffsetBySize[size];
+      const fallbackTargetCenterY = stackRect.top + stackRect.height / 2;
+      const addButtonCenterX = addButtonRect ? addButtonRect.left + addButtonRect.width / 2 : null;
+      const addButtonCenterY = addButtonRect ? addButtonRect.top + addButtonRect.height / 2 : null;
+
+      const targetCenterX =
+        addButtonCenterX !== null
+          ? addButtonCenterX - overlapOffsetBySize[size]
+          : fallbackTargetCenterX;
+      const targetCenterY = addButtonCenterY ?? fallbackTargetCenterY;
 
       setAnimationFrom({
-        top: sourceRect.top - rootRect.top,
-        right: rootRect.right - sourceRect.right,
+        top: sourceCenterY - rootRect.top,
+        left: sourceCenterX - rootRect.left,
       });
       setAnimationTo({
-        top: stackRect.top - rootRect.top,
-        right: stackRect.right - (rootRect.right - 40),
+        top: targetCenterY - rootRect.top,
+        left: targetCenterX - rootRect.left,
       });
       setAnimatedUser(user);
       setIsAnimating(true);
     }
 
-    onChange([...users, user]);
+    try {
+      onChange(nextUsers);
+    } catch {
+      setOptimisticUsers(users);
+      optimisticPendingRef.current = null;
+    }
 
     if (animationTimeoutRef.current !== null) {
       window.clearTimeout(animationTimeoutRef.current);
@@ -204,13 +267,14 @@ const UsersListInput: React.FC<UsersListProps> = ({
         )}
       >
         <UsersAvatarGroup
-          users={users}
+          users={optimisticUsers}
           visibleUsers={visibleUsers}
           hiddenUsers={hiddenUsers}
           size={size}
           disabled={disabled}
           isInteractive={isInteractive}
           onUserClick={onUserClick}
+          addButtonRef={addButtonRef}
         />
       </div>
 
@@ -232,7 +296,7 @@ const UsersListInput: React.FC<UsersListProps> = ({
 
       {isAnimating && animatedUser && animationFrom && animationTo && (
         <motion.div
-          className="absolute z-50 pointer-events-none"
+          className="absolute z-50 pointer-events-none -translate-x-1/2 -translate-y-1/2"
           animate={{
             ...getCurveCoordinates(animationFrom, animationTo, 3),
             ...{

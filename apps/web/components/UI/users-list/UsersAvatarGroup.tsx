@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import { UserPlus } from 'lucide-react';
+import type { RefObject } from 'react';
 
 import Avatar from '../Avatar';
 import Tooltip from '../Tooltip';
@@ -23,6 +24,7 @@ interface UsersAvatarGroupProps {
   disabled: boolean;
   isInteractive: boolean;
   onUserClick?: (user: TaskUser) => void;
+  addButtonRef?: RefObject<HTMLDivElement | null>;
 }
 
 const UsersAvatarGroup: React.FC<UsersAvatarGroupProps> = ({
@@ -33,6 +35,7 @@ const UsersAvatarGroup: React.FC<UsersAvatarGroupProps> = ({
   disabled,
   isInteractive,
   onUserClick,
+  addButtonRef,
 }) => {
   const renderAvatar = (user: TaskUser, index: number) => {
     const canClickUser = Boolean(onUserClick) && !disabled;
@@ -118,6 +121,7 @@ const UsersAvatarGroup: React.FC<UsersAvatarGroupProps> = ({
       {isInteractive && (
         <Tooltip content="Add users">
           <div
+            ref={addButtonRef}
             className={clsx(
               'ml-0 flex items-center justify-center rounded-full border border-dashed border-gray-300 p-1 text-slate-500',
               users.length > 0 && overlapMap[size],
