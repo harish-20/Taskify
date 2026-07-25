@@ -14,7 +14,9 @@ import {
   AuthProvider,
   AccountStatus,
   IUser,
+  UserRole,
 } from "../models/user.model.js";
+import { Organization } from "../models/organization.model.js";
 
 interface CreateUserInput {
   name: string;
@@ -71,7 +73,7 @@ export const handleGoogleUser = async (profile: Profile) => {
   if (user?.provider && user.provider !== AuthProvider.GOOGLE) {
     throw new DifferentProviderAccount(
       `This email is already logged in with ${user.provider}`,
-      user.provider
+      user.provider,
     );
   }
 
@@ -104,14 +106,14 @@ export const findUserById = async (userId: Types.ObjectId | string) => {
 
 export const setAccountStatus = async (
   userId: Types.ObjectId | string,
-  accountStatus: AccountStatus
+  accountStatus: AccountStatus,
 ): Promise<IUser> => {
   const user = await User.findByIdAndUpdate(
     userId,
     {
       status: accountStatus,
     },
-    { new: true }
+    { new: true },
   );
 
   if (!user) {
@@ -119,4 +121,57 @@ export const setAccountStatus = async (
   }
 
   return user;
+};
+
+interface CreateTestUsersInput {
+  organizationId: string;
+  count: number;
+}
+
+export const createTestUsers = async ({
+  organizationId,
+  count,
+}: CreateTestUsersInput) => {
+  const organizationObjectId = new Types.ObjectId(organizationId);
+
+  const organization = await Organization.findById(organizationId);
+  if (!organization) {
+    throw new NotFound("Organization not found");
+  }
+
+  const existingTestUsersCount = await User.countDocuments({
+    organizationId,
+    name: /^Test User\s\d+$/i,
+  });
+
+  const sequenceStart = existingTestUsersCount + 1;
+  const timestamp = Date.now();
+
+  const testUsersPayload = Array.from({ length: count }, (_, index) => {
+    const sequence = sequenceStart + index;
+    return {
+      name: `Test User ${sequence}`,
+      email: `test.user.${organizationId}.${timestamp}.${sequence}@taskify.local`,
+      provider: AuthProvider.LOCAL,
+      providerId: `test-user-${organizationId}-${timestamp}-${sequence}`,
+      status: AccountStatus.ACTIVE,
+      role: UserRole.MEMBER,
+      organizationId: organizationObjectId,
+    };
+  });
+
+  const createdUsers = await User.insertMany(testUsersPayload);
+
+  await Organization.findByIdAndUpdate(organizationId, {
+    $addToSet: { members: { $each: createdUsers.map((user) => user._id) } },
+  });
+
+  return createdUsers.map((user) => ({
+    _id: user._id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+    status: user.status,
+    organizationId: user.organizationId,
+  }));
 };
