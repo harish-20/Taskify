@@ -17,7 +17,7 @@ import {
   Redo2,
 } from 'lucide-react';
 
-// import './RichTextEditor.css';
+import './RichTextEditor.css';
 
 type RichTextEditorProps = {
   value: string | TrustedHTML;
