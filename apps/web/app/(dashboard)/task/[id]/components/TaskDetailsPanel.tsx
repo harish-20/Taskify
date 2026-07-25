@@ -2,13 +2,13 @@
 
 import { useState, useCallback, useEffect } from 'react';
 
+import { Card, CardHeader } from '@/components/UI/Card';
 import DetailField from '@/components/UI/DetailField';
 import TagInput from '@/components/UI/TagInput';
-import { updateTask } from '@/lib/services/api/task';
-import { Task } from '@/lib/types/task';
 import UsersListInput from '@/components/UI/UsersListInput';
 import { getOrganizationUsers } from '@/lib/services/api/organization';
-import { Card, CardHeader } from '@/components/UI/Card';
+import { updateTask } from '@/lib/services/api/task';
+import { Task } from '@/lib/types/task';
 
 interface TaskDetailsPanelProps {
   task: Task;

@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
+import * as React from 'react';
 
 const cardVariants = cva('rounded-xl border transition-colors', {
   variants: {

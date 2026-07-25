@@ -6,7 +6,6 @@ import Api from '.';
 
 import type { Task } from '@/lib/types/task';
 
-
 export const getTasks = async () => {
   const response = await Api.get<ApiResponse<Task[]>>(pathMap.task.list);
 
@@ -28,6 +27,13 @@ export const createTask = async (
 };
 
 export const updateTask = async (taskId: string, taskData: Partial<Task>) => {
+  // add only id for assignees and watchers to avoid sending unnecessary data
+  if (taskData.assignees) {
+    taskData.assignees = taskData.assignees.map((user) => user._id as any);
+  }
+  if (taskData.watchers) {
+    taskData.watchers = taskData.watchers.map((user) => user._id as any);
+  }
   const response = await Api.patch<ApiResponse<Task>>(`${pathMap.task.list}/${taskId}`, taskData);
 
   return response.data;

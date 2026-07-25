@@ -42,19 +42,21 @@ const TaskChecklist: React.FC<TaskChecklistProps> = ({ task, onTaskUpdate }) => 
 
   const handleToggleItem = async (index: number) => {
     const updatedChecklist = [...checklist];
-    updatedChecklist[index].completed = !updatedChecklist[index].completed;
+    if (updatedChecklist[index]) {
+      updatedChecklist[index].completed = !updatedChecklist[index].completed;
 
-    try {
-      setIsSaving(true);
-      const response = await updateTask(task._id, { checklist: updatedChecklist });
-      if (response.success && response.data) {
-        setChecklist(updatedChecklist);
-        onTaskUpdate(response.data);
+      try {
+        setIsSaving(true);
+        const response = await updateTask(task._id, { checklist: updatedChecklist });
+        if (response.success && response.data) {
+          setChecklist(updatedChecklist);
+          onTaskUpdate(response.data);
+        }
+      } catch (error) {
+        console.error('Failed to update checklist:', error);
+      } finally {
+        setIsSaving(false);
       }
-    } catch (error) {
-      console.error('Failed to update checklist:', error);
-    } finally {
-      setIsSaving(false);
     }
   };
 
