@@ -3,7 +3,9 @@ import { motion } from 'motion/react';
 import { useRouter } from 'next/navigation';
 import { useState, useRef } from 'react';
 
+import UsersListInput from '../UI/UsersListInput';
 
+import useTaskBoardStore from '@/lib/store/board';
 import { Task } from '@/lib/types/task';
 
 interface TaskItemProps {
@@ -12,6 +14,8 @@ interface TaskItemProps {
 
 const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
   const router = useRouter();
+  const updateTask = useTaskBoardStore((state) => state.updateTask);
+  const organizationUsers = useTaskBoardStore((state) => state.organizationUsers);
   const { ref, isDragging } = useDraggable({
     id: task._id,
     data: task,
@@ -46,6 +50,12 @@ const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
     if (isDragging) {
       setIsClickable(false);
     }
+  };
+
+  const handleAssigneeChange = async (selectedUsers: Task['assignees']) => {
+    await updateTask(task._id, {
+      assignees: selectedUsers,
+    });
   };
 
   return (
@@ -90,11 +100,20 @@ const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
 
       {/* Footer */}
       <div className="mt-5 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <img
-            src="https://i.pravatar.cc/40"
-            alt="Assignee"
-            className="h-8 w-8 rounded-full object-cover"
+        <div
+          onMouseDown={(e) => {
+            e.stopPropagation();
+            return false;
+          }}
+          className="flex items-center gap-2"
+        >
+          <UsersListInput
+            users={task.assignees}
+            availableUsers={organizationUsers}
+            editable
+            maxVisible={2}
+            size="sm"
+            onChange={handleAssigneeChange}
           />
 
           <div className="flex items-center gap-1 text-xs text-gray-500">

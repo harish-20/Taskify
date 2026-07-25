@@ -1,12 +1,14 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 import DetailField from '@/components/UI/DetailField';
-import MultiSelectInput from '@/components/UI/MultiSelectInput';
 import TagInput from '@/components/UI/TagInput';
 import { updateTask } from '@/lib/services/api/task';
-import { Task, TaskPriority, TaskStatus, TaskType } from '@/lib/types/task';
+import { Task } from '@/lib/types/task';
+import UsersListInput from '@/components/UI/UsersListInput';
+import { getOrganizationUsers } from '@/lib/services/api/organization';
+import { Card, CardHeader } from '@/components/UI/Card';
 
 interface TaskDetailsPanelProps {
   task: Task;
@@ -15,6 +17,20 @@ interface TaskDetailsPanelProps {
 
 const TaskDetailsPanel: React.FC<TaskDetailsPanelProps> = ({ task, onTaskUpdate }) => {
   const [isSaving, setIsSaving] = useState(false);
+  const [organizationUsers, setOrganizationUsers] = useState<Task['assignees']>([]);
+
+  useEffect(() => {
+    const fetchOrganizationUsers = async () => {
+      try {
+        const response = await getOrganizationUsers();
+        setOrganizationUsers(response.data || []);
+      } catch (error) {
+        console.error('Failed to fetch organization users:', error);
+      }
+    };
+
+    fetchOrganizationUsers();
+  }, [task.organizationId]);
 
   const handleFieldUpdate = useCallback(
     async (field: string, value: any) => {
@@ -35,60 +51,26 @@ const TaskDetailsPanel: React.FC<TaskDetailsPanelProps> = ({ task, onTaskUpdate 
 
   return (
     <div className="sticky top-6 space-y-4">
-      {/* Status */}
-      <DetailField
-        label="Status"
-        value={task.status}
-        type="select"
-        options={[
-          { label: 'To Do', value: 'todo' },
-          { label: 'In Progress', value: 'in_progress' },
-          { label: 'Review', value: 'review' },
-          { label: 'Done', value: 'done' },
-        ]}
-        onChange={(value) => handleFieldUpdate('status', value)}
-        isSaving={isSaving}
-      />
-
-      {/* Priority */}
-      <DetailField
-        label="Priority"
-        value={task.priority}
-        type="select"
-        options={[
-          { label: 'Low', value: 'low' },
-          { label: 'Medium', value: 'medium' },
-          { label: 'High', value: 'high' },
-          { label: 'Critical', value: 'critical' },
-        ]}
-        onChange={(value) => handleFieldUpdate('priority', value)}
-        isSaving={isSaving}
-      />
-
-      {/* Type */}
-      <DetailField
-        label="Type"
-        value={task.type}
-        type="select"
-        options={[
-          { label: 'Story', value: 'story' },
-          { label: 'Bug', value: 'bug' },
-          { label: 'Feature', value: 'feature' },
-          { label: 'Task', value: 'task' },
-        ]}
-        onChange={(value) => handleFieldUpdate('type', value)}
-        isSaving={isSaving}
-      />
-
       {/* Assignees */}
-      <DetailField
-        label="Assignees"
-        value={task.assignees?.join(', ') || 'Unassigned'}
-        type="text"
-        isReadOnly={true}
-      />
+      <Card>
+        <CardHeader>People</CardHeader>
+        <UsersListInput
+          label="Assignees"
+          id="assignees-input"
+          availableUsers={organizationUsers}
+          users={task.assignees}
+          onChange={(selectedUsers) =>
+            handleFieldUpdate(
+              'assignees',
+              selectedUsers.map((user) => user._id),
+            )
+          }
+          editable
+        />
+      </Card>
 
       {/* Watchers */}
+
       <DetailField
         label="Watchers"
         value={task.watchers?.length || 0}

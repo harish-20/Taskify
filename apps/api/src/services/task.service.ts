@@ -38,7 +38,12 @@ export const getTasks = async (userId: Types.ObjectId) => {
   if (!user) {
     throw new NotFound("User not found");
   }
-  const tasks = await Task.find({ createdBy: userId, isDeleted: false });
+  const tasks = await Task.find({
+    createdBy: userId,
+    isDeleted: false,
+  }).populate(
+    "assignees watchers createdBy parentTask subTasks blockedBy blocking",
+  );
 
   return tasks;
 };
@@ -48,7 +53,9 @@ export const getTask = async (userId: Types.ObjectId, taskId: string) => {
     _id: taskId,
     createdBy: userId,
     isDeleted: false,
-  });
+  }).populate(
+    "assignees watchers createdBy parentTask subTasks blockedBy blocking",
+  );
 
   if (!task) {
     throw new NotFound("Task not found");
@@ -94,9 +101,11 @@ export const updateTask = async (
   }
 
   Object.assign(task, taskData);
-  await task.save();
+  const updatedTask = (await task.save()).populate(
+    "assignees watchers createdBy parentTask subTasks blockedBy blocking",
+  );
 
-  return task;
+  return updatedTask;
 };
 
 export const deleteTask = async (taskId: string, userId: Types.ObjectId) => {

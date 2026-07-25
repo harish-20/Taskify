@@ -11,7 +11,6 @@ import TaskItem from './TaskItem';
 
 import { Task, TaskStatus } from '@/lib/types/task';
 
-
 interface ColumnProps {
   status: TaskStatus;
   tasks: Task[];

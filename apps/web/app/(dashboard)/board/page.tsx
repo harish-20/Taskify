@@ -9,10 +9,15 @@ import useTaskBoardStore from '@/lib/store/board';
 
 export default function BoardPage() {
   const loadTasks = useTaskBoardStore((state) => state.loadTasks);
+  const loadOrganizationUsers = useTaskBoardStore((state) => state.loadOrganizationUsers);
 
   useEffect(() => {
     void loadTasks();
   }, [loadTasks]);
+
+  useEffect(() => {
+    void loadOrganizationUsers();
+  }, [loadOrganizationUsers]);
 
   return (
     <DragDropProvider>

@@ -1,7 +1,9 @@
 import { Task, TaskStatus } from '@/lib/types/task';
+import { User } from '@/lib/types/user';
 
 export interface BoardState {
   tasks: Task[];
+  organizationUsers: User[];
   draggedTask: Task['_id'] | null;
   draggedOverColumn: TaskStatus | null;
   isDragging: boolean;
@@ -18,7 +20,9 @@ export interface BoardActions {
 
 export interface BoardAsyncActions {
   loadTasks: () => Promise<void>;
+  loadOrganizationUsers: () => Promise<void>;
   updateTaskStatus: (taskId: Task['_id'], status: Task['status']) => Promise<void>;
+  updateTask: (taskId: Task['_id'], taskData: Partial<Task>) => Promise<void>;
 }
 
 export interface BoardStore extends BoardState, BoardActions, BoardAsyncActions {}

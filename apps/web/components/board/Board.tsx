@@ -5,7 +5,6 @@ import Column from './Column';
 import useTaskBoardStore from '@/lib/store/board';
 import { Task, TaskStatus } from '@/lib/types/task';
 
-
 const Board: React.FC = () => {
   const { tasks, updateTaskStatus } = useTaskBoardStore();
 
@@ -33,9 +32,10 @@ const Board: React.FC = () => {
       }
 
       const taskId = operation?.source?.id as string;
+      const sourceStatus = operation?.source?.data?.status as TaskStatus | undefined;
       const taskStatus = operation?.target?.id as TaskStatus;
 
-      if (taskId && taskStatus && taskStatus !== status) {
+      if (taskId && taskStatus && taskStatus !== sourceStatus) {
         updateTaskStatus(taskId, taskStatus);
       }
     },

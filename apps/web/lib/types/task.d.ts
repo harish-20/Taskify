@@ -1,3 +1,5 @@
+import { User } from './user';
+
 export type TaskStatus = 'todo' | 'in_progress' | 'review' | 'done';
 
 export type TaskPriority = 'low' | 'medium' | 'high' | 'critical';
@@ -13,19 +15,19 @@ export interface Attachment {
   fileName: string;
   url: string;
   size: number;
-  uploadedBy: string;
+  uploadedBy: User;
   uploadedAt: Date;
 }
 
 export interface Comment {
-  author: string;
+  author: User;
   message: string;
   createdAt: Date;
 }
 
 export interface Activity {
   action: string;
-  user: string;
+  user: User;
   oldValue?: string;
   newValue?: string;
   createdAt: Date;
@@ -45,9 +47,9 @@ export interface Task {
   startDate?: Date;
   dueDate?: Date;
   completedAt?: Date;
-  assignees: string[];
-  watchers: string[];
-  createdBy: string;
+  assignees: User[];
+  watchers: User[];
+  createdBy: User;
   organizationId: string;
   tags: string[];
   attachments: Attachment[];
