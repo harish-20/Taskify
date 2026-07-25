@@ -5,8 +5,8 @@ import { Edit2, Check } from 'lucide-react';
 import { RichTextEditor } from '@/components/UI/RichTextEditor/RichTextEditor';
 
 interface TaskDescriptionProps {
-  description: string;
-  onUpdate: (description: string) => Promise<void>;
+  description: string | TrustedHTML;
+  onUpdate: (description: string | TrustedHTML) => Promise<void>;
   isSaving: boolean;
 }
 

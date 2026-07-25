@@ -20,8 +20,8 @@ import {
 // import './RichTextEditor.css';
 
 type RichTextEditorProps = {
-  value: string;
-  onChange: (html: string) => void;
+  value: string | TrustedHTML;
+  onChange: (html: string | TrustedHTML) => void;
   placeholder?: string;
 };
 

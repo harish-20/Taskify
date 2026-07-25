@@ -77,7 +77,14 @@ const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
         <div className="min-w-0 flex-1">
           <h3 className="truncate text-[15px] font-semibold text-gray-900">{task.title}</h3>
 
-          <p className="mt-1 line-clamp-2 text-sm text-gray-500">{task.description}</p>
+          {task.description && (
+            <div
+              className="mt-1 line-clamp-2 text-sm text-gray-500"
+              dangerouslySetInnerHTML={{
+                __html: task.description,
+              }}
+            ></div>
+          )}
         </div>
       </div>
 

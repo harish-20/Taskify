@@ -19,7 +19,7 @@ interface TaskMainContentProps {
 const TaskMainContent: React.FC<TaskMainContentProps> = ({ task, onTaskUpdate }) => {
   const [isSaving, setIsSaving] = useState(false);
 
-  const handleDescriptionUpdate = async (description: string) => {
+  const handleDescriptionUpdate = async (description: string | TrustedHTML) => {
     try {
       setIsSaving(true);
       const response = await updateTask(task._id, { description });

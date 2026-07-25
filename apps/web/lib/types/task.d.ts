@@ -35,7 +35,7 @@ export interface Task {
   _id: string;
   ticketId: string;
   title: string;
-  description?: string;
+  description?: string | TrustedHTML;
   type: TaskType;
   status: TaskStatus;
   priority: TaskPriority;
