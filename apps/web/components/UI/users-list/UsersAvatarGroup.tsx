@@ -1,6 +1,6 @@
 import clsx from 'clsx';
+import { AnimatePresence, motion } from 'framer-motion';
 import { UserPlus } from 'lucide-react';
-import type { RefObject } from 'react';
 
 import Avatar from '../Avatar';
 import Tooltip from '../Tooltip';
@@ -15,6 +15,8 @@ import {
 } from './config';
 import { TaskUser, UsersListSize } from './types';
 import { getUserKey } from './utils';
+
+import type { RefObject } from 'react';
 
 interface UsersAvatarGroupProps {
   users: TaskUser[];
@@ -42,7 +44,26 @@ const UsersAvatarGroup: React.FC<UsersAvatarGroupProps> = ({
     const userKey = getUserKey(user, index);
 
     const avatarNode = (
-      <div className={`relative z-[${users.length - index}] hover:z-50`}>
+      <motion.div
+        className={`relative z-[${users.length - index}] hover:z-50`}
+        layout
+        initial={{
+          opacity: 0,
+        }}
+        animate={{
+          opacity: 1,
+        }}
+        exit={{
+          opacity: 0,
+          scale: 0,
+        }}
+        transition={{
+          delay: 0.6,
+          layout: {
+            duration: 0.4,
+          },
+        }}
+      >
         <Avatar glassBorder name={user.name} src={user.avatarUrl} size={avatarSizeMap[size]} />
         {user.presence && (
           <span
@@ -53,7 +74,7 @@ const UsersAvatarGroup: React.FC<UsersAvatarGroupProps> = ({
             )}
           />
         )}
-      </div>
+      </motion.div>
     );
 
     return (
@@ -88,8 +109,9 @@ const UsersAvatarGroup: React.FC<UsersAvatarGroupProps> = ({
   return (
     <>
       <div className={clsx('inline-flex items-center')}>
-        {visibleUsers.map((user, index) => renderAvatar(user, index))}
-
+        <AnimatePresence initial={false} mode="popLayout">
+          {visibleUsers.map((user, index) => renderAvatar(user, index))}
+        </AnimatePresence>
         {hiddenUsers.length > 0 && (
           <Tooltip
             key={`overflow-${hiddenUsers.length}`}

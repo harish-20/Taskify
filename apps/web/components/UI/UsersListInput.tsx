@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { motion } from 'framer-motion';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
+import Avatar from './Avatar';
 import { DEFAULT_MAX_VISIBLE, SEARCH_DEBOUNCE_MS } from './users-list/config';
 import { TaskUser, UsersListProps } from './users-list/types';
 import UsersAvatarGroup from './users-list/UsersAvatarGroup';
@@ -309,14 +310,7 @@ const UsersListInput: React.FC<UsersListProps> = ({
             ease: 'easeInOut',
           }}
         >
-          <UsersAvatarGroup
-            users={[animatedUser]}
-            visibleUsers={[animatedUser]}
-            hiddenUsers={[]}
-            size={size}
-            disabled={disabled}
-            isInteractive={false}
-          />
+          <Avatar glassBorder name={animatedUser.name} src={animatedUser.avatarUrl} size={size} />
         </motion.div>
       )}
     </div>

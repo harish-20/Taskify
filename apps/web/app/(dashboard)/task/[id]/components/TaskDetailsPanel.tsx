@@ -17,6 +17,7 @@ interface TaskDetailsPanelProps {
 
 const TaskDetailsPanel: React.FC<TaskDetailsPanelProps> = ({ task, onTaskUpdate }) => {
   const [isSaving, setIsSaving] = useState(false);
+  const [savingField, setSavingField] = useState<string | null>(null);
   const [organizationUsers, setOrganizationUsers] = useState<Task['assignees']>([]);
 
   useEffect(() => {
@@ -36,6 +37,7 @@ const TaskDetailsPanel: React.FC<TaskDetailsPanelProps> = ({ task, onTaskUpdate 
     async (field: string, value: any) => {
       try {
         setIsSaving(true);
+        setSavingField(field);
         const response = await updateTask(task._id, { [field]: value });
         if (response.success && response.data) {
           onTaskUpdate(response.data);
@@ -44,6 +46,7 @@ const TaskDetailsPanel: React.FC<TaskDetailsPanelProps> = ({ task, onTaskUpdate 
         console.error(`Failed to update ${field}:`, error);
       } finally {
         setIsSaving(false);
+        setSavingField(null);
       }
     },
     [task._id, onTaskUpdate],
@@ -52,7 +55,7 @@ const TaskDetailsPanel: React.FC<TaskDetailsPanelProps> = ({ task, onTaskUpdate 
   return (
     <div className="sticky top-6 space-y-4">
       {/* Assignees */}
-      <Card>
+      <Card className="flex flex-col gap-4">
         <CardHeader>People</CardHeader>
         <UsersListInput
           label="Assignees"
@@ -62,16 +65,21 @@ const TaskDetailsPanel: React.FC<TaskDetailsPanelProps> = ({ task, onTaskUpdate 
           onChange={(selectedUsers) => handleFieldUpdate('assignees', selectedUsers)}
           editable
         />
+        <UsersListInput
+          label="Watchers"
+          id="watchers-input"
+          availableUsers={organizationUsers}
+          users={task.watchers || []}
+          onChange={(selectedUsers) => handleFieldUpdate('watchers', selectedUsers)}
+          editable
+        />
+        <UsersListInput
+          label="Created By"
+          id="created-by-input"
+          users={task.createdBy ? [task.createdBy] : []}
+          editable={false}
+        />
       </Card>
-
-      {/* Watchers */}
-
-      <DetailField
-        label="Watchers"
-        value={task.watchers?.length || 0}
-        type="text"
-        isReadOnly={true}
-      />
 
       {/* Start Date */}
       <DetailField
@@ -168,7 +176,6 @@ const TaskDetailsPanel: React.FC<TaskDetailsPanelProps> = ({ task, onTaskUpdate 
       <div className="bg-gray-50 rounded-lg border border-gray-200 p-3">
         <p className="text-xs uppercase text-gray-500 font-semibold mb-3">Created</p>
         <div className="space-y-2">
-          <DetailField label="Created By" value="User Name" type="text" isReadOnly={true} />
           <DetailField
             label="Created At"
             value={new Date(task.createdAt).toLocaleDateString()}
