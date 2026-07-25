@@ -1,11 +1,14 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+
+import TaskDetailLayout from './components/TaskDetailLayout';
+
+import Spinner from '@/components/UI/Spinner';
 import { getTaskById } from '@/lib/services/api/task';
 import { Task } from '@/lib/types/task';
-import Spinner from '@/components/UI/Spinner';
-import TaskDetailLayout from './components/TaskDetailLayout';
+
 
 export default function TaskDetailPage() {
   const params = useParams();

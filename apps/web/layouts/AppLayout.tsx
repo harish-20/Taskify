@@ -2,10 +2,10 @@
 
 import { PropsWithChildren, useEffect, useState } from 'react';
 
+import Header from '@/components/shared/Header/Header';
+import NavBar from '@/components/shared/NavBar/NavBar';
 import useBreakPoints from '@/lib/hooks/useBreakpoints';
 
-import NavBar from '@/components/shared/NavBar/NavBar';
-import Header from '@/components/shared/Header/Header';
 
 interface AppLayoutProps extends PropsWithChildren {}
 

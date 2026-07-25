@@ -1,8 +1,11 @@
 import { ApiResponse } from '@repo/shared/types';
-import type { Organization, OrganizationProfile } from '@/lib/types/organization';
+
+import pathMap from './pathMap';
 
 import Api from '.';
-import pathMap from './pathMap';
+
+import type { Organization, OrganizationProfile } from '@/lib/types/organization';
+
 
 interface OrganizationResponse {
   organization: Organization;

@@ -1,9 +1,11 @@
 import { ApiResponse } from '@repo/shared/types';
 
-import type { Task } from '@/lib/types/task';
+import pathMap from './pathMap';
 
 import Api from '.';
-import pathMap from './pathMap';
+
+import type { Task } from '@/lib/types/task';
+
 
 export const getTasks = async () => {
   const response = await Api.get<ApiResponse<Task[]>>(pathMap.task.list);

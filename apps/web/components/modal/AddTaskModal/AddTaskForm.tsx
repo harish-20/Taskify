@@ -1,19 +1,18 @@
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
 import { FC } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-
-import TaskSchema, { TaskFormType } from './task.schema';
-
-import { createTask } from '@/lib/services/api/task';
-
-import TextInput from '@/components/UI/TextInput';
-import DatePicker from '@/components/UI/DatePicker';
-import Button from '@/components/UI/Button';
 
 import { priorityOptions, statusOptions, taskTypeOptions } from './options';
+import TaskSchema, { TaskFormType } from './task.schema';
+
+
+import Button from '@/components/UI/Button';
+import DatePicker from '@/components/UI/DatePicker';
 import Select from '@/components/UI/Select';
+import TextInput from '@/components/UI/TextInput';
+import { createTask } from '@/lib/services/api/task';
 
 interface AddTaskFormProps {
   onClose: () => void;

@@ -1,8 +1,9 @@
 import { StateCreator } from 'zustand';
 
+import { BoardAsyncActions, BoardStore } from './types';
+
 import { getTasks, updateTaskStatus as updateTaskStatusApi } from '@/lib/services/api/task';
 
-import { BoardAsyncActions, BoardStore } from './types';
 
 export const boardAsyncActions: StateCreator<BoardStore, [], [], BoardAsyncActions> = (
   set,

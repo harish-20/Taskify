@@ -1,9 +1,8 @@
-import Office from "@/components/icons/Office";
+import Confirm from "@/components/icons/Confirm";
 import Contact from "@/components/icons/Contact";
 import Location from "@/components/icons/Location";
+import Office from "@/components/icons/Office";
 import Technology from "@/components/icons/Technology";
-import Confirm from "@/components/icons/Confirm";
-
 import { Step } from "@/lib/types/organization";
 
 export const step_data: Step[] = [

@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
-import { Task } from '@/lib/types/task';
-import { updateTask } from '@/lib/services/api/task';
 import { Plus, X } from 'lucide-react';
+import { useState } from 'react';
+
+import { updateTask } from '@/lib/services/api/task';
+import { Task } from '@/lib/types/task';
 
 interface TaskChecklistProps {
   task: Task;

@@ -1,8 +1,10 @@
-import { ModalProps } from '@/lib/types';
 
 import BaseModal from '../BaseModal';
+
 import AddTaskForm from './AddTaskForm';
+
 import Title from '@/components/UI/Title';
+import { ModalProps } from '@/lib/types';
 
 interface AddTaskModalProps extends ModalProps {}
 

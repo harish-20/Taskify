@@ -1,7 +1,7 @@
+import { ApiResponse } from '@repo/shared/types';
 import { StateCreator } from 'zustand';
 
 import { OrganizationAsyncActions as AsyncActions, OrganizationStore } from './types';
-import { ApiResponse } from '@repo/shared/types';
 
 import { createOrganization as createOrganizationApi } from '@/lib/services/api/organization';
 

@@ -1,7 +1,7 @@
 "use client";
 
-import { motion } from "motion/react";
 import { cva, VariantProps } from "class-variance-authority";
+import { motion } from "motion/react";
 
 interface SpinnerProps extends VariantProps<typeof spinnerStyles> {
   className?: string;

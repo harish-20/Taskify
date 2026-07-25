@@ -1,5 +1,5 @@
-import { ReactNode, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { ReactNode, useState } from 'react';
 
 interface TooltipProps {
   content: ReactNode;

@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
-import { Task } from '@/lib/types/task';
 import { Send } from 'lucide-react';
+import { useState } from 'react';
+
+import { Task } from '@/lib/types/task';
 
 interface TaskCommentsProps {
   task: Task;

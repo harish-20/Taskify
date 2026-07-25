@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useRef } from 'react';
 import { Edit2, Check, X } from 'lucide-react';
-import Select from '@/components/UI/Select';
+import { useState, useRef } from 'react';
+
 import DatePicker from '@/components/UI/DatePicker';
+import Select from '@/components/UI/Select';
 
 interface DetailFieldProps {
   label: string;

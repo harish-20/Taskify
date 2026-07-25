@@ -1,7 +1,9 @@
 import { ApiResponse } from "@repo/shared/types";
 
-import Api from ".";
 import pathMap from "./pathMap";
+
+import Api from ".";
+
 import { User } from "@/lib/types";
 
 interface SigninResponse {

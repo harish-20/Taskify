@@ -1,7 +1,8 @@
 'use client';
 
-import { Task } from '@/lib/types/task';
 import { Upload, X } from 'lucide-react';
+
+import { Task } from '@/lib/types/task';
 
 interface TaskAttachmentsProps {
   task: Task;

@@ -1,11 +1,12 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { Task, TaskPriority, TaskStatus, TaskType } from '@/lib/types/task';
-import { updateTask } from '@/lib/services/api/task';
+
 import DetailField from '@/components/UI/DetailField';
-import TagInput from '@/components/UI/TagInput';
 import MultiSelectInput from '@/components/UI/MultiSelectInput';
+import TagInput from '@/components/UI/TagInput';
+import { updateTask } from '@/lib/services/api/task';
+import { Task, TaskPriority, TaskStatus, TaskType } from '@/lib/types/task';
 
 interface TaskDetailsPanelProps {
   task: Task;

@@ -1,8 +1,9 @@
-import useModalStore from '@/lib/store/modal';
-
+import Plus from '../icons/Plus';
 import Button from '../UI/Button';
 
-import Plus from '../icons/Plus';
+import useModalStore from '@/lib/store/modal';
+
+
 
 interface HeadSectionProps {}
 

@@ -1,15 +1,16 @@
 'use client';
 
-import { PropsWithChildren, useMemo } from 'react';
 import { AnimatePresence } from 'motion/react';
+import { PropsWithChildren, useMemo } from 'react';
 
-import ConfirmModal from '@/components/modal/ConfirmModal';
-import AddTaskModal from '@/components/modal/AddTaskModal/AddTaskModal';
-import type { ModalProps } from '@/lib/types/components';
 
 import useModalStore from '../store/modal';
-
 import { AvailableModals } from '../store/modal/types';
+
+import type { ModalProps } from '@/lib/types/components';
+
+import AddTaskModal from '@/components/modal/AddTaskModal/AddTaskModal';
+import ConfirmModal from '@/components/modal/ConfirmModal';
 
 const modalMap: Record<AvailableModals, React.FC<ModalProps & any>> = {
   confirm: ConfirmModal,

@@ -1,4 +1,5 @@
 import { StateCreator } from "zustand";
+
 import { AuthActions, AuthStore } from "./types";
 
 export const authActions: StateCreator<AuthStore, [], [], AuthActions> = (

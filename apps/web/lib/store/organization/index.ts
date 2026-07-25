@@ -1,8 +1,9 @@
 import { create } from "zustand";
-import { OrganizationStore } from "./types";
-import { defaultState } from "./state";
+
 import { organizationActions } from "./actions";
 import { OrganizationAsyncActions } from "./asyncActions";
+import { defaultState } from "./state";
+import { OrganizationStore } from "./types";
 
 const useOranization = create<OrganizationStore>((set, get, store) => ({
   ...defaultState,

@@ -1,8 +1,8 @@
+import { useDraggable } from '@dnd-kit/react';
 import { motion } from 'motion/react';
 import { useRouter } from 'next/navigation';
 import { useState, useRef } from 'react';
 
-import { useDraggable } from '@dnd-kit/react';
 
 import { Task } from '@/lib/types/task';
 

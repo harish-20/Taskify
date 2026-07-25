@@ -1,7 +1,8 @@
 'use client';
 
-import { Task } from '@/lib/types/task';
 import { Link as LinkIcon } from 'lucide-react';
+
+import { Task } from '@/lib/types/task';
 
 interface TaskDependenciesProps {
   task: Task;

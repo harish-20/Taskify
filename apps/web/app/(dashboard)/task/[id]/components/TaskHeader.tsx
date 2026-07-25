@@ -1,21 +1,22 @@
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Star, Share2, MoreHorizontal, Copy, Check } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-
-import { TaskTypeIcons, TaskPriorityIcons, TaskStatusIcons } from '@/components/icons/task';
-import Select, { SelectOption } from '@/components/UI/Select';
-import Tooltip from '@/components/UI/Tooltip';
-import Button from '@/components/UI/Button';
-
-import { Task, TaskType, TaskPriority, TaskStatus } from '@/lib/types/task';
-import { updateTask } from '@/lib/services/api/task';
 
 import { taskDetailSchema, TaskDetailFormType } from '../schemas/taskDetailSchema';
 
-import { Star, Share2, MoreHorizontal, Copy, Check } from 'lucide-react';
+import { TaskTypeIcons, TaskPriorityIcons, TaskStatusIcons } from '@/components/icons/task';
+import Button from '@/components/UI/Button';
 import { EditableText } from '@/components/UI/EditableText';
+import Select, { SelectOption } from '@/components/UI/Select';
+import Tooltip from '@/components/UI/Tooltip';
+import { updateTask } from '@/lib/services/api/task';
+import { Task, TaskType, TaskPriority, TaskStatus } from '@/lib/types/task';
+
+
+
 
 interface TaskHeaderProps {
   task: Task;

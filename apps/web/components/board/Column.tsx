@@ -1,14 +1,16 @@
-import { Task, TaskStatus } from '@/lib/types/task';
+import { useDragOperation, useDroppable } from '@dnd-kit/react';
+import { motion } from 'motion/react';
 
 import Done from '../icons/Done';
 import InProgress from '../icons/InProgress';
 import Review from '../icons/Review';
 import Todo from '../icons/Todo';
+
 import ColumnHeader from './ColumnHeader';
 import TaskItem from './TaskItem';
 
-import { motion } from 'motion/react';
-import { useDragOperation, useDroppable } from '@dnd-kit/react';
+import { Task, TaskStatus } from '@/lib/types/task';
+
 
 interface ColumnProps {
   status: TaskStatus;

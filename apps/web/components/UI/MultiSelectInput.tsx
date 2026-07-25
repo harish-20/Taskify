@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useRef } from 'react';
 import { X, ChevronDown } from 'lucide-react';
+import { useState, useRef } from 'react';
+
 import useClickOutside from '@/lib/hooks/useClickoutside';
 
 interface Option {

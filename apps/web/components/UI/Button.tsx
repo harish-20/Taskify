@@ -1,12 +1,13 @@
 'use client';
 
-import { PropsWithChildren } from 'react';
-import { AnimatePresence, HTMLMotionProps, motion } from 'motion/react';
 import { cva, VariantProps } from 'class-variance-authority';
+import { AnimatePresence, HTMLMotionProps, motion } from 'motion/react';
+import { PropsWithChildren } from 'react';
+
+import Done from '../icons/Done';
 
 import Spinner from './Spinner';
 
-import Done from '../icons/Done';
 
 const buttonStyles = cva(
   'relative overflow-clip inline-flex items-center justify-center font-medium rounded-md transition-colors cursor-pointer',

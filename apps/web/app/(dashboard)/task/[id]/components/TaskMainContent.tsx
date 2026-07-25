@@ -1,15 +1,17 @@
 'use client';
 
 import { useState } from 'react';
-import { Task } from '@/lib/types/task';
-import { updateTask } from '@/lib/services/api/task';
-import TaskDescription from './sections/TaskDescription';
-import TaskChecklist from './sections/TaskChecklist';
-import TaskSubtasks from './sections/TaskSubtasks';
-import TaskAttachments from './sections/TaskAttachments';
-import TaskDependencies from './sections/TaskDependencies';
+
 import TaskActivity from './sections/TaskActivity';
+import TaskAttachments from './sections/TaskAttachments';
+import TaskChecklist from './sections/TaskChecklist';
 import TaskComments from './sections/TaskComments';
+import TaskDependencies from './sections/TaskDependencies';
+import TaskDescription from './sections/TaskDescription';
+import TaskSubtasks from './sections/TaskSubtasks';
+
+import { updateTask } from '@/lib/services/api/task';
+import { Task } from '@/lib/types/task';
 
 interface TaskMainContentProps {
   task: Task;

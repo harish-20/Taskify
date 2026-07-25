@@ -1,7 +1,8 @@
 'use client';
 
-import { Task } from '@/lib/types/task';
 import { History } from 'lucide-react';
+
+import { Task } from '@/lib/types/task';
 
 interface TaskActivityProps {
   task: Task;

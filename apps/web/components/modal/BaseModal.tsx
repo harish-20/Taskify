@@ -1,11 +1,13 @@
+import { motion } from 'motion/react';
 import { PropsWithChildren } from 'react';
 import { createPortal } from 'react-dom';
-import { motion } from 'motion/react';
+
+import Backdrop from '../UI/Backdrop';
+
 import type { ModalProps } from '@/lib/types/components';
 
 import usePortalTarget from '@/lib/hooks/usePortalTarget';
 
-import Backdrop from '../UI/Backdrop';
 
 interface BaseModalProps extends PropsWithChildren, ModalProps {}
 

@@ -1,7 +1,8 @@
 // Replace your-framework with the framework you are using, e.g. react-vite, nextjs, nextjs-vite, etc.
-import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import type { Address } from '@/lib/types';
 import AddressInput from '../AddressInput';
+
+import type { Address } from '@/lib/types';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 
 //👇 This default export determines where your story goes in the story list
 const meta = {

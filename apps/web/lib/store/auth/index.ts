@@ -1,9 +1,8 @@
 import { createStore } from "zustand/vanilla";
 
-import { defaultState } from "./state";
 import { authActions } from "./actions";
 import { authAsyncActions } from "./asyncActions";
-
+import { defaultState } from "./state";
 import { AuthStore } from "./types";
 
 const createAuthStore = (initialState = defaultState) =>

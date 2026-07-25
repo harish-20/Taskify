@@ -1,7 +1,7 @@
 'use client';
 
-import { ReactNode, useRef, useState } from 'react';
 import { ChevronDown, Check } from 'lucide-react';
+import { ReactNode, useRef, useState } from 'react';
 
 import useClickOutside from '@/lib/hooks/useClickoutside';
 

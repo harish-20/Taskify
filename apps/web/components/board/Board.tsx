@@ -1,9 +1,10 @@
-import useTaskBoardStore from '@/lib/store/board';
-
-import { Task, TaskStatus } from '@/lib/types/task';
+import { useDragDropMonitor } from '@dnd-kit/react';
 
 import Column from './Column';
-import { useDragDropMonitor } from '@dnd-kit/react';
+
+import useTaskBoardStore from '@/lib/store/board';
+import { Task, TaskStatus } from '@/lib/types/task';
+
 
 const Board: React.FC = () => {
   const { tasks, updateTaskStatus } = useTaskBoardStore();

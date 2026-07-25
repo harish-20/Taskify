@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { Edit2, Check } from 'lucide-react';
+import { useEffect, useState } from 'react';
+
 import { RichTextEditor } from '@/components/UI/RichTextEditor/RichTextEditor';
 
 interface TaskDescriptionProps {

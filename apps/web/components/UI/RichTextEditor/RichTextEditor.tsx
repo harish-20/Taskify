@@ -1,8 +1,7 @@
-import { useEffect } from 'react';
-import { useEditor, EditorContent, useEditorState } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
 import { DOMParser as PMDOMParser } from '@tiptap/pm/model';
+import { useEditor, EditorContent, useEditorState } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
 import {
   Bold,
   Italic,
@@ -16,6 +15,7 @@ import {
   Undo2,
   Redo2,
 } from 'lucide-react';
+import { useEffect } from 'react';
 
 import './RichTextEditor.css';
 

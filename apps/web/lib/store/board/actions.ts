@@ -1,8 +1,9 @@
 import { StateCreator } from 'zustand';
 
+import { BoardActions, BoardStore } from './types';
+
 import { TaskStatus } from '@/lib/types/task';
 
-import { BoardActions, BoardStore } from './types';
 
 export const boardActions: StateCreator<BoardStore, [], [], BoardActions> = (set) => ({
   setTasks: (tasks) =>

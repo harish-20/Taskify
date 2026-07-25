@@ -1,9 +1,10 @@
 'use client';
 
-import { Task } from '@/lib/types/task';
+import TaskDetailsPanel from './TaskDetailsPanel';
 import TaskHeader from './TaskHeader';
 import TaskMainContent from './TaskMainContent';
-import TaskDetailsPanel from './TaskDetailsPanel';
+
+import { Task } from '@/lib/types/task';
 
 interface TaskDetailLayoutProps {
   task: Task;

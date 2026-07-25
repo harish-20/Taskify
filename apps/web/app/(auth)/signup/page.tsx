@@ -1,11 +1,12 @@
 "use client";
 
-import ShortLogo from "@/components/logos/ShortLogo";
-import SignupTitle from "./components/SignupTitle";
-import SocialMediaLogin from "@/components/auth/SocialMediaLogin";
 import SignupForm from "./components/SignupForm";
-import FooterText from "@/components/auth/FooterText";
+import SignupTitle from "./components/SignupTitle";
+
 import FadeIn from "@/components/animations/FadeIn";
+import FooterText from "@/components/auth/FooterText";
+import SocialMediaLogin from "@/components/auth/SocialMediaLogin";
+import ShortLogo from "@/components/logos/ShortLogo";
 
 const RegisterPage = () => {
   return (

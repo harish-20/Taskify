@@ -1,8 +1,9 @@
 "use client";
 
+import Step from "./Step";
+
 import useOranization from "@/lib/store/organization";
 
-import Step from "./Step";
 
 interface StepperProps {}
 
