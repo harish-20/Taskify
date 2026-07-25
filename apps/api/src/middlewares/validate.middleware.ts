@@ -1,6 +1,7 @@
-import { ZodObject } from "zod";
-import { InvalidArgument } from "../utils/CustomError.js";
 import { NextFunction, Request, Response } from "express";
+import { ZodObject } from "zod";
+
+import { InvalidArgument } from "../utils/CustomError.js";
 
 export const validateRequest =
   (schema: ZodObject) => (req: Request, res: Response, next: NextFunction) => {

@@ -1,14 +1,9 @@
-import {
-  DifferentProviderAccount,
-  EmailAlreadyExists,
-  InvalidArgument,
-  NotFound,
-} from "../utils/CustomError.js";
 
-import { Types } from "mongoose";
 import bcrypt from "bcrypt";
+import { Types } from "mongoose";
 import { Profile } from "passport-google-oauth20";
 
+import { Organization } from "../models/organization.model.js";
 import {
   User,
   AuthProvider,
@@ -16,7 +11,12 @@ import {
   IUser,
   UserRole,
 } from "../models/user.model.js";
-import { Organization } from "../models/organization.model.js";
+import {
+  DifferentProviderAccount,
+  EmailAlreadyExists,
+  InvalidArgument,
+  NotFound,
+} from "../utils/CustomError.js";
 
 interface CreateUserInput {
   name: string;

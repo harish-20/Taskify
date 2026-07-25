@@ -1,11 +1,10 @@
-import { NotFound } from "../utils/CustomError.js";
 
 import { Types } from "mongoose";
 
-import { Team } from "../models/team.model.js";
 import { Organization } from "../models/organization.model.js";
-
+import { Team } from "../models/team.model.js";
 import { TeamSchema } from "../schemas/team.schema.js";
+import { NotFound } from "../utils/CustomError.js";
 
 export const getTeam = async (organizationId: Types.ObjectId) => {
   const teams = await Team.find({ organization: organizationId });

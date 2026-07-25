@@ -1,8 +1,4 @@
 import { ApiResponse } from "@repo/shared/types";
-
-import { Conflict, Unauthorized } from "../utils/CustomError.js";
-import { sendResponse } from "../utils/response.js";
-
 import { RequestHandler } from "express";
 
 import { CreateOrganizationInput } from "../schemas/organization.schema.js";
@@ -12,6 +8,8 @@ import {
   getOrganization as getOrganizationService,
   getOrganizationUsers as getOrganizationUsersService,
 } from "../services/organization.service.js";
+import { Conflict, Unauthorized } from "../utils/CustomError.js";
+import { sendResponse } from "../utils/response.js";
 
 export const getOrganization: RequestHandler = async (req, res, next) => {
   try {

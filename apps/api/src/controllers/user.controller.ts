@@ -1,12 +1,12 @@
+import { ApiResponse } from "@repo/shared/types";
 import { RequestHandler } from "express";
 
-import { ApiResponse } from "@repo/shared/types";
 
+import { CreateTestUsersSchema } from "../schemas/user.schema.js";
+import { createTestUsers } from "../services/user.service.js";
 import { Forbidden, Unauthorized } from "../utils/CustomError.js";
 import { sendResponse } from "../utils/response.js";
 
-import { createTestUsers } from "../services/user.service.js";
-import { CreateTestUsersSchema } from "../schemas/user.schema.js";
 
 export const getUser: RequestHandler = (req, res, next) => {
   try {

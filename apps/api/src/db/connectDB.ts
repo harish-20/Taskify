@@ -1,6 +1,7 @@
+import mongoose from "mongoose";
+
 import { MONGO_URI } from "../configs/index.js";
 import logger from "../utils/logger.js";
-import mongoose from "mongoose";
 
 mongoose.connection.on("connected", () => {
   logger.info("Connected to MongoDB");

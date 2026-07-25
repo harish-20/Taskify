@@ -1,10 +1,11 @@
+import jwt from "jsonwebtoken";
+
 import { JWT_ACCESS_SECRET, JWT_REFRESH_SECRET } from "../configs/index.js";
+import { IUser } from "../models/user.model.js";
 
 import { getMilliSeconds } from "./getMilliSeconds.js";
 
-import jwt from "jsonwebtoken";
 
-import { IUser } from "../models/user.model.js";
 
 export const generateAccessToken = (user: IUser) => {
   return jwt.sign({ id: user._id, email: user.email }, JWT_ACCESS_SECRET!, {

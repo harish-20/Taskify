@@ -1,15 +1,15 @@
 import { Router } from "express";
 import passport from "passport";
 
-import { validateRequest } from "../middlewares/validate.middleware.js";
-import { registerSchema } from "../schemas/auth.schema.js";
-
 import {
   refreshAccessToken,
   registerUser,
   signinUser,
   verifyMagicLink,
 } from "../controllers/auth.controller.js";
+import { validateRequest } from "../middlewares/validate.middleware.js";
+import { registerSchema } from "../schemas/auth.schema.js";
+
 
 const authRouter = Router();
 

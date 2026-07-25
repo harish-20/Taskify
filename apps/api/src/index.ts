@@ -1,17 +1,16 @@
 // passport strategies
 import "./auth/passport.js";
 
-import { PORT } from "./configs/index.js";
-import logger from "./utils/logger.js";
 
-import express from "express";
 import cors from "cors";
+import express from "express";
 import passport from "passport";
 
-import { errorHandler } from "./middlewares/errorHandler.middleware.js";
-
-import router from "./routes/index.routes.js";
+import { PORT } from "./configs/index.js";
 import connectDB from "./db/connectDB.js";
+import { errorHandler } from "./middlewares/errorHandler.middleware.js";
+import router from "./routes/index.routes.js";
+import logger from "./utils/logger.js";
 
 const app = express();
 

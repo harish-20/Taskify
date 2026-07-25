@@ -1,13 +1,5 @@
-import {
-  createTaskSchema,
-  updateTaskSchema,
-  updateTaskStatusSchema,
-} from "../schemas/task.schema.js";
 
 import { Router } from "express";
-
-import { validateRequest } from "../middlewares/validate.middleware.js";
-import { authMiddleware } from "../middlewares/auth.middleware.js";
 
 import {
   createTask,
@@ -17,6 +9,13 @@ import {
   updateTask,
   updateTaskStatus,
 } from "../controllers/task.controller.js";
+import { authMiddleware } from "../middlewares/auth.middleware.js";
+import { validateRequest } from "../middlewares/validate.middleware.js";
+import {
+  createTaskSchema,
+  updateTaskSchema,
+  updateTaskStatusSchema,
+} from "../schemas/task.schema.js";
 
 const taskRouter = Router();
 

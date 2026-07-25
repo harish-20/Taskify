@@ -1,3 +1,9 @@
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+import ejs from "ejs";
+import nodemailer from "nodemailer";
+
 import {
   FROM_EMAIL,
   FRONTEND_URL,
@@ -5,10 +11,7 @@ import {
   GMAIL_EMAIL,
 } from "../configs/index.js";
 
-import { fileURLToPath } from "node:url";
-import nodemailer from "nodemailer";
-import ejs from "ejs";
-import path from "node:path";
+
 
 interface SendMailOptions {
   to: string;

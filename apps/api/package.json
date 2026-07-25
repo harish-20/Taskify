@@ -6,13 +6,21 @@
   "scripts": {
     "dev": "npx tsx watch src/index.ts",
     "build": "tsc -p tsconfig.json",
-    "start": "node dist/index.ts"
+    "start": "node dist/index.ts",
+    "lint": "eslint .",
+    "lint:strict": "eslint . --max-warnings 0",
+    "lint:fix": "eslint . --fix"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "@repo/shared": "*"
+    "@repo/shared": "*",
+    "eslint-plugin-import": "^2.32.0"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "*",
+    "eslint": "^9.33.0"
   }
 }

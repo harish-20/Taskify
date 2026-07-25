@@ -1,10 +1,10 @@
-import { JWT_ACCESS_SECRET } from "../configs/index.js";
-import { Unauthorized } from "../utils/CustomError.js";
 
 import { RequestHandler } from "express";
 import jwt from "jsonwebtoken";
 
+import { JWT_ACCESS_SECRET } from "../configs/index.js";
 import { findUserById } from "../services/user.service.js";
+import { Unauthorized } from "../utils/CustomError.js";
 
 export const authMiddleware: RequestHandler = async (req, res, next) => {
   try {
