@@ -26,22 +26,13 @@ const TaskDescription: React.FC<TaskDescriptionProps> = ({ description, onUpdate
   };
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-      <div className="flex items-center justify-between mb-4">
+    <div className="bg-white rounded-xl border border-gray-200 shadow-sm">
+      <div className="flex items-center justify-between mb-4 border-b border-gray-200 p-6 pb-2">
         <h2 className="text-lg font-semibold text-gray-900">Description</h2>
-        {!isEditing && (
-          <button
-            onClick={() => setIsEditing(true)}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-            title="Edit description"
-          >
-            <Edit2 size={18} className="text-gray-600" />
-          </button>
-        )}
       </div>
 
       {isEditing ? (
-        <div className="space-y-3">
+        <div className="space-y-3 p-6">
           <RichTextEditor
             value={content}
             onChange={setContent}
@@ -68,7 +59,10 @@ const TaskDescription: React.FC<TaskDescriptionProps> = ({ description, onUpdate
           </div>
         </div>
       ) : (
-        <div className="prose prose-sm max-w-none text-gray-600 min-h-24">
+        <div
+          className="prose prose-sm max-w-[100vw] p-6 text-gray-600 min-h-24  prose-p:my-1 prose-headings:my-2 prose-ul:my-2 prose-ol:my-2 prose-li:my-0 prose-blockquote:my-2"
+          onClick={() => setIsEditing(true)}
+        >
           {description ? (
             <div dangerouslySetInnerHTML={{ __html: description }} />
           ) : (

@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useEditor, EditorContent } from '@tiptap/react';
+import { useEditor, EditorContent, useEditorState } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
 import { DOMParser as PMDOMParser } from '@tiptap/pm/model';
@@ -23,6 +23,18 @@ type RichTextEditorProps = {
   value: string;
   onChange: (html: string) => void;
   placeholder?: string;
+};
+
+const defaultToolbarState = {
+  bold: false,
+  italic: false,
+  strike: false,
+  heading1: false,
+  heading2: false,
+  bulletList: false,
+  orderedList: false,
+  blockquote: false,
+  codeBlock: false,
 };
 
 export function RichTextEditor({
@@ -87,6 +99,23 @@ export function RichTextEditor({
     },
   });
 
+  const toolbarState = useEditorState({
+    editor,
+    selector: ({ editor }) => ({
+      bold: editor?.isActive('bold') ?? false,
+      italic: editor?.isActive('italic') ?? false,
+      strike: editor?.isActive('strike') ?? false,
+      heading1: editor?.isActive('heading', { level: 1 }) ?? false,
+      heading2: editor?.isActive('heading', { level: 2 }) ?? false,
+      bulletList: editor?.isActive('bulletList') ?? false,
+      orderedList: editor?.isActive('orderedList') ?? false,
+      blockquote: editor?.isActive('blockquote') ?? false,
+      codeBlock: editor?.isActive('codeBlock') ?? false,
+    }),
+  });
+
+  const activeState = toolbarState ?? defaultToolbarState;
+
   useEffect(() => {
     if (!editor) {
       return;
@@ -120,65 +149,62 @@ export function RichTextEditor({
 
   return (
     <div className="overflow-hidden rounded-lg border bg-white">
-      <div className="flex flex-wrap gap-1 border-b p-2">
-        <Button
-          active={editor.isActive('bold')}
-          onClick={() => editor.chain().focus().toggleBold().run()}
-        >
+      <div className="sticky top-0 flex flex-wrap gap-1 border-b p-2 bg-white">
+        <Button active={activeState.bold} onClick={() => editor.chain().focus().toggleBold().run()}>
           <Bold size={18} />
         </Button>
 
         <Button
-          active={editor.isActive('italic')}
+          active={activeState.italic}
           onClick={() => editor.chain().focus().toggleItalic().run()}
         >
           <Italic size={18} />
         </Button>
 
         <Button
-          active={editor.isActive('strike')}
+          active={activeState.strike}
           onClick={() => editor.chain().focus().toggleStrike().run()}
         >
           <Strikethrough size={18} />
         </Button>
 
         <Button
-          active={editor.isActive('heading', { level: 1 })}
+          active={activeState.heading1}
           onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
         >
           <Heading1 size={18} />
         </Button>
 
         <Button
-          active={editor.isActive('heading', { level: 2 })}
+          active={activeState.heading2}
           onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
         >
           <Heading2 size={18} />
         </Button>
 
         <Button
-          active={editor.isActive('bulletList')}
+          active={activeState.bulletList}
           onClick={() => editor.chain().focus().toggleBulletList().run()}
         >
           <List size={18} />
         </Button>
 
         <Button
-          active={editor.isActive('orderedList')}
+          active={activeState.orderedList}
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
         >
           <ListOrdered size={18} />
         </Button>
 
         <Button
-          active={editor.isActive('blockquote')}
+          active={activeState.blockquote}
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
         >
           <Quote size={18} />
         </Button>
 
         <Button
-          active={editor.isActive('codeBlock')}
+          active={activeState.codeBlock}
           onClick={() => editor.chain().focus().toggleCodeBlock().run()}
         >
           <Code2 size={18} />
@@ -195,7 +221,10 @@ export function RichTextEditor({
         </Button>
       </div>
 
-      <EditorContent className="prose" editor={editor} />
+      <EditorContent
+        className="prose prose-sm max-w-[100vw] prose-p:my-1 prose-headings:my-2 prose-ul:my-2 prose-ol:my-2 prose-li:my-0 prose-blockquote:my-2"
+        editor={editor}
+      />
     </div>
   );
 }
