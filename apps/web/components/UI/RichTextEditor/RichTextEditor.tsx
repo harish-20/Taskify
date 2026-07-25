@@ -149,6 +149,10 @@ export function RichTextEditor({
 
   return (
     <div className="overflow-hidden rounded-lg border bg-white">
+      <EditorContent
+        className="prose prose-sm max-w-[100vw] prose-p:my-1 prose-headings:my-2 prose-ul:my-2 prose-ol:my-2 prose-li:my-0 prose-blockquote:my-2"
+        editor={editor}
+      />
       <div className="sticky top-0 flex flex-wrap gap-1 border-b p-2 bg-white">
         <Button active={activeState.bold} onClick={() => editor.chain().focus().toggleBold().run()}>
           <Bold size={18} />
@@ -220,11 +224,6 @@ export function RichTextEditor({
           <Redo2 size={18} />
         </Button>
       </div>
-
-      <EditorContent
-        className="prose prose-sm max-w-[100vw] prose-p:my-1 prose-headings:my-2 prose-ul:my-2 prose-ol:my-2 prose-li:my-0 prose-blockquote:my-2"
-        editor={editor}
-      />
     </div>
   );
 }
