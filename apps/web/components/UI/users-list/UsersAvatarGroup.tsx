@@ -45,7 +45,7 @@ const UsersAvatarGroup: React.FC<UsersAvatarGroupProps> = ({
 
     const avatarNode = (
       <motion.div
-        className={`relative z-[${users.length - index}] hover:z-50`}
+        className={`flex relative z-[${users.length - index}] hover:z-50`}
         layout
         initial={{
           opacity: 0,
