@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Star, Share2, MoreHorizontal, Copy, Check } from 'lucide-react';
+import { Star, Share2, MoreHorizontal, Copy } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
@@ -12,11 +12,9 @@ import Button from '@/components/UI/Button';
 import { EditableText } from '@/components/UI/EditableText';
 import Select, { SelectOption } from '@/components/UI/Select';
 import Tooltip from '@/components/UI/Tooltip';
+import { TASK_PRIORITY_LABEL, TASK_STATUS_LABEL, TASK_TYPE_LABEL } from '@/lib/constants/task';
 import { updateTask } from '@/lib/services/api/task';
 import { Task, TaskType, TaskPriority, TaskStatus } from '@/lib/types/task';
-
-
-
 
 interface TaskHeaderProps {
   task: Task;
@@ -24,24 +22,44 @@ interface TaskHeaderProps {
 }
 
 const taskTypeOptions: SelectOption<TaskType>[] = [
-  { label: 'Story', value: 'story', icon: <TaskTypeIcons.story size={16} /> },
-  { label: 'Bug', value: 'bug', icon: <TaskTypeIcons.bug size={16} /> },
-  { label: 'Feature', value: 'feature', icon: <TaskTypeIcons.feature size={16} /> },
-  { label: 'Task', value: 'task', icon: <TaskTypeIcons.task size={16} /> },
+  { label: TASK_TYPE_LABEL['story'], value: 'story', icon: <TaskTypeIcons.story size={16} /> },
+  { label: TASK_TYPE_LABEL['bug'], value: 'bug', icon: <TaskTypeIcons.bug size={16} /> },
+  {
+    label: TASK_TYPE_LABEL['feature'],
+    value: 'feature',
+    icon: <TaskTypeIcons.feature size={16} />,
+  },
+  { label: TASK_TYPE_LABEL['task'], value: 'task', icon: <TaskTypeIcons.task size={16} /> },
 ];
 
 const priorityOptions: SelectOption<TaskPriority>[] = [
-  { label: 'Low', value: 'low', icon: <TaskPriorityIcons.low size={16} /> },
-  { label: 'Medium', value: 'medium', icon: <TaskPriorityIcons.medium size={16} /> },
-  { label: 'High', value: 'high', icon: <TaskPriorityIcons.high size={16} /> },
-  { label: 'Critical', value: 'critical', icon: <TaskPriorityIcons.critical size={16} /> },
+  { label: TASK_PRIORITY_LABEL['low'], value: 'low', icon: <TaskPriorityIcons.low size={16} /> },
+  {
+    label: TASK_PRIORITY_LABEL['medium'],
+    value: 'medium',
+    icon: <TaskPriorityIcons.medium size={16} />,
+  },
+  { label: TASK_PRIORITY_LABEL['high'], value: 'high', icon: <TaskPriorityIcons.high size={16} /> },
+  {
+    label: TASK_PRIORITY_LABEL['critical'],
+    value: 'critical',
+    icon: <TaskPriorityIcons.critical size={16} />,
+  },
 ];
 
 const statusOptions: SelectOption<TaskStatus>[] = [
-  { label: 'To Do', value: 'todo', icon: <TaskStatusIcons.todo size={16} /> },
-  { label: 'In Progress', value: 'in_progress', icon: <TaskStatusIcons.in_progress size={16} /> },
-  { label: 'Review', value: 'review', icon: <TaskStatusIcons.review size={16} /> },
-  { label: 'Done', value: 'done', icon: <TaskStatusIcons.done size={16} /> },
+  { label: TASK_STATUS_LABEL['todo'], value: 'todo', icon: <TaskStatusIcons.todo size={16} /> },
+  {
+    label: TASK_STATUS_LABEL['in_progress'],
+    value: 'in_progress',
+    icon: <TaskStatusIcons.in_progress size={16} />,
+  },
+  {
+    label: TASK_STATUS_LABEL['review'],
+    value: 'review',
+    icon: <TaskStatusIcons.review size={16} />,
+  },
+  { label: TASK_STATUS_LABEL['done'], value: 'done', icon: <TaskStatusIcons.done size={16} /> },
 ];
 
 const TaskHeader: React.FC<TaskHeaderProps> = ({ task, onTaskUpdate }) => {

@@ -53,9 +53,13 @@ export const getTask = async (userId: Types.ObjectId, taskId: string) => {
     _id: taskId,
     createdBy: userId,
     isDeleted: false,
-  }).populate(
-    "assignees watchers createdBy parentTask subTasks blockedBy blocking",
-  );
+  })
+    .populate("assignees watchers createdBy parentTask blockedBy blocking")
+    .populate({
+      path: "subTasks",
+      populate: { path: "assignees", select: "_id name avatarUrl" },
+      select: "_id title status assignees ticketId createdAt type",
+    });
 
   if (!task) {
     throw new NotFound("Task not found");

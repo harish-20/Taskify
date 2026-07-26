@@ -56,10 +56,10 @@ export interface Task {
   comments: Comment[];
   checklist: ChecklistItem[];
   activity: Activity[];
-  parentTask?: string;
-  subTasks: string[];
-  blockedBy: string[];
-  blocking: string[];
+  parentTask?: Task;
+  subTasks: Task[];
+  blockedBy: Task[];
+  blocking: Task[];
   position: number;
   color?: string;
   isArchived: boolean;
