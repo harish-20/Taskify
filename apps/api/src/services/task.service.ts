@@ -1,10 +1,42 @@
-import { Types } from "mongoose";
+import { PopulateOptions, Types } from "mongoose";
 
 import { Task, TaskStatus } from "../models/task.model.js";
 import { TaskCounter } from "../models/taskCounter.model.js";
 import { User } from "../models/user.model.js";
 import { TaskSchema, UpdateTaskSchema } from "../schemas/task.schema.js";
 import { NotFound } from "../utils/CustomError.js";
+
+const TASK_POPULATE_OPTIONS: PopulateOptions[] = [
+  {
+    path: "assignees",
+    select: "_id name avatarUrl",
+  },
+  {
+    path: "watchers",
+    select: "_id name avatarUrl",
+  },
+  {
+    path: "createdBy",
+    select: "_id name avatarUrl",
+  },
+  {
+    path: "parentTask",
+  },
+  {
+    path: "blockedBy",
+  },
+  {
+    path: "blocking",
+  },
+  {
+    path: "subTasks",
+    select: "_id title status assignees ticketId createdAt type",
+    populate: {
+      path: "assignees",
+      select: "_id name avatarUrl",
+    },
+  },
+];
 
 export const createTask = async (
   taskData: TaskSchema,
@@ -41,9 +73,7 @@ export const getTasks = async (userId: Types.ObjectId) => {
   const tasks = await Task.find({
     createdBy: userId,
     isDeleted: false,
-  }).populate(
-    "assignees watchers createdBy parentTask subTasks blockedBy blocking",
-  );
+  }).populate(TASK_POPULATE_OPTIONS);
 
   return tasks;
 };
@@ -53,13 +83,7 @@ export const getTask = async (userId: Types.ObjectId, taskId: string) => {
     _id: taskId,
     createdBy: userId,
     isDeleted: false,
-  })
-    .populate("assignees watchers createdBy parentTask blockedBy blocking")
-    .populate({
-      path: "subTasks",
-      populate: { path: "assignees", select: "_id name avatarUrl" },
-      select: "_id title status assignees ticketId createdAt type",
-    });
+  }).populate(TASK_POPULATE_OPTIONS);
 
   if (!task) {
     throw new NotFound("Task not found");
@@ -84,9 +108,10 @@ export const updateTaskStatus = async (
   }
 
   task.status = status;
-  await task.save();
+  const updatedTask = await task.save();
+  await updatedTask.populate(TASK_POPULATE_OPTIONS);
 
-  return task;
+  return updatedTask;
 };
 
 export const updateTask = async (
@@ -105,9 +130,8 @@ export const updateTask = async (
   }
 
   Object.assign(task, taskData);
-  const updatedTask = (await task.save()).populate(
-    "assignees watchers createdBy parentTask subTasks blockedBy blocking",
-  );
+  const updatedTask = await task.save();
+  await updatedTask.populate(TASK_POPULATE_OPTIONS);
 
   return updatedTask;
 };

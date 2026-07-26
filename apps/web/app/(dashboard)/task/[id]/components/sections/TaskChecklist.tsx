@@ -13,20 +13,18 @@ interface TaskChecklistProps {
   onTaskUpdate: (task: Task) => void;
 }
 
-interface ChecklistItem {
-  title: string;
-  completed: boolean;
-}
-
 const TaskChecklist: React.FC<TaskChecklistProps> = ({ task, onTaskUpdate }) => {
-  const [checklist, setChecklist] = useState<ChecklistItem[]>(task.checklist || []);
+  const [checklist, setChecklist] = useState<Task['checklist']>(task.checklist || []);
   const [newItem, setNewItem] = useState('');
   const [isSaving, setIsSaving] = useState(false);
 
   const handleAddItem = async () => {
     if (!newItem.trim()) return;
 
-    const updatedChecklist = [...checklist, { title: newItem.trim(), completed: false }];
+    const updatedChecklist = [
+      ...checklist,
+      { _id: crypto.randomUUID(), title: newItem.trim(), completed: false },
+    ];
     try {
       setIsSaving(true);
       const response = await updateTask(task._id, { checklist: updatedChecklist });
@@ -111,7 +109,7 @@ const TaskChecklist: React.FC<TaskChecklistProps> = ({ task, onTaskUpdate }) => 
         {checklist.map((item, index) => (
           <label
             htmlFor={`checklist-item-${item.title}-${index}`}
-            key={index}
+            key={item._id}
             className="flex items-center gap-3 p-4 shadow-sm hover:bg-gray-50 rounded-lg"
           >
             <input

@@ -7,6 +7,7 @@ export type TaskPriority = 'low' | 'medium' | 'high' | 'critical';
 export type TaskType = 'story' | 'bug' | 'feature' | 'task';
 
 export interface ChecklistItem {
+  _id: string;
   title: string;
   completed: boolean;
 }

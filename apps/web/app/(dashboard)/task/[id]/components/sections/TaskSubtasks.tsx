@@ -16,6 +16,7 @@ interface TaskSubtasksProps {
 const TaskSubtasks: React.FC<TaskSubtasksProps> = ({ subTasks }) => {
   const TaskTypeIcon = TaskTypeIcons[subTasks[0]?.type || 'task'] || TaskTypeIcons.task;
   const TaskStatusIcon = TaskStatusIcons[subTasks[0]?.status || 'todo'] || TaskStatusIcons.todo;
+  console.log('subTasks:', subTasks);
 
   return (
     <div className="rounded-xl border border-gray-200 bg-white">
