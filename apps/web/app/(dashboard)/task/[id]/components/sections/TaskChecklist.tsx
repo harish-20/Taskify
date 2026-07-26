@@ -3,6 +3,7 @@
 import { Plus, X } from 'lucide-react';
 import { useState } from 'react';
 
+import Badge from '@/components/UI/Badge';
 import { updateTask } from '@/lib/services/api/task';
 import { Task } from '@/lib/types/task';
 
@@ -82,15 +83,15 @@ const TaskChecklist: React.FC<TaskChecklistProps> = ({ task, onTaskUpdate }) => 
 
   return (
     <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex justify-between items-start">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900">Checklist</h3>
-          {checklist.length > 0 && (
-            <p className="text-xs text-gray-500 mt-1">
-              {completedCount} of {checklist.length} completed
-            </p>
-          )}
+          <h3 className="font-semibold text-lg">Checklist</h3>
+          <p className="text-sm text-muted-foreground">Keep track of subtasks</p>
         </div>
+
+        <Badge>
+          {completedCount}/{checklist.length}
+        </Badge>
       </div>
 
       {checklist.length > 0 && (
