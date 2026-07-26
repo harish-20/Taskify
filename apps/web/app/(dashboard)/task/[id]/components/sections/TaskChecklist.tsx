@@ -83,7 +83,7 @@ const TaskChecklist: React.FC<TaskChecklistProps> = ({ task, onTaskUpdate }) => 
 
   return (
     <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-      <div className="flex justify-between items-start">
+      <div className="flex justify-between items-start py-4">
         <div>
           <h3 className="font-semibold text-lg">Checklist</h3>
           <p className="text-sm text-muted-foreground">Keep track of subtasks</p>
@@ -107,13 +107,18 @@ const TaskChecklist: React.FC<TaskChecklistProps> = ({ task, onTaskUpdate }) => 
 
       <div className="space-y-2 mb-4">
         {checklist.map((item, index) => (
-          <div key={index} className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg">
+          <label
+            htmlFor={`checklist-item-${item.title}-${index}`}
+            key={index}
+            className="flex items-center gap-3 p-4 shadow-sm hover:bg-gray-50 rounded-lg"
+          >
             <input
               type="checkbox"
+              id={`checklist-item-${item.title}-${index}`}
               checked={item.completed}
               onChange={() => handleToggleItem(index)}
               disabled={isSaving}
-              className="w-5 h-5 rounded cursor-pointer"
+              className="w-4 h-4 rounded cursor-pointer accent-primary"
             />
             <span
               className={`flex-1 ${item.completed ? 'line-through text-gray-400' : 'text-gray-700'}`}
@@ -127,7 +132,7 @@ const TaskChecklist: React.FC<TaskChecklistProps> = ({ task, onTaskUpdate }) => 
             >
               <X size={16} />
             </button>
-          </div>
+          </label>
         ))}
       </div>
 
