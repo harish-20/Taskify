@@ -1,5 +1,6 @@
 'use client';
 
+import { motion } from 'framer-motion';
 import { Plus, X } from 'lucide-react';
 import { useState } from 'react';
 
@@ -97,9 +98,10 @@ const TaskChecklist: React.FC<TaskChecklistProps> = ({ task, onTaskUpdate }) => 
       {checklist.length > 0 && (
         <div className="mb-4">
           <div className="w-full bg-gray-200 rounded-full h-1.5">
-            <div
-              className="bg-black h-1.5 rounded-full transition-all duration-300"
-              style={{ width: `${progress}%` }}
+            <motion.div
+              className="bg-black h-1.5 rounded-full"
+              animate={{ width: `${progress}%` }}
+              transition={{ type: 'spring', duration: 0.5 }}
             />
           </div>
         </div>
