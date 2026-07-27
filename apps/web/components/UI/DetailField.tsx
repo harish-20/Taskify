@@ -14,6 +14,7 @@ interface DetailFieldProps {
   onChange?: (value: any) => void;
   isSaving?: boolean;
   isReadOnly?: boolean;
+  plain?: boolean;
 }
 
 const DetailField: React.FC<DetailFieldProps> = ({
@@ -24,6 +25,7 @@ const DetailField: React.FC<DetailFieldProps> = ({
   onChange,
   isSaving = false,
   isReadOnly = false,
+  plain = false,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(String(value));
@@ -41,17 +43,36 @@ const DetailField: React.FC<DetailFieldProps> = ({
     setIsEditing(false);
   };
 
+  const containerClass = plain ? '' : 'bg-white rounded-lg border border-gray-200 p-3 shadow-sm';
+
   if (isReadOnly) {
     return (
-      <div className="bg-white rounded-lg border border-gray-200 p-3 shadow-sm">
+      <div className={containerClass}>
         <p className="text-xs uppercase text-gray-500 font-semibold mb-1">{label}</p>
         <p className="text-sm text-gray-700">{value}</p>
       </div>
     );
   }
 
+  if (type === 'date') {
+    return (
+      <div className={containerClass}>
+        <div className="mb-2">
+          <p className="text-xs uppercase text-gray-500 font-semibold">{label}</p>
+        </div>
+
+        <DatePicker
+          value={value === 'Not set' ? '' : value}
+          onChange={(event) => onChange?.(event.target.value)}
+          disabled={isSaving}
+          className="text-sm"
+        />
+      </div>
+    );
+  }
+
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-3 shadow-sm">
+    <div className={containerClass}>
       <div className="flex items-center justify-between mb-2">
         <p className="text-xs uppercase text-gray-500 font-semibold">{label}</p>
         {!isEditing && (
@@ -72,14 +93,6 @@ const DetailField: React.FC<DetailFieldProps> = ({
               options={options}
               value={editValue}
               onChange={setEditValue}
-              className="text-sm"
-            />
-          )}
-
-          {type === 'date' && (
-            <DatePicker
-              value={editValue}
-              onChange={(e) => setEditValue(e.target.value)}
               className="text-sm"
             />
           )}

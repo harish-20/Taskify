@@ -4,6 +4,7 @@ import { useState, useCallback, useEffect } from 'react';
 
 import { Card, CardHeader } from '@/components/UI/Card';
 import DetailField from '@/components/UI/DetailField';
+import DurationInput from '@/components/UI/DurationInput';
 import TagInput from '@/components/UI/TagInput';
 import UsersListInput from '@/components/UI/UsersListInput';
 import { getOrganizationUsers } from '@/lib/services/api/organization';
@@ -19,6 +20,95 @@ const TaskDetailsPanel: React.FC<TaskDetailsPanelProps> = ({ task, onTaskUpdate 
   const [isSaving, setIsSaving] = useState(false);
   const [savingField, setSavingField] = useState<string | null>(null);
   const [organizationUsers, setOrganizationUsers] = useState<Task['assignees']>([]);
+  const taskFields = task as unknown as Record<string, unknown>;
+
+  const toDateInputValue = (value: unknown) => {
+    if (!value) {
+      return '';
+    }
+
+    const date = new Date(value as string | number | Date);
+
+    if (Number.isNaN(date.getTime())) {
+      return '';
+    }
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  };
+
+  const toDateKey = (value: unknown) => {
+    if (!value) {
+      return '';
+    }
+
+    const date = new Date(value as string | number | Date);
+
+    if (Number.isNaN(date.getTime())) {
+      return '';
+    }
+
+    return date.toISOString().split('T')[0] || '';
+  };
+
+  const getUserIds = (value: unknown) => {
+    if (!Array.isArray(value)) {
+      return [];
+    }
+
+    return value
+      .map((item) => {
+        if (!item || typeof item !== 'object') {
+          return '';
+        }
+
+        return String((item as { _id?: string })._id || '');
+      })
+      .filter(Boolean);
+  };
+
+  const isFieldValueSame = (field: string, nextValue: any) => {
+    if (field === 'estimate' || field === 'spentTime' || field === 'remainingTime') {
+      const current = Number(taskFields[field] || 0);
+      const next = Number(nextValue || 0);
+
+      return Number.isFinite(current) && Number.isFinite(next) && current === next;
+    }
+
+    if (field === 'startDate' || field === 'dueDate') {
+      const current = toDateKey(taskFields[field]);
+      const next = toDateKey(nextValue);
+
+      return current === next;
+    }
+
+    if (field === 'assignees' || field === 'watchers') {
+      const currentIds = getUserIds(taskFields[field]);
+      const nextIds = getUserIds(nextValue);
+
+      return (
+        currentIds.length === nextIds.length &&
+        currentIds.every((id, index) => id === nextIds[index])
+      );
+    }
+
+    if (field === 'tags') {
+      const currentTags = Array.isArray(task.tags) ? task.tags : [];
+      const nextTags = Array.isArray(nextValue) ? nextValue : [];
+
+      return (
+        currentTags.length === nextTags.length &&
+        currentTags.every((tag, index) => tag === nextTags[index])
+      );
+    }
+
+    const current = taskFields[field];
+
+    return current === nextValue;
+  };
 
   useEffect(() => {
     const fetchOrganizationUsers = async () => {
@@ -35,6 +125,10 @@ const TaskDetailsPanel: React.FC<TaskDetailsPanelProps> = ({ task, onTaskUpdate 
 
   const handleFieldUpdate = useCallback(
     async (field: string, value: any) => {
+      if (isFieldValueSame(field, value)) {
+        return;
+      }
+
       try {
         setIsSaving(true);
         setSavingField(field);
@@ -49,7 +143,7 @@ const TaskDetailsPanel: React.FC<TaskDetailsPanelProps> = ({ task, onTaskUpdate 
         setSavingField(null);
       }
     },
-    [task._id, onTaskUpdate],
+    [task, task._id, onTaskUpdate],
   );
 
   return (
@@ -81,58 +175,72 @@ const TaskDetailsPanel: React.FC<TaskDetailsPanelProps> = ({ task, onTaskUpdate 
         />
       </Card>
 
-      {/* Start Date */}
-      <DetailField
-        label="Start Date"
-        value={task.startDate ? new Date(task.startDate).toLocaleDateString() : 'Not set'}
-        type="date"
-        onChange={(value) => handleFieldUpdate('startDate', value)}
-        isSaving={isSaving}
-      />
+      {/* Schedule & Time */}
+      <Card className="flex flex-col gap-4">
+        <CardHeader>Schedule & Time</CardHeader>
+        <p className="text-xs text-dark-gray">
+          Time format: use 2h30m, 1h, 45m, or 2:30. Press Enter to save.
+        </p>
 
-      {/* Due Date */}
-      <DetailField
-        label="Due Date"
-        value={task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'Not set'}
-        type="date"
-        onChange={(value) => handleFieldUpdate('dueDate', value)}
-        isSaving={isSaving}
-      />
+        <DurationInput
+          label="Estimate"
+          id="estimate-duration"
+          value={Math.round((task.estimate || 0) * 60)}
+          onChange={(totalMinutes) =>
+            handleFieldUpdate('estimate', Number((totalMinutes / 60).toFixed(2)))
+          }
+          disabled={isSaving && savingField === 'estimate'}
+          showTotal={true}
+        />
 
-      {/* Completed Date */}
-      <DetailField
-        label="Completed Date"
-        value={task.completedAt ? new Date(task.completedAt).toLocaleDateString() : 'Not set'}
-        type="date"
-        isReadOnly={true}
-      />
+        <DurationInput
+          label="Spent Time"
+          id="spent-duration"
+          value={Math.round((task.spentTime || 0) * 60)}
+          onChange={(totalMinutes) =>
+            handleFieldUpdate('spentTime', Number((totalMinutes / 60).toFixed(2)))
+          }
+          disabled={isSaving && savingField === 'spentTime'}
+          showTotal={true}
+        />
 
-      {/* Estimate */}
-      <DetailField
-        label="Estimate (hours)"
-        value={task.estimate?.toString() || 'Not set'}
-        type="number"
-        onChange={(value) => handleFieldUpdate('estimate', parseInt(value) || 0)}
-        isSaving={isSaving}
-      />
+        <DurationInput
+          label="Remaining Time"
+          id="remaining-duration"
+          value={Math.round((task.remainingTime || 0) * 60)}
+          onChange={(totalMinutes) =>
+            handleFieldUpdate('remainingTime', Number((totalMinutes / 60).toFixed(2)))
+          }
+          disabled={isSaving && savingField === 'remainingTime'}
+          showTotal={true}
+        />
 
-      {/* Spent Time */}
-      <DetailField
-        label="Spent Time (hours)"
-        value={task.spentTime?.toString() || '0'}
-        type="number"
-        onChange={(value) => handleFieldUpdate('spentTime', parseInt(value) || 0)}
-        isSaving={isSaving}
-      />
+        <DetailField
+          label="Start Date"
+          value={toDateInputValue(task.startDate)}
+          type="date"
+          onChange={(value) => handleFieldUpdate('startDate', value)}
+          isSaving={isSaving}
+          plain
+        />
 
-      {/* Remaining Time */}
-      <DetailField
-        label="Remaining Time (hours)"
-        value={task.remainingTime?.toString() || 'Not set'}
-        type="number"
-        onChange={(value) => handleFieldUpdate('remainingTime', parseInt(value) || 0)}
-        isSaving={isSaving}
-      />
+        <DetailField
+          label="Due Date"
+          value={toDateInputValue(task.dueDate)}
+          type="date"
+          onChange={(value) => handleFieldUpdate('dueDate', value)}
+          isSaving={isSaving}
+          plain
+        />
+
+        <DetailField
+          label="Completed Date"
+          value={task.completedAt ? new Date(task.completedAt).toLocaleDateString() : 'Not set'}
+          type="date"
+          isReadOnly={true}
+          plain
+        />
+      </Card>
 
       {/* Tags */}
       <div className="bg-white rounded-lg border border-gray-200 p-3 shadow-sm">
