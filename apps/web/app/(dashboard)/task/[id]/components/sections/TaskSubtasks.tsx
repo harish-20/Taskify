@@ -1,25 +1,46 @@
 'use client';
 
-import { ArrowRight, Calendar, ChevronRight, GitBranch, User } from 'lucide-react';
-import Link from 'next/link';
+import { GitBranch, Unlink } from 'lucide-react';
+import { useMemo, useRef, useState } from 'react';
 
-import { TaskStatusIcons, TaskTypeIcons } from '@/components/icons/task';
-import Avatar from '@/components/UI/Avatar';
+import SubtaskSelectList from '../subtasks/SubtaskSelectList';
+import TaskListItem from '../subtasks/TaskListItem';
+
 import Badge from '@/components/UI/Badge';
-import { TASK_STATUS_LABEL } from '@/lib/constants/task';
+import useClickOutside from '@/lib/hooks/useClickoutside';
+import { removeSubtaskFromTask } from '@/lib/services/api/task';
 import { Task } from '@/lib/types/task';
 
 interface TaskSubtasksProps {
+  taskId: string;
   subTasks: Task[];
+  onTaskUpdate: (task: Task) => void;
 }
 
-const TaskSubtasks: React.FC<TaskSubtasksProps> = ({ subTasks }) => {
-  const TaskTypeIcon = TaskTypeIcons[subTasks[0]?.type || 'task'] || TaskTypeIcons.task;
-  const TaskStatusIcon = TaskStatusIcons[subTasks[0]?.status || 'todo'] || TaskStatusIcons.todo;
-  console.log('subTasks:', subTasks);
+const TaskSubtasks: React.FC<TaskSubtasksProps> = ({ taskId, subTasks, onTaskUpdate }) => {
+  const [isSelectOpen, setIsSelectOpen] = useState(false);
+  const [isUnlinkingTaskId, setIsUnlinkingTaskId] = useState<string | null>(null);
+  const subtasksCardRef = useRef<HTMLDivElement>(null);
+  const subTaskIds = useMemo(() => subTasks.map((subTask) => subTask._id), [subTasks]);
+
+  useClickOutside(subtasksCardRef, () => setIsSelectOpen(false), isSelectOpen);
+
+  const handleUnlinkSubtask = async (subTaskId: string) => {
+    try {
+      setIsUnlinkingTaskId(subTaskId);
+      const response = await removeSubtaskFromTask(taskId, subTaskId);
+      if (response.success && response.data) {
+        onTaskUpdate(response.data);
+      }
+    } catch (error) {
+      console.error('Failed to unlink subtask:', error);
+    } finally {
+      setIsUnlinkingTaskId(null);
+    }
+  };
 
   return (
-    <div className="rounded-xl border border-gray-200 bg-white">
+    <div ref={subtasksCardRef} className="rounded-xl border border-gray-200 bg-white">
       <div className="flex items-center justify-between border-b border-gray-100 px-6 py-5">
         <div>
           <div className="flex items-center gap-2">
@@ -31,10 +52,6 @@ const TaskSubtasks: React.FC<TaskSubtasksProps> = ({ subTasks }) => {
 
           <p className="mt-1 text-sm text-gray-500">Break this task into smaller deliverables.</p>
         </div>
-
-        <button className="rounded-lg border px-4 py-2 text-sm font-medium transition hover:bg-gray-50">
-          Add Subtask
-        </button>
       </div>
 
       {subTasks.length === 0 ? (
@@ -46,72 +63,64 @@ const TaskSubtasks: React.FC<TaskSubtasksProps> = ({ subTasks }) => {
           <p className="mt-1 text-sm text-gray-500">
             Split this task into smaller pieces to track progress.
           </p>
+
+          <div className="mt-6 w-full px-6">
+            <button
+              type="button"
+              onClick={() => setIsSelectOpen(true)}
+              className="w-full rounded-lg border bg-white px-4 py-2 text-sm font-medium transition hover:bg-gray-50"
+            >
+              Add Subtask
+            </button>
+          </div>
         </div>
       ) : (
         <div className="divide-y divide-gray-100">
-          {subTasks.map((subtask) => (
-            <Link
-              key={subtask._id}
-              href={`/task/${subtask._id}`}
-              className="group flex items-center gap-4 px-6 py-4 transition hover:bg-gray-50"
-            >
-              <TaskTypeIcon className="h-5 w-5 text-gray-500" />
-              <div className="flex min-w-0 flex-1 flex-col">
-                <div className="flex items-center gap-3">
-                  <span className="font-medium text-gray-900 group-hover:text-blue-600">
-                    {subtask.title}
-                  </span>
-                  <div className="flex items-center gap-1 rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700">
-                    <TaskStatusIcon className=" text-gray-500" />
-                    {TASK_STATUS_LABEL[subtask.status]}
-                  </div>
-                </div>
-
-                <div className="mt-2 flex items-center gap-5 text-sm text-gray-500">
-                  <span>{subtask.ticketId}</span>
-
-                  <span className="flex items-center gap-1">
-                    <Calendar className="h-4 w-4" />
-                    {new Date(subtask.createdAt).toLocaleDateString()}
-                  </span>
-                </div>
-              </div>
-
-              {subtask.assignees?.length ? (
-                <div className="flex -space-x-2">
-                  {subtask.assignees.slice(0, 3).map((user) => (
-                    <Avatar key={user._id} src={user.avatarUrl} name={user.name} size="sm" />
-                  ))}
-
-                  {subtask.assignees.length > 3 && (
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-gray-100 text-xs font-medium">
-                      +{subtask.assignees.length - 3}
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div className="flex items-center gap-1 text-sm text-gray-400">
-                  <User className="h-4 w-4" />
-                  Unassigned
-                </div>
-              )}
-
-              <ChevronRight className="h-5 w-5 text-gray-400 transition group-hover:translate-x-1" />
-            </Link>
-          ))}
+          {subTasks.map((subtask) => {
+            return (
+              <TaskListItem
+                key={subtask._id}
+                task={subtask}
+                href={`/task/${subtask._id}`}
+                rightAction={
+                  <button
+                    type="button"
+                    aria-label="Unlink subtask"
+                    title="Unlink subtask"
+                    disabled={isUnlinkingTaskId === subtask._id}
+                    onClick={() => handleUnlinkSubtask(subtask._id)}
+                    className="rounded-md p-2 text-gray-400 transition hover:bg-red-50 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    <Unlink className="h-4 w-4" />
+                  </button>
+                }
+              />
+            );
+          })}
         </div>
       )}
 
       {subTasks.length > 0 && (
-        <div className="flex items-center justify-between border-t border-gray-100 px-6 py-3 text-sm text-gray-500">
-          <span>{subTasks.length} subtasks</span>
-
-          <button className="flex items-center gap-1 text-blue-600 hover:text-blue-700">
-            View all
-            <ArrowRight className="h-4 w-4" />
+        <div className="border-t border-gray-100 px-6 py-4">
+          <button
+            type="button"
+            onClick={() => setIsSelectOpen(true)}
+            className="flex w-full items-center justify-center gap-2 rounded-lg border bg-white px-4 py-2 text-sm font-medium transition hover:bg-gray-50"
+          >
+            Add Subtask
           </button>
         </div>
       )}
+
+      <SubtaskSelectList
+        open={isSelectOpen}
+        parentTaskId={taskId}
+        existingSubTaskIds={subTaskIds}
+        onSubtaskAdded={(updatedTask) => {
+          onTaskUpdate(updatedTask);
+          setIsSelectOpen(false);
+        }}
+      />
     </div>
   );
 };

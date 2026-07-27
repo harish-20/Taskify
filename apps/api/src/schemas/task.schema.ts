@@ -60,6 +60,14 @@ export const updateTaskStatusSchema = z.object({
   status: z.enum(TaskStatus),
 });
 
+export const addSubTaskSchema = z.object({
+  subTaskId: z.string().regex(MONGO_DB_ID_RX, "Invalid sub-task ID"),
+});
+
+export const removeSubTaskSchema = z.object({
+  subTaskId: z.string().regex(MONGO_DB_ID_RX, "Invalid sub-task ID"),
+});
+
 export const updateTaskSchema = z
   .object({
     ticketId: z.undefined(),
@@ -116,3 +124,5 @@ export const updateTaskSchema = z
 
 export type TaskSchema = z.infer<typeof createTaskSchema>;
 export type UpdateTaskSchema = z.infer<typeof updateTaskSchema>;
+export type AddSubTaskSchema = z.infer<typeof addSubTaskSchema>;
+export type RemoveSubTaskSchema = z.infer<typeof removeSubTaskSchema>;

@@ -2,17 +2,17 @@ import { ApiResponse } from "@repo/shared/types";
 import { RequestHandler } from "express";
 
 import {
+  addSubTask as addSubTaskService,
   createTask as createTaskService,
   getTask as getTaskService,
   deleteTask as deleteTaskService,
   getTasks as getTasksService,
+  removeSubTask as removeSubTaskService,
   updateTask as updateTaskService,
   updateTaskStatus as updateTaskStatusService,
 } from "../services/task.service.js";
 import { Unauthorized } from "../utils/CustomError.js";
 import { sendResponse } from "../utils/response.js";
-
-
 
 export const createTask: RequestHandler = async (req, res, next) => {
   try {
@@ -101,6 +101,52 @@ export const updateTask: RequestHandler = async (req, res, next) => {
     const payload: ApiResponse = {
       success: true,
       message: "Task updated successfully",
+      data: task,
+    };
+
+    return sendResponse(res, 200, payload);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const addSubTask: RequestHandler = async (req, res, next) => {
+  try {
+    const user = req.userObj;
+    if (!user) throw new Unauthorized();
+
+    const task = await addSubTaskService(
+      req.params.taskId,
+      req.body.subTaskId,
+      user._id,
+    );
+
+    const payload: ApiResponse = {
+      success: true,
+      message: "Subtask added successfully",
+      data: task,
+    };
+
+    return sendResponse(res, 200, payload);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const removeSubTask: RequestHandler = async (req, res, next) => {
+  try {
+    const user = req.userObj;
+    if (!user) throw new Unauthorized();
+
+    const task = await removeSubTaskService(
+      req.params.taskId,
+      req.body.subTaskId,
+      user._id,
+    );
+
+    const payload: ApiResponse = {
+      success: true,
+      message: "Subtask removed successfully",
       data: task,
     };
 

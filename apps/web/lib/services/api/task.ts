@@ -52,3 +52,22 @@ export const deleteTask = async (taskId: string) => {
 
   return response.data;
 };
+
+export const addSubtaskToTask = async (taskId: string, subTaskId: string) => {
+  const response = await Api.post<ApiResponse<Task>>(`${pathMap.task.list}/${taskId}/subtasks`, {
+    subTaskId,
+  });
+
+  return response.data;
+};
+
+export const removeSubtaskFromTask = async (taskId: string, subTaskId: string) => {
+  const response = await Api.patch<ApiResponse<Task>>(
+    `${pathMap.task.list}/${taskId}/subtasks/remove`,
+    {
+      subTaskId,
+    },
+  );
+
+  return response.data;
+};

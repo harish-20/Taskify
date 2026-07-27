@@ -48,7 +48,7 @@ const TaskMainContent: React.FC<TaskMainContentProps> = ({ task, onTaskUpdate })
       <TaskChecklist task={task} onTaskUpdate={onTaskUpdate} />
 
       {/* Subtasks */}
-      <TaskSubtasks subTasks={task.subTasks} />
+      <TaskSubtasks taskId={task._id} subTasks={task.subTasks} onTaskUpdate={onTaskUpdate} />
 
       {/* Attachments */}
       <TaskAttachments task={task} onTaskUpdate={onTaskUpdate} />

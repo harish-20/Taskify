@@ -4,7 +4,7 @@ import { Task, TaskStatus } from "../models/task.model.js";
 import { TaskCounter } from "../models/taskCounter.model.js";
 import { User } from "../models/user.model.js";
 import { TaskSchema, UpdateTaskSchema } from "../schemas/task.schema.js";
-import { NotFound } from "../utils/CustomError.js";
+import { InvalidArgument, NotFound } from "../utils/CustomError.js";
 
 const TASK_POPULATE_OPTIONS: PopulateOptions[] = [
   {
@@ -30,11 +30,17 @@ const TASK_POPULATE_OPTIONS: PopulateOptions[] = [
   },
   {
     path: "subTasks",
-    select: "_id title status assignees ticketId createdAt type",
-    populate: {
-      path: "assignees",
-      select: "_id name avatarUrl",
-    },
+    select: "_id title status assignees createdBy ticketId createdAt type",
+    populate: [
+      {
+        path: "assignees",
+        select: "_id name avatarUrl",
+      },
+      {
+        path: "createdBy",
+        select: "_id name avatarUrl",
+      },
+    ],
   },
 ];
 
@@ -134,6 +140,105 @@ export const updateTask = async (
   await updatedTask.populate(TASK_POPULATE_OPTIONS);
 
   return updatedTask;
+};
+
+export const addSubTask = async (
+  taskId: string,
+  subTaskId: string,
+  userId: Types.ObjectId,
+) => {
+  if (taskId === subTaskId) {
+    throw new InvalidArgument("A task cannot be added as its own subtask");
+  }
+
+  const parentTask = await Task.findOne({
+    _id: taskId,
+    createdBy: userId,
+    isDeleted: false,
+  });
+
+  if (!parentTask) {
+    throw new NotFound("Task not found");
+  }
+
+  const subTask = await Task.findOne({
+    _id: subTaskId,
+    createdBy: userId,
+    isDeleted: false,
+  });
+
+  if (!subTask) {
+    throw new NotFound("Subtask not found");
+  }
+
+  const parentTaskObjectId = new Types.ObjectId(taskId);
+  const subTaskObjectId = new Types.ObjectId(subTaskId);
+
+  const alreadyLinked = parentTask.subTasks.some((id) =>
+    id.equals(subTaskObjectId),
+  );
+
+  if (!alreadyLinked) {
+    parentTask.subTasks.push(subTaskObjectId);
+  }
+
+  if (!subTask.parentTask || !subTask.parentTask.equals(parentTaskObjectId)) {
+    if (subTask.parentTask) {
+      await Task.updateOne(
+        { _id: subTask.parentTask, createdBy: userId, isDeleted: false },
+        { $pull: { subTasks: subTaskObjectId } },
+      );
+    }
+
+    subTask.parentTask = parentTaskObjectId;
+  }
+
+  await Promise.all([parentTask.save(), subTask.save()]);
+  await parentTask.populate(TASK_POPULATE_OPTIONS);
+
+  return parentTask;
+};
+
+export const removeSubTask = async (
+  taskId: string,
+  subTaskId: string,
+  userId: Types.ObjectId,
+) => {
+  const parentTask = await Task.findOne({
+    _id: taskId,
+    createdBy: userId,
+    isDeleted: false,
+  });
+
+  if (!parentTask) {
+    throw new NotFound("Task not found");
+  }
+
+  const subTask = await Task.findOne({
+    _id: subTaskId,
+    createdBy: userId,
+    isDeleted: false,
+  });
+
+  if (!subTask) {
+    throw new NotFound("Subtask not found");
+  }
+
+  const parentTaskObjectId = new Types.ObjectId(taskId);
+  const subTaskObjectId = new Types.ObjectId(subTaskId);
+
+  parentTask.subTasks = parentTask.subTasks.filter(
+    (id) => !id.equals(subTaskObjectId),
+  );
+
+  if (subTask.parentTask?.equals(parentTaskObjectId)) {
+    subTask.parentTask = undefined;
+  }
+
+  await Promise.all([parentTask.save(), subTask.save()]);
+  await parentTask.populate(TASK_POPULATE_OPTIONS);
+
+  return parentTask;
 };
 
 export const deleteTask = async (taskId: string, userId: Types.ObjectId) => {
