@@ -7,7 +7,7 @@ import SubtaskCandidateRow from './SubtaskCandidateRow';
 
 import Spinner from '@/components/UI/Spinner';
 import TextInput from '@/components/UI/TextInput';
-import { addSubtaskToTask, getTasks } from '@/lib/services/api/task';
+import { addSubtaskToTask, getAvailableSubtasks } from '@/lib/services/api/task';
 import { Task } from '@/lib/types/task';
 
 interface SubtaskSelectListProps {
@@ -29,14 +29,14 @@ const SubtaskSelectList: React.FC<SubtaskSelectListProps> = ({
   const [query, setQuery] = useState('');
 
   useEffect(() => {
-    const fetchTasks = async () => {
+    const fetchSubTasks = async () => {
       if (!open) {
         return;
       }
 
       try {
         setIsLoading(true);
-        const response = await getTasks();
+        const response = await getAvailableSubtasks(parentTaskId);
         setAllTasks(response.data || []);
       } catch (error) {
         console.error('Failed to fetch tasks for subtask picker:', error);
@@ -45,7 +45,7 @@ const SubtaskSelectList: React.FC<SubtaskSelectListProps> = ({
       }
     };
 
-    void fetchTasks();
+    void fetchSubTasks();
   }, [open]);
 
   useEffect(() => {
@@ -107,11 +107,11 @@ const SubtaskSelectList: React.FC<SubtaskSelectListProps> = ({
 
       <div className="mt-3 max-h-[18rem] overflow-auto rounded-lg border border-gray-100 bg-white pr-1">
         {isLoading ? (
-          <div className="flex items-center justify-center py-8">
+          <div className="min-h-[17rem] flex items-center justify-center py-8">
             <Spinner />
           </div>
         ) : filteredTasks.length === 0 ? (
-          <p className="rounded-lg border border-dashed border-gray-200 bg-white py-6 text-center text-sm text-gray-500">
+          <p className="min-h-[17rem] flex items-center justify-center rounded-lg border border-dashed border-gray-200 bg-white py-6 text-center text-sm text-gray-500">
             No tasks available to add.
           </p>
         ) : (

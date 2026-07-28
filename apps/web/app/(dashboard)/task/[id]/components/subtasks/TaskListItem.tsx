@@ -92,7 +92,7 @@ const TaskListItem: React.FC<TaskListItemProps> = ({
   const rowClassName = `group flex min-w-0 flex-1 items-center gap-4 ${onClick ? 'w-full text-left' : ''}`;
 
   return (
-    <div className="group flex items-center gap-3 px-6 py-4 transition hover:bg-gray-50">
+    <div className="group flex items-center gap-3 px-6 py-4 transition rounded-lg hover:bg-gray-50">
       {href ? (
         <Link href={href} className={rowClassName}>
           {content}

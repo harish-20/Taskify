@@ -9,6 +9,7 @@ import TaskComments from './sections/TaskComments';
 import TaskDependencies from './sections/TaskDependencies';
 import TaskDescription from './sections/TaskDescription';
 import TaskSubtasks from './sections/TaskSubtasks';
+import TaskListItem from './subtasks/TaskListItem';
 
 import { updateTask } from '@/lib/services/api/task';
 import { Task } from '@/lib/types/task';
@@ -20,6 +21,7 @@ interface TaskMainContentProps {
 
 const TaskMainContent: React.FC<TaskMainContentProps> = ({ task, onTaskUpdate }) => {
   const [isSaving, setIsSaving] = useState(false);
+  console.log(task.parentTask);
 
   const handleDescriptionUpdate = async (description: string | TrustedHTML) => {
     try {
@@ -47,8 +49,18 @@ const TaskMainContent: React.FC<TaskMainContentProps> = ({ task, onTaskUpdate })
       {/* Checklist */}
       <TaskChecklist task={task} onTaskUpdate={onTaskUpdate} />
 
+      {/* Parent Task */}
+      {task.parentTask && (
+        <div className="rounded-xl border border-gray-200 bg-white p-6">
+          <h3 className="mb-4 text-lg font-semibold">Parent Task</h3>
+          <TaskListItem href={`/task/${task.parentTask._id}`} task={task.parentTask} />
+        </div>
+      )}
+
       {/* Subtasks */}
-      <TaskSubtasks taskId={task._id} subTasks={task.subTasks} onTaskUpdate={onTaskUpdate} />
+      {!task.parentTask && (
+        <TaskSubtasks taskId={task._id} subTasks={task.subTasks} onTaskUpdate={onTaskUpdate} />
+      )}
 
       {/* Attachments */}
       <TaskAttachments task={task} onTaskUpdate={onTaskUpdate} />

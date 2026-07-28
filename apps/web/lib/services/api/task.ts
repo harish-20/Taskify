@@ -53,6 +53,14 @@ export const deleteTask = async (taskId: string) => {
   return response.data;
 };
 
+export const getAvailableSubtasks = async (taskId: string) => {
+  const response = await Api.get<ApiResponse<Task[]>>(
+    `${pathMap.task.list}/${taskId}/available-subtasks`,
+  );
+
+  return response.data;
+};
+
 export const addSubtaskToTask = async (taskId: string, subTaskId: string) => {
   const response = await Api.post<ApiResponse<Task>>(`${pathMap.task.list}/${taskId}/subtasks`, {
     subTaskId,

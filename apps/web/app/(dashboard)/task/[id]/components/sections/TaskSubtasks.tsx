@@ -100,7 +100,7 @@ const TaskSubtasks: React.FC<TaskSubtasksProps> = ({ taskId, subTasks, onTaskUpd
         </div>
       )}
 
-      {subTasks.length > 0 && (
+      {!isSelectOpen && subTasks.length > 0 && (
         <div className="border-t border-gray-100 px-6 py-4">
           <button
             type="button"

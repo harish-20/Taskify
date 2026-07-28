@@ -9,6 +9,7 @@ import {
   removeSubTask,
   updateTask,
   updateTaskStatus,
+  getAvailableSubtasks,
 } from "../controllers/task.controller.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 import { validateRequest } from "../middlewares/validate.middleware.js";
@@ -42,6 +43,11 @@ taskRouter.patch(
   authMiddleware,
   validateRequest(updateTaskSchema),
   updateTask,
+);
+taskRouter.get(
+  "/:taskId/available-subtasks",
+  authMiddleware,
+  getAvailableSubtasks,
 );
 taskRouter.post(
   "/:taskId/subtasks",
