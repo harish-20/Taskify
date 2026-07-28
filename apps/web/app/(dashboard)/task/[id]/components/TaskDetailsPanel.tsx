@@ -78,7 +78,7 @@ const TaskDetailsPanel: React.FC<TaskDetailsPanelProps> = ({ task, onTaskUpdate 
       return Number.isFinite(current) && Number.isFinite(next) && current === next;
     }
 
-    if (field === 'startDate' || field === 'dueDate') {
+    if (field === 'startDate' || field === 'dueDate' || field === 'completedAt') {
       const current = toDateKey(taskFields[field]);
       const next = toDateKey(nextValue);
 
@@ -235,9 +235,10 @@ const TaskDetailsPanel: React.FC<TaskDetailsPanelProps> = ({ task, onTaskUpdate 
 
         <DetailField
           label="Completed Date"
-          value={task.completedAt ? new Date(task.completedAt).toLocaleDateString() : 'Not set'}
+          value={toDateInputValue(task.completedAt)}
           type="date"
-          isReadOnly={true}
+          onChange={(value) => handleFieldUpdate('completedAt', value)}
+          isSaving={isSaving}
           plain
         />
       </Card>

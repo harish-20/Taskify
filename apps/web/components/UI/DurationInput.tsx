@@ -1,6 +1,9 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect, useMemo, useRef } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 interface DurationInputProps {
   label?: string;
@@ -21,6 +24,18 @@ interface DurationInputProps {
 
 const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
 
+const toFieldValue = (value: number) => (value === 0 ? '' : String(value));
+
+const toNumber = (value: string) => {
+  const trimmed = value.trim();
+
+  if (!trimmed) {
+    return 0;
+  }
+
+  return Number.parseInt(trimmed, 10);
+};
+
 const formatDuration = (hours: number, minutes: number) => {
   if (hours === 0 && minutes === 0) {
     return '0m';
@@ -37,40 +52,9 @@ const formatDuration = (hours: number, minutes: number) => {
   return `${hours}h${minutes}m`;
 };
 
-const parseDuration = (value: string) => {
-  const input = value.trim().toLowerCase();
-
-  if (!input) {
-    return null;
-  }
-
-  const colonMatch = input.match(/^(\d+)\s*:\s*(\d{1,2})$/);
-
-  if (colonMatch) {
-    return {
-      hours: Number.parseInt(colonMatch[1] ?? '0', 10),
-      minutes: Number.parseInt(colonMatch[2] ?? '0', 10),
-    };
-  }
-
-  const hourMatch = input.match(/(\d+)\s*h/);
-  const minuteMatch = input.match(/(\d+)\s*m/);
-
-  if (hourMatch || minuteMatch) {
-    return {
-      hours: hourMatch ? Number.parseInt(hourMatch[1] ?? '0', 10) : 0,
-      minutes: minuteMatch ? Number.parseInt(minuteMatch[1] ?? '0', 10) : 0,
-    };
-  }
-
-  if (/^\d+$/.test(input)) {
-    return {
-      hours: Number.parseInt(input, 10),
-      minutes: 0,
-    };
-  }
-
-  return null;
+type DurationFormValues = {
+  hours: string;
+  minutes: string;
 };
 
 const DurationInput: React.FC<DurationInputProps> = ({
@@ -80,7 +64,6 @@ const DurationInput: React.FC<DurationInputProps> = ({
   value = 0,
   onChange,
   onDurationChange,
-  minuteStep = 5,
   maxHours = 99,
   disabled = false,
   error,
@@ -89,43 +72,86 @@ const DurationInput: React.FC<DurationInputProps> = ({
   containerClass = '',
   showTotal = true,
 }) => {
-  const safeStep = clamp(Number.isFinite(minuteStep) ? Math.floor(minuteStep) : 5, 1, 30);
   const safeMaxHours = clamp(Number.isFinite(maxHours) ? Math.floor(maxHours) : 99, 1, 999);
   const safeValue = Math.max(0, Math.floor(Number.isFinite(value) ? value : 0));
 
   const hours = clamp(Math.floor(safeValue / 60), 0, safeMaxHours);
   const minutes = safeValue % 60;
+  const lastSyncedValueRef = useRef(safeValue);
+  const inputName = name || id || 'duration';
 
-  const [durationInput, setDurationInput] = useState(formatDuration(hours, minutes));
+  const validationSchema = useMemo(
+    () =>
+      z
+        .object({
+          hours: z
+            .string()
+            .trim()
+            .refine((value) => value === '' || /^\d+$/.test(value), {
+              message: 'Hours must be a number. Example: 2h 30m',
+            }),
+          minutes: z
+            .string()
+            .trim()
+            .refine((value) => value === '' || /^\d+$/.test(value), {
+              message: 'Minutes must be a number. Example: 2h 30m',
+            }),
+        })
+        .refine(
+          (data) => {
+            const parsedHours = toNumber(data.hours);
+            return parsedHours <= safeMaxHours;
+          },
+          {
+            path: ['hours'],
+            message: `Hours cannot exceed ${safeMaxHours}.`,
+          },
+        )
+        .refine(
+          (data) => {
+            const parsedMinutes = toNumber(data.minutes);
+            return parsedMinutes >= 0 && parsedMinutes <= 59;
+          },
+          {
+            path: ['minutes'],
+            message: 'Minutes must be between 0 and 59. Example: 2h 30m',
+          },
+        ),
+    [safeMaxHours],
+  );
+
+  const {
+    register,
+    setValue,
+    getValues,
+    clearErrors,
+    trigger,
+    formState: { errors },
+  } = useForm<DurationFormValues>({
+    resolver: zodResolver(validationSchema),
+    mode: 'onBlur',
+    defaultValues: {
+      hours: toFieldValue(hours),
+      minutes: toFieldValue(minutes),
+    },
+  });
 
   useEffect(() => {
-    setDurationInput(formatDuration(hours, minutes));
-  }, [hours, minutes]);
-
-  const minuteOptions = useMemo(() => {
-    const options = new Set<number>();
-
-    for (let i = 0; i < 60; i += safeStep) {
-      options.add(i);
+    if (lastSyncedValueRef.current === safeValue) {
+      return;
     }
 
-    options.add(minutes);
-
-    return [...options].sort((a, b) => a - b);
-  }, [minutes, safeStep]);
-
-  const durationSuggestions = useMemo(() => {
-    const suggestions: string[] = ['15m', '30m', '45m'];
-
-    for (let hour = 1; hour <= Math.min(safeMaxHours, 12); hour += 1) {
-      suggestions.push(`${hour}h`);
-      for (let minute = safeStep; minute < 60; minute += safeStep) {
-        suggestions.push(`${hour}h${minute}m`);
-      }
-    }
-
-    return suggestions;
-  }, [safeMaxHours, safeStep]);
+    setValue('hours', toFieldValue(hours), {
+      shouldDirty: false,
+      shouldValidate: false,
+    });
+    setValue('minutes', toFieldValue(minutes), {
+      shouldDirty: false,
+      shouldValidate: false,
+    });
+    clearErrors();
+    lastSyncedValueRef.current = safeValue;
+  }, [hours, minutes, safeValue, setValue, clearErrors]);
 
   const emitChange = (nextHours: number, nextMinutes: number) => {
     const boundedHours = clamp(nextHours, 0, safeMaxHours);
@@ -140,31 +166,44 @@ const DurationInput: React.FC<DurationInputProps> = ({
     });
   };
 
-  const commitInput = () => {
-    const parsed = parseDuration(durationInput);
+  const commitInput = async () => {
+    const isValid = await trigger(['hours', 'minutes']);
 
-    if (!parsed) {
-      setDurationInput(formatDuration(hours, minutes));
+    if (!isValid) {
       return;
     }
 
-    const totalInputMinutes = parsed.hours * 60 + parsed.minutes;
-    const normalizedHours = Math.floor(totalInputMinutes / 60);
-    const normalizedMinutes = totalInputMinutes % 60;
-    const boundedHours = clamp(normalizedHours, 0, safeMaxHours);
-    const boundedMinutes = clamp(normalizedMinutes, 0, 59);
+    const formValues = getValues();
+    const boundedHours = clamp(toNumber(formValues.hours), 0, safeMaxHours);
+    const boundedMinutes = clamp(toNumber(formValues.minutes), 0, 59);
     const nextTotalMinutes = boundedHours * 60 + boundedMinutes;
 
     if (nextTotalMinutes === safeValue) {
-      setDurationInput(formatDuration(boundedHours, boundedMinutes));
+      setValue('hours', toFieldValue(boundedHours), {
+        shouldDirty: false,
+        shouldValidate: false,
+      });
+      setValue('minutes', toFieldValue(boundedMinutes), {
+        shouldDirty: false,
+        shouldValidate: false,
+      });
       return;
     }
 
     emitChange(boundedHours, boundedMinutes);
-    setDurationInput(formatDuration(boundedHours, boundedMinutes));
+    setValue('hours', toFieldValue(boundedHours), {
+      shouldDirty: false,
+      shouldValidate: false,
+    });
+    setValue('minutes', toFieldValue(boundedMinutes), {
+      shouldDirty: false,
+      shouldValidate: false,
+    });
   };
 
-  const durationListId = `${id || name || 'duration'}-list`;
+  const hoursField = register('hours');
+  const minutesField = register('minutes');
+  const durationFieldError = error || errors.hours?.message || errors.minutes?.message;
 
   return (
     <div className={`flex flex-col gap-1 ${containerClass}`}>
@@ -175,40 +214,56 @@ const DurationInput: React.FC<DurationInputProps> = ({
       )}
 
       <div className={`flex flex-col gap-1 ${className}`}>
-        <input
-          id={id}
-          name={name}
-          type="text"
-          value={durationInput}
-          disabled={disabled}
-          list={durationListId}
-          onChange={(event) => setDurationInput(event.target.value)}
-          onBlur={commitInput}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter') {
-              event.preventDefault();
-              commitInput();
-            }
-          }}
-          placeholder="e.g. 2h30m"
-          className="min-h-10 rounded-md border-2 border-gray bg-white px-2 text-sm outline-none transition-colors duration-200 focus:border-black disabled:cursor-not-allowed disabled:bg-gray"
-        />
+        <div className="inline-flex w-fit min-h-10 items-center self-start rounded-md border-2 border-gray bg-white px-2 text-sm transition-colors duration-200 focus-within:border-black disabled:cursor-not-allowed disabled:bg-gray">
+          <input
+            id={id ? `${id}-hours` : ''}
+            type="text"
+            inputMode="numeric"
+            disabled={disabled}
+            aria-label="Hours"
+            {...hoursField}
+            onBlur={(event) => {
+              hoursField.onBlur(event);
+              void commitInput();
+            }}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter') {
+                event.preventDefault();
+                void commitInput();
+              }
+            }}
+            className="w-14 border-none bg-transparent p-0 text-right outline-none"
+          />
+          <span className="mx-1 text-dark-gray">h</span>
 
-        <datalist id={durationListId}>
-          {durationSuggestions.map((option) => (
-            <option key={option} value={option} />
-          ))}
-          {minuteOptions.map((option) => (
-            <option key={`m-${option}`} value={`${option}m`} />
-          ))}
-        </datalist>
+          <span className="mx-2 h-5 w-px bg-gray-300" />
+
+          <input
+            id={id ? `${id}-minutes` : ''}
+            type="text"
+            inputMode="numeric"
+            disabled={disabled}
+            aria-label="Minutes"
+            {...minutesField}
+            onBlur={(event) => {
+              minutesField.onBlur(event);
+              void commitInput();
+            }}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter') {
+                event.preventDefault();
+                void commitInput();
+              }
+            }}
+            className="w-14 border-none bg-transparent p-0 text-right outline-none"
+          />
+          <span className="ml-1 text-dark-gray">m</span>
+
+          <input type="hidden" name={inputName} value={`${hours}h${minutes}m`} readOnly />
+        </div>
       </div>
 
-      {showTotal && (
-        <p className="text-xs text-dark-gray">Selected: {formatDuration(hours, minutes)}</p>
-      )}
-
-      {error && <p className="text-xs text-red-500">{error}</p>}
+      {durationFieldError && <p className="text-xs text-red-500">{durationFieldError}</p>}
     </div>
   );
 };
