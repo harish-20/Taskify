@@ -81,7 +81,7 @@ const TaskSubtasks: React.FC<TaskSubtasksProps> = ({ taskId, subTasks, onTaskUpd
               <TaskListItem
                 key={subtask._id}
                 task={subtask}
-                href={`/task/${subtask._id}`}
+                href={`/board/task/${subtask._id}`}
                 rightAction={
                   <button
                     type="button"

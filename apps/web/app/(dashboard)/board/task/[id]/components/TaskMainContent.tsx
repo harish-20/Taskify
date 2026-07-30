@@ -53,7 +53,7 @@ const TaskMainContent: React.FC<TaskMainContentProps> = ({ task, onTaskUpdate })
       {task.parentTask && (
         <div className="rounded-xl border border-gray-200 bg-white p-6">
           <h3 className="mb-4 text-lg font-semibold">Parent Task</h3>
-          <TaskListItem href={`/task/${task.parentTask._id}`} task={task.parentTask} />
+          <TaskListItem href={`/board/task/${task.parentTask._id}`} task={task.parentTask} />
         </div>
       )}
 

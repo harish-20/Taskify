@@ -9,7 +9,6 @@ import Spinner from '@/components/UI/Spinner';
 import { getTaskById } from '@/lib/services/api/task';
 import { Task } from '@/lib/types/task';
 
-
 export default function TaskDetailPage() {
   const params = useParams();
   const taskId = params.id as string;

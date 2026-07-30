@@ -39,7 +39,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
 
     // If distance is less than 5px, treat it as a click
     if (distance < 5) {
-      router.push(`/task/${task._id}`);
+      router.push(`/board/task/${task._id}`);
     }
 
     mouseDownPos.current = null;
