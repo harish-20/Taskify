@@ -11,6 +11,7 @@ import TaskDescription from './sections/TaskDescription';
 import TaskSubtasks from './sections/TaskSubtasks';
 import TaskListItem from './subtasks/TaskListItem';
 
+import { useApi } from '@/lib/hooks/useApi';
 import { updateTask } from '@/lib/services/api/task';
 import { Task } from '@/lib/types/task';
 
@@ -20,22 +21,14 @@ interface TaskMainContentProps {
 }
 
 const TaskMainContent: React.FC<TaskMainContentProps> = ({ task, onTaskUpdate }) => {
-  const [isSaving, setIsSaving] = useState(false);
-  console.log(task.parentTask);
-
-  const handleDescriptionUpdate = async (description: string | TrustedHTML) => {
-    try {
-      setIsSaving(true);
+  const { execute: handleDescriptionUpdate, loading: isSaving } = useApi(
+    async (description: string | TrustedHTML) => {
       const response = await updateTask(task._id, { description });
       if (response.success && response.data) {
         onTaskUpdate(response.data);
       }
-    } catch (error) {
-      console.error('Failed to update description:', error);
-    } finally {
-      setIsSaving(false);
-    }
-  };
+    },
+  );
 
   return (
     <div className="space-y-6">

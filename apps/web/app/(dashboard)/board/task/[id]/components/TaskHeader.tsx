@@ -1,264 +1,161 @@
 'use client';
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Star, Share2, MoreHorizontal, Copy } from 'lucide-react';
-import { useState, useRef, useEffect } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { Copy, MoreHorizontal, Share2, Star } from 'lucide-react';
+import { useState } from 'react';
 
-import { taskDetailSchema, TaskDetailFormType } from '../schemas/taskDetailSchema';
-
-import { TaskTypeIcons, TaskPriorityIcons, TaskStatusIcons } from '@/components/icons/task';
+import { TaskPriorityIcons, TaskStatusIcons, TaskTypeIcons } from '@/components/icons/task';
 import Button from '@/components/UI/Button';
 import { EditableText } from '@/components/UI/EditableText';
 import Select, { SelectOption } from '@/components/UI/Select';
 import Tooltip from '@/components/UI/Tooltip';
-import { TASK_PRIORITY_LABEL, TASK_STATUS_LABEL, TASK_TYPE_LABEL } from '@/lib/constants/task';
+import {
+  TASK_PRIORITY_LABEL,
+  TASK_PRIORITY_VALUES,
+  TASK_STATUS_LABEL,
+  TASK_STATUS_VALUES,
+  TASK_TYPE_LABEL,
+  TASK_TYPE_VALUES,
+} from '@/lib/constants/task';
+import { useApi } from '@/lib/hooks/useApi';
 import { updateTask } from '@/lib/services/api/task';
-import { Task, TaskType, TaskPriority, TaskStatus } from '@/lib/types/task';
+import { Task, TaskPriority, TaskStatus, TaskType } from '@/lib/types/task';
 
 interface TaskHeaderProps {
   task: Task;
   onTaskUpdate: (task: Task) => void;
 }
 
-const taskTypeOptions: SelectOption<TaskType>[] = [
-  { label: TASK_TYPE_LABEL['story'], value: 'story', icon: <TaskTypeIcons.story size={16} /> },
-  { label: TASK_TYPE_LABEL['bug'], value: 'bug', icon: <TaskTypeIcons.bug size={16} /> },
-  {
-    label: TASK_TYPE_LABEL['feature'],
-    value: 'feature',
-    icon: <TaskTypeIcons.feature size={16} />,
-  },
-  { label: TASK_TYPE_LABEL['task'], value: 'task', icon: <TaskTypeIcons.task size={16} /> },
-];
+const taskTypeOptions: SelectOption<TaskType>[] = TASK_TYPE_VALUES.map((type) => {
+  const Icon = TaskTypeIcons[type];
 
-const priorityOptions: SelectOption<TaskPriority>[] = [
-  { label: TASK_PRIORITY_LABEL['low'], value: 'low', icon: <TaskPriorityIcons.low size={16} /> },
-  {
-    label: TASK_PRIORITY_LABEL['medium'],
-    value: 'medium',
-    icon: <TaskPriorityIcons.medium size={16} />,
-  },
-  { label: TASK_PRIORITY_LABEL['high'], value: 'high', icon: <TaskPriorityIcons.high size={16} /> },
-  {
-    label: TASK_PRIORITY_LABEL['critical'],
-    value: 'critical',
-    icon: <TaskPriorityIcons.critical size={16} />,
-  },
-];
+  return {
+    label: TASK_TYPE_LABEL[type],
+    value: type,
+    icon: <Icon size={16} />,
+  };
+});
 
-const statusOptions: SelectOption<TaskStatus>[] = [
-  { label: TASK_STATUS_LABEL['todo'], value: 'todo', icon: <TaskStatusIcons.todo size={16} /> },
-  {
-    label: TASK_STATUS_LABEL['in_progress'],
-    value: 'in_progress',
-    icon: <TaskStatusIcons.in_progress size={16} />,
-  },
-  {
-    label: TASK_STATUS_LABEL['review'],
-    value: 'review',
-    icon: <TaskStatusIcons.review size={16} />,
-  },
-  { label: TASK_STATUS_LABEL['done'], value: 'done', icon: <TaskStatusIcons.done size={16} /> },
-];
+const priorityOptions: SelectOption<TaskPriority>[] = TASK_PRIORITY_VALUES.map((priority) => {
+  const Icon = TaskPriorityIcons[priority];
+
+  return {
+    label: TASK_PRIORITY_LABEL[priority],
+    value: priority,
+    icon: <Icon size={16} />,
+  };
+});
+
+const statusOptions: SelectOption<TaskStatus>[] = TASK_STATUS_VALUES.map((status) => {
+  const Icon = TaskStatusIcons[status];
+
+  return {
+    label: TASK_STATUS_LABEL[status],
+    value: status,
+    icon: <Icon size={16} />,
+  };
+});
+
+type EditableField = Pick<Task, 'title' | 'type' | 'priority' | 'status'>;
 
 const TaskHeader: React.FC<TaskHeaderProps> = ({ task, onTaskUpdate }) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const titleInputRef = useRef<HTMLInputElement>(null);
-  const [isSaving, setIsSaving] = useState(false);
-  const [selectedType, setSelectedType] = useState(task.type);
-  const [selectedPriority, setSelectedPriority] = useState(task.priority);
-  const [selectedStatus, setSelectedStatus] = useState(task.status);
   const [isCopying, setIsCopying] = useState(false);
 
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm<TaskDetailFormType>({
-    resolver: zodResolver(taskDetailSchema),
-    defaultValues: {
-      title: task.title,
-    },
-  });
+  const { execute: updateTaskApi, loading } = useApi(updateTask);
 
-  const currentTitle = watch('title');
-
-  useEffect(() => {
-    if (isEditing && titleInputRef.current) {
-      titleInputRef.current.focus();
-      titleInputRef.current.select();
-    }
-  }, [isEditing]);
-
-  const handleCopyTicketId = () => {
-    setIsCopying(true);
-    navigator.clipboard.writeText(task.ticketId).then(() => {
-      setTimeout(() => {
-        setIsCopying(false);
-      }, 1000);
-    });
-  };
-
-  const onSubmit: SubmitHandler<TaskDetailFormType> = async (data) => {
+  const updateField = async <K extends keyof EditableField>(field: K, value: EditableField[K]) => {
     try {
-      setIsSaving(true);
-      const response = await updateTask(task._id, {
-        title: data.title,
-        type: selectedType as TaskType,
-        priority: selectedPriority as TaskPriority,
-        status: selectedStatus as TaskStatus,
+      const response = await updateTaskApi(task._id, {
+        [field]: value,
       });
 
       if (response.success && response.data) {
         onTaskUpdate(response.data);
-        setIsEditing(false);
       }
     } catch (error) {
-      console.error('Failed to update task:', error);
-    } finally {
-      setIsSaving(false);
+      console.error(error);
     }
   };
 
-  const handleFieldChange = async (field: string, value: string) => {
-    try {
-      setIsSaving(true);
-      const updateData: any = { [field]: value };
-      const response = await updateTask(task._id, updateData);
+  const handleCopyTicketId = async () => {
+    await navigator.clipboard.writeText(task.ticketId);
 
-      if (response.success && response.data) {
-        onTaskUpdate(response.data);
-      }
-    } catch (error) {
-      console.error(`Failed to update ${field}:`, error);
-    } finally {
-      setIsSaving(false);
-    }
+    setIsCopying(true);
+
+    setTimeout(() => setIsCopying(false), 1000);
   };
 
-  const getPriorityColor = (priority: TaskPriority) => {
-    switch (priority) {
-      case 'critical':
-        return 'bg-red-100 text-red-800';
-      case 'high':
-        return 'bg-orange-100 text-orange-800';
-      case 'medium':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'low':
-        return 'bg-green-100 text-green-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  };
-
-  const getStatusColor = (status: TaskStatus) => {
-    switch (status) {
-      case 'done':
-        return 'bg-green-100 text-green-800';
-      case 'review':
-        return 'bg-blue-100 text-blue-800';
-      case 'in_progress':
-        return 'bg-purple-100 text-purple-800';
-      case 'todo':
-        return 'bg-gray-100 text-gray-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  };
-
-  const TaskIcon = TaskTypeIcons[selectedType as TaskType] || TaskTypeIcons['task'];
+  const TaskIcon = TaskTypeIcons[task.type];
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4">
       <div className="flex items-center gap-2">
         <p className="text-sm font-bold text-gray-500">{task.ticketId}</p>
-        <Tooltip content={isCopying ? 'Copied' : ''} alwaysVisible>
+
+        <Tooltip content={isCopying ? 'Copied!' : ''} alwaysVisible>
           <Button
-            className="aspect-square"
             variant="text"
             size="sm"
-            onClick={handleCopyTicketId}
+            className="aspect-square"
             done={isCopying}
+            onClick={handleCopyTicketId}
           >
             <Copy size={12} className="text-gray-600" />
           </Button>
         </Tooltip>
       </div>
-      {/* Task ID and Title */}
-      <div className="flex-1 flex flex-col gap-4">
+
+      <div className="flex flex-col gap-4">
         <div className="flex items-center gap-4">
-          <div className="flex-1 flex gap-4">
+          <div className="flex flex-1 gap-4">
             <TaskIcon size={32} className="mt-4 text-gray-600" />
+
             <EditableText
               value={task.title}
-              onSave={(value) => handleFieldChange('title', value)}
-              className="pl-0 p-3 text-4xl font-medium text-gray-900"
               placeholder="Enter task title"
+              className="p-3 pl-0 text-4xl font-medium text-gray-900"
+              onSave={(value) => updateField('title', value)}
             />
           </div>
 
-          {/* Quick Actions */}
           <div className="flex items-center gap-2">
-            <button
-              type="button"
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-              title="Add to favorites"
-            >
+            <button type="button" className="rounded-lg p-2 transition-colors hover:bg-gray-100">
               <Star size={20} className="text-gray-600" />
             </button>
-            <button
-              type="button"
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-              title="Share"
-            >
+
+            <button type="button" className="rounded-lg p-2 transition-colors hover:bg-gray-100">
               <Share2 size={20} className="text-gray-600" />
             </button>
-            <button
-              type="button"
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-              title="More options"
-            >
+
+            <button type="button" className="rounded-lg p-2 transition-colors hover:bg-gray-100">
               <MoreHorizontal size={20} className="text-gray-600" />
             </button>
           </div>
         </div>
 
-        {/* Type, Priority, Status */}
-        <div className="flex gap-4 flex-wrap items-start">
+        <div className="flex flex-wrap items-start gap-4">
           <Select
+            value={task.type}
             options={taskTypeOptions}
-            value={selectedType}
-            onChange={(value) => {
-              setSelectedType(value);
-              handleFieldChange('type', value);
-            }}
-            className="mt-1 min-w-[120px]"
+            disabled={loading}
+            onChange={(value) => updateField('type', value)}
           />
 
           <Select
+            value={task.priority}
             options={priorityOptions}
-            value={selectedPriority}
-            onChange={(value) => {
-              setSelectedPriority(value);
-              handleFieldChange('priority', value);
-            }}
-            className={`mt-1 min-w-[120px] ${getPriorityColor(selectedPriority as TaskPriority)}`}
+            disabled={loading}
+            onChange={(value) => updateField('priority', value)}
           />
 
           <Select
+            value={task.status}
             options={statusOptions}
-            value={selectedStatus}
-            onChange={(value) => {
-              setSelectedStatus(value);
-              handleFieldChange('status', value);
-            }}
-            className={`mt-1 min-w-[120px] ${getStatusColor(selectedStatus as TaskStatus)}`}
+            disabled={loading}
+            onChange={(value) => updateField('status', value)}
           />
         </div>
       </div>
-    </form>
+    </div>
   );
 };
 
