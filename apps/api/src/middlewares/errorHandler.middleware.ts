@@ -6,8 +6,6 @@ import { CustomError, InvalidArgument } from "../utils/CustomError.js";
 import logger from "../utils/logger.js";
 import { sendResponse } from "../utils/response.js";
 
-
-
 export const errorHandler: ErrorRequestHandler = (err, req, res, _next) => {
   if (err instanceof CustomError) {
     logger.error(`Programatic error [${err.errorCode}] - ${err.message}\n`, {
