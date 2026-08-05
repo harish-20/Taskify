@@ -64,9 +64,16 @@ export const logger = winston.createLogger({
         winston.format.timestamp({
           format: "hh:mm:ss a",
         }),
-        winston.format.printf(({ timestamp, level, message }) => {
-          return `${timestamp} ${level}: ${message}`;
-        }),
+        winston.format.printf(
+          ({ timestamp, level, message, service, ...meta }) => {
+            const metadata =
+              Object.keys(meta).length > 0
+                ? `\n${JSON.stringify(meta, null, 2)}`
+                : "";
+
+            return `${timestamp} ${level}: ${message}${metadata}`;
+          },
+        ),
       ),
     }),
   ],
