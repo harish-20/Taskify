@@ -7,7 +7,6 @@ import { Task } from '@/lib/types/task';
 
 interface TaskCommentsProps {
   task: Task;
-  onTaskUpdate: (task: Task) => void;
 }
 
 const TaskComments: React.FC<TaskCommentsProps> = ({ task }) => {

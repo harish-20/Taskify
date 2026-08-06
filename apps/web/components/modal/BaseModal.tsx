@@ -8,7 +8,6 @@ import type { ModalProps } from '@/lib/types/components';
 
 import usePortalTarget from '@/lib/hooks/usePortalTarget';
 
-
 interface BaseModalProps extends PropsWithChildren, ModalProps {}
 
 const BaseModal: React.FC<BaseModalProps> = (props) => {
@@ -23,7 +22,7 @@ const BaseModal: React.FC<BaseModalProps> = (props) => {
       <motion.div
         animate={{ translateY: ['-30%', '-50%'], opacity: [0, 1] }}
         exit={{ translateY: ['-50%', '-30%'], opacity: [1, 0] }}
-        className="z-10 absolute top-1/2 left-1/2 -translate-x-1/2"
+        className="z-20 fixed top-1/2 left-1/2 -translate-x-1/2"
       >
         {children}
       </motion.div>

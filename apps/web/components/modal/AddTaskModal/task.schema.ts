@@ -14,6 +14,7 @@ const TaskSchema = z.object({
   type: TaskTypeSchema,
   status: TaskStatusSchema,
   priority: TaskPrioritySchema,
+  startDate: z.date().optional(),
   dueDate: z.date().min(new Date(), {
     message: 'Due date must be in the future',
   }),

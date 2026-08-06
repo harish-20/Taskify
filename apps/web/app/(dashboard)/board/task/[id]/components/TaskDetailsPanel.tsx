@@ -2,23 +2,22 @@
 
 import { useState, useCallback, useEffect } from 'react';
 
+import { TaskFieldUpdater } from '../hooks/useTaskFields';
+
 import { Card, CardHeader } from '@/components/UI/Card';
 import DetailField from '@/components/UI/DetailField';
 import DurationInput from '@/components/UI/DurationInput';
 import TagInput from '@/components/UI/TagInput';
 import UsersListInput from '@/components/UI/UsersListInput';
 import { getOrganizationUsers } from '@/lib/services/api/organization';
-import { updateTask } from '@/lib/services/api/task';
 import { Task } from '@/lib/types/task';
 
 interface TaskDetailsPanelProps {
   task: Task;
-  onTaskUpdate: (task: Task) => void;
+  taskFieldUpdater: TaskFieldUpdater;
 }
 
-const TaskDetailsPanel: React.FC<TaskDetailsPanelProps> = ({ task, onTaskUpdate }) => {
-  const [isSaving, setIsSaving] = useState(false);
-  const [savingField, setSavingField] = useState<string | null>(null);
+const TaskDetailsPanel: React.FC<TaskDetailsPanelProps> = ({ task, taskFieldUpdater }) => {
   const [organizationUsers, setOrganizationUsers] = useState<Task['assignees']>([]);
   const taskFields = task as unknown as Record<string, unknown>;
 
@@ -123,27 +122,27 @@ const TaskDetailsPanel: React.FC<TaskDetailsPanelProps> = ({ task, onTaskUpdate 
     fetchOrganizationUsers();
   }, [task.organizationId]);
 
-  const handleFieldUpdate = useCallback(
-    async (field: string, value: any) => {
-      if (isFieldValueSame(field, value)) {
-        return;
+  const normalizeFieldValue = useCallback((field: keyof Task, value: unknown) => {
+    if (field === 'startDate' || field === 'dueDate' || field === 'completedAt') {
+      if (!value) {
+        return undefined;
       }
 
-      try {
-        setIsSaving(true);
-        setSavingField(field);
-        const response = await updateTask(task._id, { [field]: value });
-        if (response.success && response.data) {
-          onTaskUpdate(response.data);
-        }
-      } catch (error) {
-        console.error(`Failed to update ${field}:`, error);
-      } finally {
-        setIsSaving(false);
-        setSavingField(null);
-      }
+      const date = new Date(value as string);
+      return Number.isNaN(date.getTime()) ? undefined : date;
+    }
+
+    return value;
+  }, []);
+
+  const handleFieldUpdate = useCallback(
+    async (field: keyof Task, value: unknown) => {
+      await taskFieldUpdater.updateField(field, value, {
+        isEqual: () => isFieldValueSame(field as string, value),
+        normalize: (nextValue) => normalizeFieldValue(field, nextValue) as Task[typeof field],
+      });
     },
-    [task, task._id, onTaskUpdate],
+    [isFieldValueSame, normalizeFieldValue, taskFieldUpdater],
   );
 
   return (
@@ -189,7 +188,7 @@ const TaskDetailsPanel: React.FC<TaskDetailsPanelProps> = ({ task, onTaskUpdate 
           onChange={(totalMinutes) =>
             handleFieldUpdate('estimate', Number((totalMinutes / 60).toFixed(2)))
           }
-          disabled={isSaving && savingField === 'estimate'}
+          disabled={taskFieldUpdater.loading && !!taskFieldUpdater.updatingFields.estimate}
           showTotal={true}
         />
 
@@ -200,7 +199,7 @@ const TaskDetailsPanel: React.FC<TaskDetailsPanelProps> = ({ task, onTaskUpdate 
           onChange={(totalMinutes) =>
             handleFieldUpdate('spentTime', Number((totalMinutes / 60).toFixed(2)))
           }
-          disabled={isSaving && savingField === 'spentTime'}
+          disabled={taskFieldUpdater.loading && !!taskFieldUpdater.updatingFields.spentTime}
           showTotal={true}
         />
 
@@ -211,7 +210,7 @@ const TaskDetailsPanel: React.FC<TaskDetailsPanelProps> = ({ task, onTaskUpdate 
           onChange={(totalMinutes) =>
             handleFieldUpdate('remainingTime', Number((totalMinutes / 60).toFixed(2)))
           }
-          disabled={isSaving && savingField === 'remainingTime'}
+          disabled={taskFieldUpdater.loading && !!taskFieldUpdater.updatingFields.remainingTime}
           showTotal={true}
         />
 
@@ -220,7 +219,7 @@ const TaskDetailsPanel: React.FC<TaskDetailsPanelProps> = ({ task, onTaskUpdate 
           value={toDateInputValue(task.startDate)}
           type="date"
           onChange={(value) => handleFieldUpdate('startDate', value)}
-          isSaving={isSaving}
+          isSaving={taskFieldUpdater.loading && !!taskFieldUpdater.updatingFields.startDate}
           plain
         />
 
@@ -229,7 +228,7 @@ const TaskDetailsPanel: React.FC<TaskDetailsPanelProps> = ({ task, onTaskUpdate 
           value={toDateInputValue(task.dueDate)}
           type="date"
           onChange={(value) => handleFieldUpdate('dueDate', value)}
-          isSaving={isSaving}
+          isSaving={taskFieldUpdater.loading && !!taskFieldUpdater.updatingFields.dueDate}
           plain
         />
 
@@ -238,7 +237,7 @@ const TaskDetailsPanel: React.FC<TaskDetailsPanelProps> = ({ task, onTaskUpdate 
           value={toDateInputValue(task.completedAt)}
           type="date"
           onChange={(value) => handleFieldUpdate('completedAt', value)}
-          isSaving={isSaving}
+          isSaving={taskFieldUpdater.loading && !!taskFieldUpdater.updatingFields.completedAt}
           plain
         />
       </Card>
@@ -249,53 +248,29 @@ const TaskDetailsPanel: React.FC<TaskDetailsPanelProps> = ({ task, onTaskUpdate 
         <TagInput
           tags={task.tags || []}
           onChange={(tags) => handleFieldUpdate('tags', tags)}
-          disabled={isSaving}
+          disabled={taskFieldUpdater.loading}
         />
       </div>
-
-      {/* Color */}
-      <DetailField
-        label="Color"
-        value={task.color || 'No color'}
-        type="color"
-        onChange={(value) => handleFieldUpdate('color', value)}
-        isSaving={isSaving}
-      />
-
-      {/* Parent Task */}
-      <DetailField
-        label="Parent Task"
-        value={task.parentTask ? 'Set' : 'None'}
-        type="text"
-        isReadOnly={true}
-      />
-
-      {/* Dependencies */}
-      <DetailField
-        label="Blocked By"
-        value={task.blockedBy?.length || 0}
-        type="text"
-        isReadOnly={true}
-      />
 
       {/* Divider */}
       <div className="border-t border-gray-200 my-4" />
 
       {/* Creation Info */}
-      <div className="bg-gray-50 rounded-lg border border-gray-200 p-3">
-        <p className="text-xs uppercase text-gray-500 font-semibold mb-3">Created</p>
+      <div className="bg-white rounded-lg border border-gray-200 p-3">
         <div className="space-y-2">
           <DetailField
             label="Created At"
-            value={new Date(task.createdAt).toLocaleDateString()}
+            value={new Date(task.createdAt).toLocaleDateString('en-US', { dateStyle: 'medium' })}
             type="text"
             isReadOnly={true}
+            plain
           />
           <DetailField
             label="Last Updated"
-            value={new Date(task.updatedAt).toLocaleDateString()}
+            value={new Date(task.updatedAt).toLocaleDateString('en-US', { dateStyle: 'medium' })}
             type="text"
             isReadOnly={true}
+            plain
           />
         </div>
       </div>

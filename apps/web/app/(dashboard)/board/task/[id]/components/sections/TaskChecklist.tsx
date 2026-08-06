@@ -4,22 +4,24 @@ import { motion } from 'framer-motion';
 import { Check, Plus, Trash } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
-import { updateTask } from '@/lib/services/api/task';
+import { TaskFieldUpdater } from '../../hooks/useTaskFields';
+
 import { Task } from '@/lib/types/task';
 
 interface TaskChecklistProps {
   task: Task;
-  onTaskUpdate: (task: Task) => void;
+  taskFieldUpdater: TaskFieldUpdater;
 }
 
-const TaskChecklist: React.FC<TaskChecklistProps> = ({ task, onTaskUpdate }) => {
+const TaskChecklist: React.FC<TaskChecklistProps> = ({ task, taskFieldUpdater }) => {
   const [checklist, setChecklist] = useState<Task['checklist']>(task.checklist || []);
   const [newItem, setNewItem] = useState('');
-  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     setChecklist(task.checklist || []);
   }, [task.checklist]);
+
+  const isSaving = taskFieldUpdater.loading && !!taskFieldUpdater.updatingFields.checklist;
 
   const handleAddItem = async () => {
     if (!newItem.trim()) return;
@@ -29,17 +31,11 @@ const TaskChecklist: React.FC<TaskChecklistProps> = ({ task, onTaskUpdate }) => 
       { _id: crypto.randomUUID(), title: newItem.trim(), completed: false },
     ];
     try {
-      setIsSaving(true);
-      const response = await updateTask(task._id, { checklist: updatedChecklist });
-      if (response.success && response.data) {
-        setChecklist(updatedChecklist);
-        setNewItem('');
-        onTaskUpdate(response.data);
-      }
+      await taskFieldUpdater.updateField('checklist', updatedChecklist);
+      setChecklist(updatedChecklist);
+      setNewItem('');
     } catch (error) {
       console.error('Failed to add checklist item:', error);
-    } finally {
-      setIsSaving(false);
     }
   };
 
@@ -49,16 +45,10 @@ const TaskChecklist: React.FC<TaskChecklistProps> = ({ task, onTaskUpdate }) => 
       updatedChecklist[index].completed = !updatedChecklist[index].completed;
 
       try {
-        setIsSaving(true);
-        const response = await updateTask(task._id, { checklist: updatedChecklist });
-        if (response.success && response.data) {
-          setChecklist(updatedChecklist);
-          onTaskUpdate(response.data);
-        }
+        await taskFieldUpdater.updateField('checklist', updatedChecklist);
+        setChecklist(updatedChecklist);
       } catch (error) {
         console.error('Failed to update checklist:', error);
-      } finally {
-        setIsSaving(false);
       }
     }
   };
@@ -67,16 +57,10 @@ const TaskChecklist: React.FC<TaskChecklistProps> = ({ task, onTaskUpdate }) => 
     const updatedChecklist = checklist.filter((_, i) => i !== index);
 
     try {
-      setIsSaving(true);
-      const response = await updateTask(task._id, { checklist: updatedChecklist });
-      if (response.success && response.data) {
-        setChecklist(updatedChecklist);
-        onTaskUpdate(response.data);
-      }
+      await taskFieldUpdater.updateField('checklist', updatedChecklist);
+      setChecklist(updatedChecklist);
     } catch (error) {
       console.error('Failed to remove checklist item:', error);
-    } finally {
-      setIsSaving(false);
     }
   };
 

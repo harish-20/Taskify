@@ -1,29 +1,17 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
 
 import TaskDetailLayout from './components/TaskDetailLayout';
+import { useTask } from './hooks/useTask';
 
 import Spinner from '@/components/UI/Spinner';
-import { useApi } from '@/lib/hooks/useApi';
-import { getTaskById } from '@/lib/services/api/task';
-import { Task } from '@/lib/types/task';
 
 export default function TaskDetailPage() {
   const params = useParams();
   const taskId = params.id as string;
 
-  const [task, setTask] = useState<Task | null>(null);
-  const { execute, loading, error } = useApi(async (taskId: string) => getTaskById(taskId), {
-    onSuccess: (data) => data?.data && setTask(data.data),
-  });
-
-  useEffect(() => {
-    if (taskId) {
-      void execute(taskId);
-    }
-  }, [taskId]);
+  const { task, setTask, loading, error } = useTask(taskId);
 
   if (loading) {
     return (

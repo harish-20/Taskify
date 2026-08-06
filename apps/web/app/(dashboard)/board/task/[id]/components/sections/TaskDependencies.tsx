@@ -6,7 +6,6 @@ import { Task } from '@/lib/types/task';
 
 interface TaskDependenciesProps {
   task: Task;
-  onTaskUpdate: (task: Task) => void;
 }
 
 const TaskDependencies: React.FC<TaskDependenciesProps> = ({ task }) => {

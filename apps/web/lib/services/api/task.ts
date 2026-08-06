@@ -4,7 +4,32 @@ import pathMap from './pathMap';
 
 import Api from '.';
 
-import type { Task } from '@/lib/types/task';
+import type { ChecklistItem, Task } from '@/lib/types/task';
+
+export interface CreateTaskInput {
+  title: string;
+  description?: string;
+  type?: Task['type'];
+  status?: Task['status'];
+  priority?: Task['priority'];
+  estimate?: number;
+  spentTime?: number;
+  remainingTime?: number;
+  startDate?: Date;
+  dueDate?: Date;
+  completedAt?: Date;
+  assignees?: string[];
+  watchers?: string[];
+  tags?: string[];
+  checklist?: Array<Pick<ChecklistItem, 'title' | 'completed'>>;
+  parentTask?: string;
+  subTasks?: string[];
+  blockedBy?: string[];
+  blocking?: string[];
+  position?: number;
+  color?: string;
+  isArchived?: boolean;
+}
 
 export const getTasks = async () => {
   const response = await Api.get<ApiResponse<Task[]>>(pathMap.task.list);
@@ -18,9 +43,7 @@ export const getTaskById = async (taskId: string) => {
   return response.data;
 };
 
-export const createTask = async (
-  taskData: Omit<Task, '_id' | 'createdAt' | 'updatedAt' | 'createdBy' | 'organizationId'>,
-) => {
+export const createTask = async (taskData: CreateTaskInput) => {
   const response = await Api.post<ApiResponse<Task>>(pathMap.task.create, taskData);
 
   return response.data;

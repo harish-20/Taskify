@@ -1,6 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useCallback } from 'react';
+
+import { TaskFieldUpdater } from '../hooks/useTaskFields';
 
 import TaskActivity from './sections/TaskActivity';
 import TaskAttachments from './sections/TaskAttachments';
@@ -11,23 +13,24 @@ import TaskDescription from './sections/TaskDescription';
 import TaskSubtasks from './sections/TaskSubtasks';
 import TaskListItem from './subtasks/TaskListItem';
 
-import { useApi } from '@/lib/hooks/useApi';
-import { updateTask } from '@/lib/services/api/task';
 import { Task } from '@/lib/types/task';
 
 interface TaskMainContentProps {
   task: Task;
   onTaskUpdate: (task: Task) => void;
+  taskFieldUpdater: TaskFieldUpdater;
 }
 
-const TaskMainContent: React.FC<TaskMainContentProps> = ({ task, onTaskUpdate }) => {
-  const { execute: handleDescriptionUpdate, loading: isSaving } = useApi(
+const TaskMainContent: React.FC<TaskMainContentProps> = ({
+  task,
+  onTaskUpdate,
+  taskFieldUpdater,
+}) => {
+  const handleDescriptionUpdate = useCallback(
     async (description: string | TrustedHTML) => {
-      const response = await updateTask(task._id, { description });
-      if (response.success && response.data) {
-        onTaskUpdate(response.data);
-      }
+      await taskFieldUpdater.updateField('description', description);
     },
+    [taskFieldUpdater],
   );
 
   return (
@@ -36,11 +39,11 @@ const TaskMainContent: React.FC<TaskMainContentProps> = ({ task, onTaskUpdate })
       <TaskDescription
         description={task.description || ''}
         onUpdate={handleDescriptionUpdate}
-        isSaving={isSaving}
+        isSaving={taskFieldUpdater.loading && !!taskFieldUpdater.updatingFields.description}
       />
 
       {/* Checklist */}
-      <TaskChecklist task={task} onTaskUpdate={onTaskUpdate} />
+      <TaskChecklist task={task} taskFieldUpdater={taskFieldUpdater} />
 
       {/* Parent Task */}
       {task.parentTask && (
@@ -56,16 +59,16 @@ const TaskMainContent: React.FC<TaskMainContentProps> = ({ task, onTaskUpdate })
       )}
 
       {/* Attachments */}
-      <TaskAttachments task={task} onTaskUpdate={onTaskUpdate} />
+      <TaskAttachments task={task} />
 
       {/* Dependencies */}
-      <TaskDependencies task={task} onTaskUpdate={onTaskUpdate} />
+      <TaskDependencies task={task} />
 
       {/* Activity */}
       <TaskActivity task={task} />
 
       {/* Comments */}
-      <TaskComments task={task} onTaskUpdate={onTaskUpdate} />
+      <TaskComments task={task} />
     </div>
   );
 };

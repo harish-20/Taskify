@@ -6,7 +6,6 @@ import { Task } from '@/lib/types/task';
 
 interface TaskAttachmentsProps {
   task: Task;
-  onTaskUpdate: (task: Task) => void;
 }
 
 const TaskAttachments: React.FC<TaskAttachmentsProps> = ({ task }) => {

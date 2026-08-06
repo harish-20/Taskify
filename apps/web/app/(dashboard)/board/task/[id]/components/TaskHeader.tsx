@@ -3,6 +3,8 @@
 import { Copy, MoreHorizontal, Share2, Star } from 'lucide-react';
 import { useState } from 'react';
 
+import { TaskFieldUpdater } from '../hooks/useTaskFields';
+
 import { TaskPriorityIcons, TaskStatusIcons, TaskTypeIcons } from '@/components/icons/task';
 import Button from '@/components/UI/Button';
 import { EditableText } from '@/components/UI/EditableText';
@@ -16,13 +18,11 @@ import {
   TASK_TYPE_LABEL,
   TASK_TYPE_VALUES,
 } from '@/lib/constants/task';
-import { useApi } from '@/lib/hooks/useApi';
-import { updateTask } from '@/lib/services/api/task';
 import { Task, TaskPriority, TaskStatus, TaskType } from '@/lib/types/task';
 
 interface TaskHeaderProps {
   task: Task;
-  onTaskUpdate: (task: Task) => void;
+  taskFieldUpdater: TaskFieldUpdater;
 }
 
 const taskTypeOptions: SelectOption<TaskType>[] = TASK_TYPE_VALUES.map((type) => {
@@ -57,23 +57,11 @@ const statusOptions: SelectOption<TaskStatus>[] = TASK_STATUS_VALUES.map((status
 
 type EditableField = Pick<Task, 'title' | 'type' | 'priority' | 'status'>;
 
-const TaskHeader: React.FC<TaskHeaderProps> = ({ task, onTaskUpdate }) => {
+const TaskHeader: React.FC<TaskHeaderProps> = ({ task, taskFieldUpdater }) => {
   const [isCopying, setIsCopying] = useState(false);
 
-  const { execute: updateTaskApi, loading } = useApi(updateTask);
-
   const updateField = async <K extends keyof EditableField>(field: K, value: EditableField[K]) => {
-    try {
-      const response = await updateTaskApi(task._id, {
-        [field]: value,
-      });
-
-      if (response.success && response.data) {
-        onTaskUpdate(response.data);
-      }
-    } catch (error) {
-      console.error(error);
-    }
+    await taskFieldUpdater.updateField(field, value);
   };
 
   const handleCopyTicketId = async () => {
@@ -136,21 +124,21 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({ task, onTaskUpdate }) => {
           <Select
             value={task.type}
             options={taskTypeOptions}
-            disabled={loading}
+            disabled={taskFieldUpdater.loading && !!taskFieldUpdater.updatingFields.type}
             onChange={(value) => updateField('type', value)}
           />
 
           <Select
             value={task.priority}
             options={priorityOptions}
-            disabled={loading}
+            disabled={taskFieldUpdater.loading && !!taskFieldUpdater.updatingFields.priority}
             onChange={(value) => updateField('priority', value)}
           />
 
           <Select
             value={task.status}
             options={statusOptions}
-            disabled={loading}
+            disabled={taskFieldUpdater.loading && !!taskFieldUpdater.updatingFields.status}
             onChange={(value) => updateField('status', value)}
           />
         </div>

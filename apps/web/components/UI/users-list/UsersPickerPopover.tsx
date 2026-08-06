@@ -1,7 +1,6 @@
 import clsx from 'clsx';
 import { Check, Search } from 'lucide-react';
 
-
 import Avatar from '../Avatar';
 
 import { TaskUser } from './types';
@@ -43,7 +42,7 @@ const UsersPickerPopover: React.FC<UsersPickerPopoverProps> = ({
   if (!isInteractive || !open) return null;
 
   return (
-    <div className="absolute left-0 top-[calc(100%+0.5rem)] z-40 w-[min(24rem,90vw)] rounded-lg border border-gray-200 bg-white p-3 shadow-xl">
+    <div className="absolute left-0 top-[calc(100%+0.5rem)] z-40 min-w-[16rem] w-full max-w-[24rem] rounded-lg border border-gray-200 bg-white p-3 shadow-xl">
       <div className="relative mb-3">
         <Search
           size={16}

@@ -1,8 +1,8 @@
-import { motion } from "motion/react";
-import { Ref } from "react";
-import { createPortal } from "react-dom";
+import { motion } from 'motion/react';
+import { Ref } from 'react';
+import { createPortal } from 'react-dom';
 
-import usePortalTarget from "@/lib/hooks/usePortalTarget";
+import usePortalTarget from '@/lib/hooks/usePortalTarget';
 
 interface BackdropProps {
   onClose: () => void;
@@ -12,7 +12,7 @@ interface BackdropProps {
 const Backdrop: React.FC<BackdropProps> = (props) => {
   const { onClose } = props;
 
-  const target = usePortalTarget("backdrop");
+  const target = usePortalTarget('backdrop');
 
   if (!target) return null;
 
@@ -21,10 +21,10 @@ const Backdrop: React.FC<BackdropProps> = (props) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="absolute top-0 left-0 w-full h-screen bg-black/30"
+      className="z-10 absolute top-0 left-0 w-full h-screen bg-black/30"
       onClick={onClose}
     />,
-    target
+    target,
   );
 
   return portal;
