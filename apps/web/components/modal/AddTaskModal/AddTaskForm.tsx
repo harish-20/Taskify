@@ -268,22 +268,6 @@ const AddTaskForm: FC<AddTaskFormProps> = ({ onClose }) => {
 
             <Controller
               control={control}
-              name="dueDate"
-              render={({ field }) => (
-                <DatePicker
-                  label="Due Date"
-                  value={field.value ? new Date(field.value).toISOString().split('T')[0] : ''}
-                  onChange={(e) => field.onChange(new Date(e.target.value))}
-                  error={errors.dueDate?.message}
-                  labelClass={`inline-flex items-center gap-2 ${fieldLabelClass}`}
-                  containerClass="gap-2"
-                  className="min-h-11 rounded-xl border-gray-200 bg-white px-4"
-                />
-              )}
-            />
-
-            <Controller
-              control={control}
               name="startDate"
               render={({ field }) => (
                 <DatePicker
@@ -293,6 +277,22 @@ const AddTaskForm: FC<AddTaskFormProps> = ({ onClose }) => {
                     field.onChange(e.target.value ? new Date(e.target.value) : undefined)
                   }
                   error={errors.startDate?.message}
+                  labelClass={`inline-flex items-center gap-2 ${fieldLabelClass}`}
+                  containerClass="gap-2"
+                  className="min-h-11 rounded-xl border-gray-200 bg-white px-4"
+                />
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="dueDate"
+              render={({ field }) => (
+                <DatePicker
+                  label="Due Date"
+                  value={field.value ? new Date(field.value).toISOString().split('T')[0] : ''}
+                  onChange={(e) => field.onChange(new Date(e.target.value))}
+                  error={errors.dueDate?.message}
                   labelClass={`inline-flex items-center gap-2 ${fieldLabelClass}`}
                   containerClass="gap-2"
                   className="min-h-11 rounded-xl border-gray-200 bg-white px-4"

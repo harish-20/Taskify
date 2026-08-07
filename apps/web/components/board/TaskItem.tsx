@@ -1,11 +1,11 @@
 import { useDraggable } from '@dnd-kit/react';
 import { motion } from 'motion/react';
-import { useRouter } from 'next/navigation';
 import { useState, useRef } from 'react';
 
 import UsersListInput from '../UI/UsersListInput';
 
 import useTaskBoardStore from '@/lib/store/board';
+import useModalStore from '@/lib/store/modal';
 import { Task } from '@/lib/types/task';
 
 interface TaskItemProps {
@@ -13,7 +13,7 @@ interface TaskItemProps {
 }
 
 const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
-  const router = useRouter();
+  const { openModal } = useModalStore();
   const updateTask = useTaskBoardStore((state) => state.updateTask);
   const organizationUsers = useTaskBoardStore((state) => state.organizationUsers);
   const { ref, isDragging } = useDraggable({
@@ -39,7 +39,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
 
     // If distance is less than 5px, treat it as a click
     if (distance < 5) {
-      router.push(`/board/task/${task._id}`);
+      openModal('task-preview', { taskId: task._id, initialTask: task });
     }
 
     mouseDownPos.current = null;
