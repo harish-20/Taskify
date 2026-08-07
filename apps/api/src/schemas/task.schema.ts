@@ -122,6 +122,10 @@ export const updateTaskSchema = z
     message: "At least one field is required for update",
   });
 
+export const taskIdParamSchema = z.object({
+  taskId: z.string().regex(MONGO_DB_ID_RX, "Invalid task ID"),
+});
+
 export type TaskSchema = z.infer<typeof createTaskSchema>;
 export type UpdateTaskSchema = z.infer<typeof updateTaskSchema>;
 export type AddSubTaskSchema = z.infer<typeof addSubTaskSchema>;
