@@ -1,3 +1,4 @@
+import { CreateTaskInput } from '@/lib/services/api/task';
 import { Task, TaskStatus } from '@/lib/types/task';
 import { User } from '@/lib/types/user';
 
@@ -21,6 +22,7 @@ export interface BoardActions {
 export interface BoardAsyncActions {
   loadTasks: () => Promise<void>;
   loadOrganizationUsers: () => Promise<void>;
+  addTask: (taskData: CreateTaskInput) => Promise<void>;
   updateTaskStatus: (taskId: Task['_id'], status: Task['status']) => Promise<void>;
   updateTask: (taskId: Task['_id'], taskData: Partial<Task>) => Promise<void>;
 }

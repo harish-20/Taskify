@@ -24,7 +24,7 @@ interface DurationInputProps {
 
 const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
 
-const toFieldValue = (value: number) => (value === 0 ? '' : String(value));
+const toFieldValue = (value: number) => String(value);
 
 const toNumber = (value: string) => {
   const trimmed = value.trim();

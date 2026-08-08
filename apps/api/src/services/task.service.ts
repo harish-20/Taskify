@@ -75,6 +75,7 @@ export const createTask = async (
     createdBy: userId,
     organizationId: organizationId,
   });
+  await task.populate(TASK_POPULATE_OPTIONS);
 
   return task;
 };

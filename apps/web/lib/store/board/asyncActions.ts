@@ -4,6 +4,7 @@ import { BoardAsyncActions, BoardStore } from './types';
 
 import { getOrganizationUsers } from '@/lib/services/api/organization';
 import {
+  createTask,
   getTasks,
   updateTask as updateTaskApi,
   updateTaskStatus as updateTaskStatusApi,
@@ -31,6 +32,21 @@ export const boardAsyncActions: StateCreator<BoardStore, [], [], BoardAsyncActio
       set({ organizationUsers: response.data || [] });
     } catch (error) {
       console.error('Failed to load organization users', error);
+    }
+  },
+
+  addTask: async (task) => {
+    try {
+      const response = await createTask(task);
+
+      if (response.success && response.data !== undefined) {
+        const newTask = response.data;
+        set((state) => ({
+          tasks: [...state.tasks, newTask],
+        }));
+      }
+    } catch (error) {
+      console.error('Failed to add task', error);
     }
   },
 

@@ -23,7 +23,8 @@ import {
   TASK_TYPE_VALUES,
 } from '@/lib/constants/task';
 import { getOrganizationUsers } from '@/lib/services/api/organization';
-import { createTask, type CreateTaskInput } from '@/lib/services/api/task';
+import { type CreateTaskInput } from '@/lib/services/api/task';
+import useTaskBoardStore from '@/lib/store/board';
 import { Task, TaskPriority, TaskStatus, TaskType } from '@/lib/types/task';
 
 const taskTypeOptions: SelectOption<TaskType>[] = TASK_TYPE_VALUES.map((type) => {
@@ -64,6 +65,8 @@ const AddTaskForm: FC<AddTaskFormProps> = ({ onClose }) => {
   const [organizationUsers, setOrganizationUsers] = useState<Task['assignees']>([]);
   const [loadingAssignees, setLoadingAssignees] = useState(true);
 
+  const { addTask } = useTaskBoardStore();
+
   const {
     control,
     handleSubmit,
@@ -99,10 +102,9 @@ const AddTaskForm: FC<AddTaskFormProps> = ({ onClose }) => {
     fetchOrganizationMembers();
   }, []);
 
-  const onSubmit: SubmitHandler<TaskFormType> = async (data) => {
+  const onSubmit: SubmitHandler<TaskFormType> = (data) => {
     const taskPayload: CreateTaskInput = data;
-
-    await createTask(taskPayload);
+    addTask(taskPayload);
     onClose();
   };
 
