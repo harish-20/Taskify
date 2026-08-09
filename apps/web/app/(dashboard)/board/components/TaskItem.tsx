@@ -100,9 +100,9 @@ const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
             </div>
           </Tooltip>
 
-          <div>
+          <Tooltip content={`${task.priority[0]?.toUpperCase()}${task.priority.slice(1)} Priority`}>
             <TaskPriorityIcon />
-          </div>
+          </Tooltip>
         </div>
         <div className="min-w-0 flex-1">
           <h3 className="truncate text-[15px] font-semibold text-gray-900">{task.title}</h3>
