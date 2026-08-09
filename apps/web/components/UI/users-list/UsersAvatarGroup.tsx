@@ -116,7 +116,7 @@ const UsersAvatarGroup: React.FC<UsersAvatarGroupProps> = ({
           <Tooltip
             key={`overflow-${hiddenUsers.length}`}
             content={
-              <div className="flex max-w-[240px] flex-col gap-1 whitespace-normal">
+              <div className="flex w-max max-w-[240px] flex-col gap-1 whitespace-normal">
                 {hiddenUsers.map((user, index) => (
                   <span key={getUserKey(user, index)} className="text-xs leading-tight">
                     {user.name}

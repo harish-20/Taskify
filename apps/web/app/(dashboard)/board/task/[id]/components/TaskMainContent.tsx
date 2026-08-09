@@ -13,6 +13,7 @@ import TaskDescription from './sections/TaskDescription';
 import TaskSubtasks from './sections/TaskSubtasks';
 import TaskListItem from './subtasks/TaskListItem';
 
+import useModalStore from '@/lib/store/modal';
 import { Task } from '@/lib/types/task';
 
 interface TaskMainContentProps {
@@ -33,6 +34,8 @@ const TaskMainContent: React.FC<TaskMainContentProps> = ({
     [taskFieldUpdater],
   );
 
+  const { closeModal } = useModalStore();
+
   return (
     <div className="space-y-6">
       {/* Description */}
@@ -49,7 +52,9 @@ const TaskMainContent: React.FC<TaskMainContentProps> = ({
       {task.parentTask && (
         <div className="rounded-xl border border-gray-200 bg-white p-6">
           <h3 className="mb-4 text-lg font-semibold">Parent Task</h3>
-          <TaskListItem href={`/board/task/${task.parentTask._id}`} task={task.parentTask} />
+          <div onClick={closeModal}>
+            <TaskListItem href={`/board/task/${task.parentTask._id}`} task={task.parentTask} />
+          </div>
         </div>
       )}
 

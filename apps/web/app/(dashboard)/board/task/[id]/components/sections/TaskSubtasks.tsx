@@ -9,6 +9,7 @@ import TaskListItem from '../subtasks/TaskListItem';
 import Badge from '@/components/UI/Badge';
 import useClickOutside from '@/lib/hooks/useClickoutside';
 import { removeSubtaskFromTask } from '@/lib/services/api/task';
+import useModalStore from '@/lib/store/modal';
 import { Task } from '@/lib/types/task';
 
 interface TaskSubtasksProps {
@@ -20,7 +21,11 @@ interface TaskSubtasksProps {
 const TaskSubtasks: React.FC<TaskSubtasksProps> = ({ taskId, subTasks, onTaskUpdate }) => {
   const [isSelectOpen, setIsSelectOpen] = useState(false);
   const [isUnlinkingTaskId, setIsUnlinkingTaskId] = useState<string | null>(null);
+
+  const { closeModal } = useModalStore();
+
   const subtasksCardRef = useRef<HTMLDivElement>(null);
+
   const subTaskIds = useMemo(() => subTasks.map((subTask) => subTask._id), [subTasks]);
 
   useClickOutside(subtasksCardRef, () => setIsSelectOpen(false), isSelectOpen);
@@ -75,7 +80,7 @@ const TaskSubtasks: React.FC<TaskSubtasksProps> = ({ taskId, subTasks, onTaskUpd
           </div>
         </div>
       ) : (
-        <div className="divide-y divide-gray-100">
+        <div className="divide-y divide-gray-100" onClick={closeModal}>
           {subTasks.map((subtask) => {
             return (
               <TaskListItem

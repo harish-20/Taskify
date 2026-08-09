@@ -87,6 +87,7 @@ const TaskChecklist: React.FC<TaskChecklistProps> = ({ task, taskFieldUpdater })
         <div className="h-2 flex-1 rounded-full bg-gray-100">
           <motion.div
             className="h-2 rounded-full bg-primary"
+            initial={{ width: 0 }}
             animate={{ width: `${progress}%` }}
             transition={{ type: 'spring', duration: 0.5 }}
           />
