@@ -76,64 +76,67 @@ const TaskChecklist: React.FC<TaskChecklistProps> = ({ task, taskFieldUpdater })
           <p className="text-sm text-gray-500">Keep track of subtasks</p>
         </div>
 
-        <div className="rounded-xl bg-emerald-50 p-1.5">
-          <span className="inline-flex rounded-xl bg-emerald-600 px-3 py-1 text-base font-semibold text-white">
+        <div className="rounded-xl p-1.5">
+          <span className="text-sm font-medium text-gray-400">
             {completedCount}/{checklist.length}
           </span>
         </div>
       </div>
 
       <div className="mb-5 flex items-center gap-4">
-        <div className="h-3 flex-1 rounded-full bg-gray-100">
+        <div className="h-2 flex-1 rounded-full bg-gray-100">
           <motion.div
-            className="h-3 rounded-full bg-emerald-500"
+            className="h-2 rounded-full bg-primary"
             animate={{ width: `${progress}%` }}
             transition={{ type: 'spring', duration: 0.5 }}
           />
         </div>
-        <span className="text-lg font-semibold text-emerald-600">{progressLabel}</span>
+        <span className="text-lg font-semibold text-primary">{progressLabel}</span>
       </div>
 
-      <div className="space-y-3">
+      <div className="flex flex-col gap-3">
         {checklist.map((item, index) => (
           <div
             key={item._id}
-            className="flex items-center gap-3 rounded-xl border border-gray-200 px-4 py-3 shadow-sm"
+            className="flex items-center gap-3 rounded-xl border border-gray-200 px-4 shadow-sm"
           >
             <button
+              className="py-3 flex flex-1 items-center gap-3 cursor-pointer"
               type="button"
               onClick={() => handleToggleItem(index)}
               disabled={isSaving}
-              className={`flex h-5 w-5 items-center justify-center rounded border transition-colors ${
-                item.completed
-                  ? 'border-emerald-500 bg-emerald-500 text-white'
-                  : 'border-gray-300 bg-white text-transparent'
-              }`}
-              aria-label={item.completed ? 'Mark as pending' : 'Mark as done'}
             >
-              <Check className="h-3.5 w-3.5" />
+              <div
+                className={`flex h-5 w-5 items-center justify-center rounded border transition-colors ${
+                  item.completed
+                    ? 'border-primary bg-primary text-white'
+                    : 'border-gray-300 bg-white text-transparent'
+                }`}
+                aria-label={item.completed ? 'Mark as pending' : 'Mark as done'}
+              >
+                <Check className="h-3.5 w-3.5" />
+              </div>
+
+              <span
+                className={`flex-1 text-base text-left ${item.completed ? 'text-gray-500 line-through' : 'text-gray-800'}`}
+              >
+                {item.title}
+              </span>
+
+              <span
+                className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${
+                  item.completed ? 'bg-primary/10 text-primary' : 'bg-gray-100 text-gray-500'
+                }`}
+              >
+                {item.completed ? 'Done' : 'Pending'}
+              </span>
             </button>
-
-            <span
-              className={`flex-1 text-base ${item.completed ? 'text-gray-500 line-through' : 'text-gray-800'}`}
-            >
-              {item.title}
-            </span>
-
-            <span
-              className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${
-                item.completed ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-500'
-              }`}
-            >
-              {item.completed ? 'Done' : 'Pending'}
-            </span>
-
             <button
               type="button"
               onClick={() => handleRemoveItem(index)}
               disabled={isSaving}
               aria-label="Remove checklist item"
-              className="rounded-md p-1 text-gray-400 transition hover:bg-gray-100 hover:text-gray-700"
+              className="rounded-md p-1 text-gray-400 transition cursor-pointer hover:bg-gray-100 hover:text-gray-700"
             >
               <Trash className="h-4 w-4" />
             </button>
@@ -146,7 +149,7 @@ const TaskChecklist: React.FC<TaskChecklistProps> = ({ task, taskFieldUpdater })
             onClick={handleAddItem}
             disabled={!newItem.trim() || isSaving}
             aria-label="Add checklist item"
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500 text-white transition hover:bg-emerald-600 disabled:opacity-50"
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-white transition cursor-pointer hover:bg-primary/90 disabled:opacity-50"
           >
             <Plus className="h-5 w-5" />
           </button>
