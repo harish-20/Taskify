@@ -74,8 +74,8 @@ const PeekChecklist: React.FC<PeekChecklistProps> = ({ task }) => {
           <motion.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            className={`max-h-52 mt-1 rounded-lg border border-gray-200 ${isOpened ? 'overflow-y-auto' : 'overflow-y-hidden'}`}
+            exit={{ height: 0, opacity: 0, overflow: 'hidden' }}
+            className={`max-h-52 mt-1 rounded-lg border border-gray-200 ${isOpened ? 'overflow-y-auto' : 'overflow-y-clip'}`}
           >
             <div className="mt-2 space-y-2 bg-white p-2">
               {task.checklist.map((item, index) => (

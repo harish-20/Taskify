@@ -95,7 +95,7 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({ task, taskFieldUpdater }) => {
       <div className="flex flex-col gap-4">
         <div className="flex items-center gap-4">
           <div className="flex flex-1 gap-4">
-            <TaskIcon size={32} className="mt-4 text-gray-600" />
+            <TaskIcon size={32} className="mt-4" />
 
             <EditableText
               value={task.title}

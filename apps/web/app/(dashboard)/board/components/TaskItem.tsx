@@ -1,4 +1,5 @@
 import { useDraggable } from '@dnd-kit/react';
+import { ClockAlert } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useState, useRef } from 'react';
 
@@ -7,6 +8,7 @@ import UsersListInput from '../../../../components/UI/UsersListInput';
 
 import PeekChecklist from './PeekChecklist';
 
+import Tooltip from '@/components/UI/Tooltip';
 import useTaskBoardStore from '@/lib/store/board';
 import useModalStore from '@/lib/store/modal';
 import { Task } from '@/lib/types/task';
@@ -91,10 +93,12 @@ const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
       {/* Header */}
       <div className="flex flex-col gap-3">
         <div className="flex justify-between">
-          <div className="flex items-center gap-2">
-            <TaskTypeIcon className="stroke-1 h-5 w-5" />
-            <span className="text-xs font-semibold text-gray-600">{task.ticketId}</span>
-          </div>
+          <Tooltip content={task.type}>
+            <div className="flex items-center gap-2">
+              <TaskTypeIcon className="stroke-2 h-5 w-5" />
+              <span className="text-xs font-semibold text-gray-600">{task.ticketId}</span>
+            </div>
+          </Tooltip>
 
           <div>
             <TaskPriorityIcon />
@@ -117,13 +121,13 @@ const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
       {task.checklist.length > 0 && <PeekChecklist task={task} />}
 
       {/* Footer */}
-      <div className="mt-5 flex items-center justify-between">
+      <div className="mt-5">
         <div
           onMouseDown={(e) => {
             e.stopPropagation();
             return false;
           }}
-          className="flex items-center gap-2"
+          className="flex justify-between gap-2"
         >
           <UsersListInput
             users={task.assignees}
@@ -134,14 +138,15 @@ const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
             onChange={handleAssigneeChange}
           />
 
-          <div className="flex items-center gap-1 text-xs text-gray-500">
-            <span>20 Oct, 2022</span>
-          </div>
+          {task.dueDate && (
+            <div className="flex items-center gap-1 text-xs text-gray-500">
+              <ClockAlert className="h-5 w-5" />
+              <span>
+                {new Date(task.dueDate)?.toLocaleDateString('en-us', { dateStyle: 'medium' })}
+              </span>
+            </div>
+          )}
         </div>
-
-        <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600">
-          Urgent
-        </span>
       </div>
     </motion.div>
   );
