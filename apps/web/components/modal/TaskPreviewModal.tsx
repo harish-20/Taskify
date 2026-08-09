@@ -81,7 +81,7 @@ const TaskPreviewModal: React.FC<TaskPreviewModalProps> = ({ taskId, initialTask
   return (
     <BaseModal onClose={onClose}>
       <div className="flex w-[min(98vw,86rem)] max-h-[94vh] flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl">
-        <div className="min-h-0 flex-1 overflow-y-auto bg-white px-5 py-5 lg:px-6">
+        <div className="min-h-0 flex-1 overflow-y-hidden bg-white px-5 py-5 lg:px-6">
           {loading && !task && (
             <div className="flex h-64 items-center justify-center">
               <Spinner />

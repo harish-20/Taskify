@@ -3,8 +3,8 @@
 import { DragDropProvider } from '@dnd-kit/react';
 import { useEffect } from 'react';
 
-import Board from '@/components/board/Board';
-import HeadSection from '@/components/board/HeadSection';
+import Board from '@/app/(dashboard)/board/components/Board';
+import HeadSection from '@/app/(dashboard)/board/components/HeadSection';
 import useTaskBoardStore from '@/lib/store/board';
 
 export default function BoardPage() {

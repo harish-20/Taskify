@@ -2,7 +2,10 @@ import { useDraggable } from '@dnd-kit/react';
 import { motion } from 'motion/react';
 import { useState, useRef } from 'react';
 
-import UsersListInput from '../UI/UsersListInput';
+import { TaskPriorityIcons, TaskTypeIcons } from '../../../../components/icons/task';
+import UsersListInput from '../../../../components/UI/UsersListInput';
+
+import PeekChecklist from './PeekChecklist';
 
 import useTaskBoardStore from '@/lib/store/board';
 import useModalStore from '@/lib/store/modal';
@@ -58,6 +61,9 @@ const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
     });
   };
 
+  const TaskTypeIcon = TaskTypeIcons[task.type];
+  const TaskPriorityIcon = TaskPriorityIcons[task.priority];
+
   return (
     <motion.div
       ref={ref}
@@ -83,13 +89,23 @@ const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
       }
     >
       {/* Header */}
-      <div className="flex items-start gap-3">
+      <div className="flex flex-col gap-3">
+        <div className="flex justify-between">
+          <div className="flex items-center gap-2">
+            <TaskTypeIcon className="stroke-1 h-5 w-5" />
+            <span className="text-xs font-semibold text-gray-600">{task.ticketId}</span>
+          </div>
+
+          <div>
+            <TaskPriorityIcon />
+          </div>
+        </div>
         <div className="min-w-0 flex-1">
           <h3 className="truncate text-[15px] font-semibold text-gray-900">{task.title}</h3>
 
           {task.description && (
             <div
-              className="mt-1 line-clamp-2 text-sm text-gray-500"
+              className="mt-1 line-clamp-3 text-sm text-gray-500"
               dangerouslySetInnerHTML={{
                 __html: task.description,
               }}
@@ -97,6 +113,8 @@ const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
           )}
         </div>
       </div>
+
+      {task.checklist.length > 0 && <PeekChecklist task={task} />}
 
       {/* Footer */}
       <div className="mt-5 flex items-center justify-between">

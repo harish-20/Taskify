@@ -1,4 +1,4 @@
-import Plus from '../icons/Plus';
+import Plus from '../../../../components/icons/Plus';
 
 interface ColumnHeaderProps {
   label: string;

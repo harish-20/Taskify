@@ -1,10 +1,10 @@
 import { useDragOperation, useDroppable } from '@dnd-kit/react';
 import { motion } from 'motion/react';
 
-import Done from '../icons/Done';
-import InProgress from '../icons/InProgress';
-import Review from '../icons/Review';
-import Todo from '../icons/Todo';
+import Done from '../../../../components/icons/Done';
+import InProgress from '../../../../components/icons/InProgress';
+import Review from '../../../../components/icons/Review';
+import Todo from '../../../../components/icons/Todo';
 
 import ColumnHeader from './ColumnHeader';
 import TaskItem from './TaskItem';
