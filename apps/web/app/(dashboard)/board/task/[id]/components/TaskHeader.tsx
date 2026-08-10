@@ -122,6 +122,7 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({ task, taskFieldUpdater }) => {
 
         <div className="flex flex-wrap items-start gap-4">
           <Select
+            className="min-w-36"
             value={task.type}
             options={taskTypeOptions}
             disabled={taskFieldUpdater.loading && !!taskFieldUpdater.updatingFields.type}
@@ -129,6 +130,7 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({ task, taskFieldUpdater }) => {
           />
 
           <Select
+            className="min-w-36"
             value={task.priority}
             options={priorityOptions}
             disabled={taskFieldUpdater.loading && !!taskFieldUpdater.updatingFields.priority}
@@ -136,6 +138,7 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({ task, taskFieldUpdater }) => {
           />
 
           <Select
+            className="min-w-36"
             value={task.status}
             options={statusOptions}
             disabled={taskFieldUpdater.loading && !!taskFieldUpdater.updatingFields.status}
