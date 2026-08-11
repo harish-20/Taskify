@@ -2,6 +2,7 @@ import { Check, ChevronDown } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
 
+import StopPropagation from '@/components/shared/StopPropagation';
 import useClickOutside from '@/lib/hooks/useClickoutside';
 import useTaskBoardStore from '@/lib/store/board';
 import { Task } from '@/lib/types/task';
@@ -46,28 +47,29 @@ const PeekChecklist: React.FC<PeekChecklistProps> = ({ task }) => {
   };
 
   return (
-    <div className="my-2 p-2" ref={checklistRef}>
-      <button
-        type="button"
-        onMouseDown={(e) => e.stopPropagation()}
-        onClick={handleTogglePanel}
-        className="flex w-full items-center gap-3 rounded-md p-2 text-left transition cursor-pointer hover:bg-gray-100"
-      >
-        <div className="h-1 flex-1 overflow-hidden rounded-full bg-gray-200">
-          <motion.div
-            className="h-1 rounded-full bg-primary"
-            initial={{ width: 0 }}
-            animate={{ width: `${progress}%` }}
-            transition={{ type: 'spring', duration: 0.4 }}
+    <div className="my-2" ref={checklistRef}>
+      <StopPropagation>
+        <button
+          type="button"
+          onClick={handleTogglePanel}
+          className="flex w-full items-center gap-3 rounded-md py-2 px-1 text-left transition cursor-pointer hover:bg-gray-100"
+        >
+          <div className="h-1 flex-1 overflow-hidden rounded-full bg-gray-200">
+            <motion.div
+              className="h-1 rounded-full bg-primary"
+              initial={{ width: 0 }}
+              animate={{ width: `${progress}%` }}
+              transition={{ type: 'spring', duration: 0.4 }}
+            />
+          </div>
+          <span className="text-xs font-semibold text-primary">
+            {completedCount}/{task.checklist.length}
+          </span>
+          <ChevronDown
+            className={`h-4 w-4 shrink-0 text-gray-500 transition-transform ${isOpen ? 'rotate-180' : ''}`}
           />
-        </div>
-        <span className="text-xs font-semibold text-primary">
-          {completedCount}/{task.checklist.length}
-        </span>
-        <ChevronDown
-          className={`h-4 w-4 shrink-0 text-gray-500 transition-transform ${isOpen ? 'rotate-180' : ''}`}
-        />
-      </button>
+        </button>
+      </StopPropagation>
 
       <AnimatePresence initial={false}>
         {isOpen && (
@@ -79,32 +81,30 @@ const PeekChecklist: React.FC<PeekChecklistProps> = ({ task }) => {
           >
             <div className="mt-2 space-y-2 bg-white p-2">
               {task.checklist.map((item, index) => (
-                <button
-                  key={`${item.title}-${index}`}
-                  type="button"
-                  onMouseDown={(e) => e.stopPropagation()}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    void handleToggleItem(index);
-                  }}
-                  className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left transition cursor-pointer hover:bg-gray-50"
-                >
-                  <span
-                    className={`flex h-5 w-5 items-center justify-center rounded border ${
-                      item.completed
-                        ? 'border-primary bg-primary text-white'
-                        : 'border-gray-300 bg-white text-transparent'
-                    }`}
+                <StopPropagation key={`${item.title}-${index}`}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      handleToggleItem(index);
+                    }}
+                    className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left transition cursor-pointer hover:bg-gray-50"
                   >
-                    <Check className="h-3.5 w-3.5" />
-                  </span>
-                  <span
-                    className={`text-sm ${item.completed ? 'text-gray-400 line-through' : 'text-gray-700'}`}
-                  >
-                    {item.title}
-                  </span>
-                </button>
+                    <span
+                      className={`flex h-5 w-5 items-center justify-center rounded border ${
+                        item.completed
+                          ? 'border-primary bg-primary text-white'
+                          : 'border-gray-300 bg-white text-transparent'
+                      }`}
+                    >
+                      <Check className="h-3.5 w-3.5" />
+                    </span>
+                    <span
+                      className={`text-sm ${item.completed ? 'text-gray-400 line-through' : 'text-gray-700'}`}
+                    >
+                      {item.title}
+                    </span>
+                  </button>
+                </StopPropagation>
               ))}
             </div>
           </motion.div>

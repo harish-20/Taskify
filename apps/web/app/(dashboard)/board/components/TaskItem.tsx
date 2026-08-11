@@ -8,6 +8,7 @@ import UsersListInput from '../../../../components/UI/UsersListInput';
 
 import PeekChecklist from './PeekChecklist';
 
+import StopPropagation from '@/components/shared/StopPropagation';
 import Tooltip from '@/components/UI/Tooltip';
 import useTaskBoardStore from '@/lib/store/board';
 import useModalStore from '@/lib/store/modal';
@@ -122,21 +123,17 @@ const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
 
       {/* Footer */}
       <div className="mt-5">
-        <div
-          onMouseDown={(e) => {
-            e.stopPropagation();
-            return false;
-          }}
-          className="flex justify-between gap-2"
-        >
-          <UsersListInput
-            users={task.assignees}
-            availableUsers={organizationUsers}
-            editable
-            maxVisible={2}
-            size="sm"
-            onChange={handleAssigneeChange}
-          />
+        <div className="flex justify-between gap-2">
+          <StopPropagation>
+            <UsersListInput
+              users={task.assignees}
+              availableUsers={organizationUsers}
+              editable
+              maxVisible={2}
+              size="sm"
+              onChange={handleAssigneeChange}
+            />
+          </StopPropagation>
 
           {task.dueDate && (
             <div className="flex items-center gap-1 text-xs text-gray-500">
