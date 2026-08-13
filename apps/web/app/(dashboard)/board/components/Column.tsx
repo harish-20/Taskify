@@ -1,10 +1,7 @@
 import { useDragOperation, useDroppable } from '@dnd-kit/react';
 import { motion } from 'motion/react';
 
-import Done from '../../../../components/icons/Done';
-import InProgress from '../../../../components/icons/InProgress';
-import Review from '../../../../components/icons/Review';
-import Todo from '../../../../components/icons/Todo';
+import { TaskStatusIcons } from '../../../../components/icons/task';
 
 import ColumnHeader from './ColumnHeader';
 import { TaskDropIndicator } from './TaskDropZone';
@@ -17,13 +14,6 @@ interface ColumnProps {
   status: TaskStatus;
   tasks: Task[];
 }
-
-const columnIcons: Record<TaskStatus, React.FC<React.SVGProps<SVGSVGElement>>> = {
-  todo: Todo,
-  in_progress: InProgress,
-  review: Review,
-  done: Done,
-};
 
 const Column: React.FC<ColumnProps> = ({ status, tasks }) => {
   const { ref, isDropTarget } = useDroppable({
@@ -42,7 +32,7 @@ const Column: React.FC<ColumnProps> = ({ status, tasks }) => {
       <ColumnHeader
         status={status}
         label={readableStatus}
-        Icon={columnIcons[status]}
+        Icon={TaskStatusIcons[status]}
         onAddClick={() => {
           // Handle add task click
         }}
@@ -80,9 +70,7 @@ const Column: React.FC<ColumnProps> = ({ status, tasks }) => {
           <TaskItem key={task._id} task={task} />
         ))}
 
-        {feedbackTaskPosition === null &&
-          (source?.data.status as TaskStatus) !== status &&
-          isDropTarget && <TaskDropIndicator />}
+        {feedbackTaskPosition === null && isDropTarget && <TaskDropIndicator />}
       </div>
     </div>
   );
