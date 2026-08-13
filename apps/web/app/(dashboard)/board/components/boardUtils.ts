@@ -8,6 +8,23 @@ export const sortTasksByPosition = (tasks: Task[]) =>
 export const isTaskStatus = (value: string | undefined): value is TaskStatus =>
   !!value && boardStatuses.includes(value as TaskStatus);
 
+const getStatusTasks = (tasks: Task[], status: TaskStatus, excludedTaskId?: string) =>
+  tasks
+    .filter((task) => task.status === status && task._id !== excludedTaskId)
+    .sort((firstTask, secondTask) => firstTask.position - secondTask.position);
+
+const getTaskMidpointY = (taskId: string) => {
+  const element = document.querySelector(`[data-task-id="${taskId}"]`);
+
+  if (!element) {
+    return null;
+  }
+
+  const rect = element.getBoundingClientRect();
+
+  return rect.top + rect.height / 2;
+};
+
 export const getNextPosition = (
   tasks: Task[],
   draggedTask: Task,
@@ -19,11 +36,8 @@ export const getNextPosition = (
     return draggedTask.position;
   }
 
-  const statusTasks = tasks
-    .filter((task) => task.status === targetStatus && task._id !== draggedTask._id)
-    .sort((firstTask, secondTask) => firstTask.position - secondTask.position);
+  const statusTasks = getStatusTasks(tasks, targetStatus, draggedTask._id);
 
-  // Dropping at the end
   if (!targetTask) {
     const lastTask = statusTasks.at(-1);
 
@@ -57,25 +71,18 @@ export const getTaskAtDropPosition = (
   pointerY: number,
   draggedTaskId: string,
 ) => {
-  const statusTasks = tasks
-    .filter((task) => task.status === status && task._id !== draggedTaskId)
-    .sort((a, b) => a.position - b.position);
+  const statusTasks = getStatusTasks(tasks, status, draggedTaskId);
 
-  let i = 0;
   for (const task of statusTasks) {
-    const element = document.querySelector(`[data-task-id="${task._id}"]`);
+    const midY = getTaskMidpointY(task._id);
 
-    if (!element) continue;
-
-    const rect = element.getBoundingClientRect();
-    const midY = rect.top + rect.height / 2;
+    if (midY === null) {
+      continue;
+    }
 
     if (pointerY < midY) {
-      // if (i === statusTasks.length - 1) return statusTasks[i];
-      // return statusTasks[i + 1];
       return task;
     }
-    i++;
   }
 
   return undefined;
@@ -87,25 +94,24 @@ export const getTargetTask = (
   pointerY: number,
   draggedTask: Task['_id'],
 ) => {
-  const statusTasks = tasks
-    .filter((task) => task.status === status)
-    .sort((a, b) => a.position - b.position);
+  const statusTasks = getStatusTasks(tasks, status);
 
-  let i = 0;
-  for (const task of statusTasks) {
-    const element = document.querySelector(`[data-task-id="${task._id}"]`);
+  for (const [index, task] of statusTasks.entries()) {
+    const midY = getTaskMidpointY(task._id);
 
-    if (!element) continue;
-
-    const rect = element.getBoundingClientRect();
-    const midY = rect.top + rect.height / 2;
+    if (midY === null) {
+      continue;
+    }
 
     if (pointerY < midY) {
-      const prevTask = statusTasks[i - 1];
-      if (i && prevTask && prevTask._id === draggedTask) return statusTasks[i - 1];
+      const previousTask = statusTasks[index - 1];
+
+      if (previousTask && previousTask._id === draggedTask) {
+        return previousTask;
+      }
+
       return task;
     }
-    i++;
   }
 
   return null;
