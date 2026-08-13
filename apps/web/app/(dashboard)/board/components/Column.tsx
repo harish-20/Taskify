@@ -8,6 +8,7 @@ import { TaskDropIndicator } from './TaskDropZone';
 import TaskItem from './TaskItem';
 
 import useTaskBoardStore from '@/lib/store/board';
+import useModalStore from '@/lib/store/modal';
 import { Task, TaskStatus } from '@/lib/types/task';
 
 interface ColumnProps {
@@ -21,6 +22,7 @@ const Column: React.FC<ColumnProps> = ({ status, tasks }) => {
   });
 
   const feedbackTaskPosition = useTaskBoardStore((state) => state.feedbackTaskPosition);
+  const { openModal } = useModalStore();
 
   const { source } = useDragOperation();
 
@@ -34,7 +36,7 @@ const Column: React.FC<ColumnProps> = ({ status, tasks }) => {
         label={readableStatus}
         Icon={TaskStatusIcons[status]}
         onAddClick={() => {
-          // Handle add task click
+          openModal('add-task', { defaultStatus: status });
         }}
       />
 

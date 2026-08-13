@@ -21,12 +21,14 @@ const ColumnHeader: React.FC<ColumnHeaderProps> = (props) => {
         </span>
       </div>
 
-      <div
+      <button
+        type="button"
         onClick={onAddClick}
+        aria-label={`Add task to ${status}`}
         className="cursor-pointer rounded-lg p-2 text-slate-500 transition-colors duration-200 hover:bg-slate-100 hover:text-slate-900"
       >
         <Plus className="h-4 w-4 stroke-2" />
-      </div>
+      </button>
     </div>
   );
 };

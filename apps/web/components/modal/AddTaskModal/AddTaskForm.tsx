@@ -59,9 +59,10 @@ const statusOptions: SelectOption<TaskStatus>[] = TASK_STATUS_VALUES.map((status
 
 interface AddTaskFormProps {
   onClose: () => void;
+  defaultStatus?: TaskStatus;
 }
 
-const AddTaskForm: FC<AddTaskFormProps> = ({ onClose }) => {
+const AddTaskForm: FC<AddTaskFormProps> = ({ onClose, defaultStatus = 'todo' }) => {
   const [organizationUsers, setOrganizationUsers] = useState<Task['assignees']>([]);
   const [loadingAssignees, setLoadingAssignees] = useState(true);
 
@@ -79,7 +80,7 @@ const AddTaskForm: FC<AddTaskFormProps> = ({ onClose }) => {
       description: '',
       type: 'feature',
       priority: 'medium',
-      status: 'todo',
+      status: defaultStatus,
       startDate: undefined,
       dueDate: new Date(),
       assignees: [],

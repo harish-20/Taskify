@@ -6,11 +6,14 @@ import AddTaskForm from './AddTaskForm';
 
 import Button from '@/components/UI/Button';
 import { ModalProps } from '@/lib/types';
+import { TaskStatus } from '@/lib/types/task';
 
-interface AddTaskModalProps extends ModalProps {}
+interface AddTaskModalProps extends ModalProps {
+  defaultStatus?: TaskStatus;
+}
 
 const AddTaskModal: React.FC<AddTaskModalProps> = (props) => {
-  const { onClose } = props;
+  const { onClose, defaultStatus } = props;
 
   return (
     <BaseModal onClose={onClose}>
@@ -34,7 +37,7 @@ const AddTaskModal: React.FC<AddTaskModalProps> = (props) => {
         </div>
 
         <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden bg-white [scrollbar-gutter:stable]">
-          <AddTaskForm onClose={onClose} />
+          <AddTaskForm onClose={onClose} defaultStatus={defaultStatus} />
         </div>
 
         <div className="flex items-center justify-end gap-3 border-t border-gray-200 px-5 py-4 lg:px-6">
