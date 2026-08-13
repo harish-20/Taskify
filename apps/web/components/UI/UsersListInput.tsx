@@ -274,6 +274,7 @@ const UsersListInput: React.FC<UsersListProps> = ({
           size={size}
           disabled={disabled}
           isInteractive={isInteractive}
+          animateUsers={isAnimating}
           onUserClick={onUserClick}
           addButtonRef={addButtonRef}
         />

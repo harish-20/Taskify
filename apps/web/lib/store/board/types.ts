@@ -6,6 +6,8 @@ export interface BoardState {
   tasks: Task[];
   organizationUsers: User[];
   draggedTask: Task['_id'] | null;
+  draggedTaskHeight: number | null;
+  feedbackTaskPosition: Task['_id'] | null;
   draggedOverColumn: TaskStatus | null;
   isDragging: boolean;
   isLoading: boolean;
@@ -14,6 +16,8 @@ export interface BoardState {
 export interface BoardActions {
   setTasks: (tasks: Task[] | ((currentTasks: Task[]) => Task[])) => void;
   setDraggedTask: (taskId: Task['_id'] | null) => void;
+  setDraggedTaskHeight: (height: number | null) => void;
+  setFeedbackTaskPosition: (position: Task['_id'] | null) => void;
   setDraggedOverColumn: (status: TaskStatus | null) => void;
   setIsDragging: (isDragging: boolean) => void;
   moveTask: (taskId: Task['_id'], status: TaskStatus) => void;

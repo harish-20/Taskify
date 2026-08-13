@@ -25,6 +25,7 @@ interface UsersAvatarGroupProps {
   size: UsersListSize;
   disabled: boolean;
   isInteractive: boolean;
+  animateUsers?: boolean;
   onUserClick?: (user: TaskUser) => void;
   addButtonRef?: RefObject<HTMLDivElement | null>;
 }
@@ -36,6 +37,7 @@ const UsersAvatarGroup: React.FC<UsersAvatarGroupProps> = ({
   size,
   disabled,
   isInteractive,
+  animateUsers = false,
   onUserClick,
   addButtonRef,
 }) => {
@@ -43,7 +45,22 @@ const UsersAvatarGroup: React.FC<UsersAvatarGroupProps> = ({
     const canClickUser = Boolean(onUserClick) && !disabled;
     const userKey = getUserKey(user, index);
 
-    const avatarNode = (
+    const avatarContent = (
+      <>
+        <Avatar glassBorder name={user.name} src={user.avatarUrl} size={avatarSizeMap[size]} />
+        {user.presence && (
+          <span
+            className={clsx(
+              'absolute bottom-0 right-0 rounded-full border-white',
+              presenceDotMap[size],
+              presenceColorMap[user.presence],
+            )}
+          />
+        )}
+      </>
+    );
+
+    const avatarNode = animateUsers ? (
       <motion.div
         className={`flex relative z-[${users.length - index}] hover:z-50`}
         layout
@@ -64,17 +81,10 @@ const UsersAvatarGroup: React.FC<UsersAvatarGroupProps> = ({
           },
         }}
       >
-        <Avatar glassBorder name={user.name} src={user.avatarUrl} size={avatarSizeMap[size]} />
-        {user.presence && (
-          <span
-            className={clsx(
-              'absolute bottom-0 right-0 rounded-full border-white',
-              presenceDotMap[size],
-              presenceColorMap[user.presence],
-            )}
-          />
-        )}
+        {avatarContent}
       </motion.div>
+    ) : (
+      <div className={`flex relative z-[${users.length - index}] hover:z-50`}>{avatarContent}</div>
     );
 
     return (
@@ -109,9 +119,13 @@ const UsersAvatarGroup: React.FC<UsersAvatarGroupProps> = ({
   return (
     <>
       <div className={clsx('inline-flex items-center')}>
-        <AnimatePresence initial={false} mode="popLayout">
-          {visibleUsers.map((user, index) => renderAvatar(user, index))}
-        </AnimatePresence>
+        {animateUsers ? (
+          <AnimatePresence initial={false} mode="popLayout">
+            {visibleUsers.map((user, index) => renderAvatar(user, index))}
+          </AnimatePresence>
+        ) : (
+          visibleUsers.map((user, index) => renderAvatar(user, index))
+        )}
         {hiddenUsers.length > 0 && (
           <Tooltip
             key={`overflow-${hiddenUsers.length}`}

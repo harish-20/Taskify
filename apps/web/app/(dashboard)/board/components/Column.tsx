@@ -7,8 +7,10 @@ import Review from '../../../../components/icons/Review';
 import Todo from '../../../../components/icons/Todo';
 
 import ColumnHeader from './ColumnHeader';
+import { TaskDropIndicator } from './TaskDropZone';
 import TaskItem from './TaskItem';
 
+import useTaskBoardStore from '@/lib/store/board';
 import { Task, TaskStatus } from '@/lib/types/task';
 
 interface ColumnProps {
@@ -28,14 +30,17 @@ const Column: React.FC<ColumnProps> = ({ status, tasks }) => {
     id: status,
   });
 
+  const feedbackTaskPosition = useTaskBoardStore((state) => state.feedbackTaskPosition);
+
   const { source } = useDragOperation();
 
   const readableStatus = status.replace('_', ' ');
 
   const isDiffrentColumn = (source?.data.status as TaskStatus) !== status && isDropTarget;
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-3" data-task-column-id={status}>
       <ColumnHeader
+        status={status}
         label={readableStatus}
         Icon={columnIcons[status]}
         onAddClick={() => {
@@ -43,23 +48,30 @@ const Column: React.FC<ColumnProps> = ({ status, tasks }) => {
         }}
       />
 
-      <div ref={ref} className="relative flex flex-1 min-w-[220px] flex-col gap-2 rounded-lg">
+      <div
+        ref={ref}
+        className={`relative flex min-w-[220px] flex-1 flex-col gap-2 rounded-2xl border border-slate-200 bg-slate-50/80 p-2 shadow-sm transition-colors duration-200 ${
+          isDiffrentColumn ? 'border-sky-300 bg-sky-50/80' : 'hover:border-slate-300'
+        }`}
+      >
         {source && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className={`pointer-events-none absolute inset-0 rounded-xl border-2 border-dashed transition-all duration-200 ${
-              isDiffrentColumn ? 'border-blue-500 bg-blue-500/10' : 'border-gray-300 bg-gray-100/50'
+            className={`pointer-events-none absolute inset-0 rounded-2xl border-2 border-dashed transition-all duration-200 ${
+              isDiffrentColumn ? 'border-sky-400 bg-sky-50/30' : 'border-slate-300 bg-white/40'
             }`}
           >
             <div className="flex h-full items-center justify-center">
               <div
-                className={`rounded-full px-4 py-2 text-sm font-medium capitalize ${
-                  isDiffrentColumn ? 'bg-blue-500 text-white' : 'bg-white text-gray-500 shadow'
+                className={`rounded-full px-3.5 py-1.5 text-xs font-semibold capitalize shadow-sm ${
+                  isDiffrentColumn ? 'bg-sky-500 text-white' : 'bg-white text-slate-500'
                 }`}
               >
-                {readableStatus}
+                {isDiffrentColumn
+                  ? `Place in ${readableStatus}`
+                  : `Drop to place in ${readableStatus}`}
               </div>
             </div>
           </motion.div>
@@ -67,6 +79,10 @@ const Column: React.FC<ColumnProps> = ({ status, tasks }) => {
         {tasks.map((task) => (
           <TaskItem key={task._id} task={task} />
         ))}
+
+        {feedbackTaskPosition === null &&
+          (source?.data.status as TaskStatus) !== status &&
+          isDropTarget && <TaskDropIndicator />}
       </div>
     </div>
   );
