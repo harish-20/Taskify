@@ -107,7 +107,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
         onMouseMove={handleMouseMove}
-        className={`rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md ${
+        className={`rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:shadow-md ${
           isDragging ? 'active:cursor-grabbing' : 'cursor-pointer hover:border-primary'
         }`}
         animate={
