@@ -14,7 +14,7 @@ const OverlayTaskItem: React.FC<OverlayTaskItemProps> = (props) => {
     <DragOverlay>
       {(source) => (
         <AnimatePresence>
-          <motion.div initial={{ rotate: 0 }} animate={{ rotate: 3 }} exit={{ rotate: 0 }}>
+          <motion.div initial={{ rotate: 0 }} animate={{ rotate: 10 }} exit={{ rotate: 0 }}>
             <TaskItem key={source.id} task={source.data as Task} />
           </motion.div>
         </AnimatePresence>

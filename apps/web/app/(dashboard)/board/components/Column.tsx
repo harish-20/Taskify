@@ -72,7 +72,9 @@ const Column: React.FC<ColumnProps> = ({ status, tasks }) => {
           <TaskItem key={task._id} task={task} />
         ))}
 
-        {feedbackTaskPosition === null && isDropTarget && <TaskDropIndicator />}
+        {feedbackTaskPosition === null &&
+          isDropTarget &&
+          source?.data._id !== tasks.at(-1)?._id && <TaskDropIndicator />}
       </div>
     </div>
   );
