@@ -6,7 +6,6 @@ import Header from '@/components/shared/Header/Header';
 import NavBar from '@/components/shared/NavBar/NavBar';
 import useBreakPoints from '@/lib/hooks/useBreakpoints';
 
-
 interface AppLayoutProps extends PropsWithChildren {}
 
 const AppLayout: React.FC<AppLayoutProps> = (props) => {
@@ -24,7 +23,7 @@ const AppLayout: React.FC<AppLayoutProps> = (props) => {
       <NavBar isNavOpen={isNavOpen} closeNav={() => setIsNavOpen(false)} />
       <div className="flex-1">
         <Header isNavOpen={isNavOpen} toggleNav={() => setIsNavOpen((prev) => !prev)} />
-        <main className="flex min-h-[calc(100vh-64px)] p-8">{children}</main>
+        <main className="flex min-h-[calc(100vh-64px)] py-4 px-2 md:p-8">{children}</main>
       </div>
     </div>
   );

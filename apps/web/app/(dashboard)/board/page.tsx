@@ -21,7 +21,7 @@ export default function BoardPage() {
 
   return (
     <DragDropProvider>
-      <div className="h-[calc(100vh-124px)] flex-1 flex flex-col gap-8">
+      <div className="h-[calc(100vh-92px)] md:h-[calc(100vh-124px)] flex-1 flex flex-col gap-8">
         <HeadSection />
         <Board />
       </div>
