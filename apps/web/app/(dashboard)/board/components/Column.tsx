@@ -42,7 +42,7 @@ const Column: React.FC<ColumnProps> = ({ status, tasks }) => {
 
       <div
         ref={ref}
-        className={`relative flex min-w-[220px] flex-1 flex-col gap-2 rounded-2xl border border-slate-200 bg-slate-50/80 p-2 shadow-sm transition-colors duration-200 ${
+        className={`relative flex min-w-[220px] flex-1 flex-col gap-2 rounded-2xl p-2 transition-colors duration-200 ${
           isDiffrentColumn ? 'border-sky-300 bg-sky-50/80' : 'hover:border-slate-300'
         }`}
       >

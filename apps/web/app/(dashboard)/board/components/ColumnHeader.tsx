@@ -11,7 +11,7 @@ const ColumnHeader: React.FC<ColumnHeaderProps> = (props) => {
   const { status, label, Icon, onAddClick } = props;
 
   return (
-    <div className="flex items-center justify-between rounded-xl border border-slate-200 bg-white/90 px-3 py-2 shadow-sm backdrop-blur">
+    <div className="sticky top-0 z-10 flex items-center justify-between rounded-xl border border-slate-200 bg-white/90 px-3 py-2 shadow-sm backdrop-blur">
       <div className="flex items-center gap-2 text-slate-700">
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100">
           <Icon className="h-4 w-4" />

@@ -21,7 +21,7 @@ const Backdrop: React.FC<BackdropProps> = (props) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="z-10 absolute top-0 left-0 w-full h-screen bg-black/30"
+      className="z-10 fixed top-0 left-0 w-full h-screen bg-black/30"
       onClick={onClose}
     />,
     target,

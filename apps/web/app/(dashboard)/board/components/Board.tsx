@@ -146,6 +146,8 @@ const Board: React.FC = () => {
 
       const position = getNextPosition(tasks, draggedTask, dropTargetTask, targetStatus);
 
+      if (draggedTask.position === position && draggedTask.status === targetStatus)
+        console.log('its the same blud');
       updateTask(draggedTask._id, {
         status: targetStatus,
         position,
@@ -156,7 +158,7 @@ const Board: React.FC = () => {
 
   return (
     <>
-      <div className="grid flex-1 grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div className="max-h-[calc(100vh-200px)] overflow-y-auto grid flex-1 grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {Object.entries(groupedTasks).map(([status, columnTasks]) => (
           <Column key={status} status={status as TaskStatus} tasks={columnTasks} />
         ))}
