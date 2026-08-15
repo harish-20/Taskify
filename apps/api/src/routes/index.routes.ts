@@ -1,11 +1,11 @@
 import { Router } from "express";
 
-import healthRouter from "./health.routes.js";
 import authRouter from "./auth.routes.js";
-import userRouter from "./user.routes.js";
+import healthRouter from "./health.routes.js";
 import organizationRouter from "./organization.routes.js";
-import teamRouter from "./team.routes.js";
 import taskRouter from "./task.routes.js";
+import teamRouter from "./team.routes.js";
+import userRouter from "./user.routes.js";
 
 const router = Router();
 

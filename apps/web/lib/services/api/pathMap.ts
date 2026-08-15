@@ -6,7 +6,7 @@ const pathMap = {
   },
   organization: {
     create: '/organization',
-    getOrganizationUsers: '/organization/user',
+    getOrganizationUsers: '/organization/users',
   },
   task: {
     list: '/task',

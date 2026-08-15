@@ -1,8 +1,8 @@
+import Board from '@/components/icons/Board';
+import Graph from '@/components/icons/Graph';
+import Home from '@/components/icons/Home';
 import { Link } from '@/lib/types/components';
 
-import Home from '@/components/icons/Home';
-import Graph from '@/components/icons/Graph';
-import Board from '@/components/icons/Board';
 
 export const links: Link[] = [
   {

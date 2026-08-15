@@ -1,14 +1,13 @@
 import { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-
 import { PropsWithChildren } from 'react';
 
+import AuthGuard from '@/components/auth/AuthGuard';
+import AppLayout from '@/layouts/AppLayout';
 import { AuthStoreProvider } from '@/lib/providers/auth-store-provider';
 import ModalProvider from '@/lib/providers/modal-provider';
 
-import AuthGuard from '@/components/auth/AuthGuard';
 
-import AppLayout from '@/layouts/AppLayout';
 
 import '@/app/globals.css';
 

@@ -1,11 +1,10 @@
 import { Metadata } from "next";
 import { Inter } from "next/font/google";
-
 import { PropsWithChildren } from "react";
 
+import AuthGuard from "@/components/auth/AuthGuard";
 import OrganizationLayout from "@/layouts/OrganizationLayout";
 
-import AuthGuard from "@/components/auth/AuthGuard";
 
 import "@/app/globals.css";
 

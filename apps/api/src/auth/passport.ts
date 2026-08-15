@@ -1,10 +1,9 @@
 import passport from "passport";
-
-import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
+import { Strategy as LocalStrategy } from "passport-local";
 
-import { validateUser } from "../services/auth.service.js";
 import { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } from "../configs/index.js";
+import { validateUser } from "../services/auth.service.js";
 import { handleGoogleUser } from "../services/user.service.js";
 
 passport.use(

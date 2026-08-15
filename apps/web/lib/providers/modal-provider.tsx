@@ -1,25 +1,29 @@
 'use client';
 
-import { PropsWithChildren, useMemo } from 'react';
 import { AnimatePresence } from 'motion/react';
-
-import ConfirmModal from '@/components/modal/ConfirmModal';
-import AddTaskModal from '@/components/modal/AddTaskModal/AddTaskModal';
-import type { ModalProps } from '@/lib/types/components';
+import { PropsWithChildren, useMemo } from 'react';
 
 import useModalStore from '../store/modal';
-
 import { AvailableModals } from '../store/modal/types';
+
+import type { ModalProps } from '@/lib/types/components';
+
+import AddTaskModal from '@/components/modal/AddTaskModal/AddTaskModal';
+import ConfirmModal from '@/components/modal/ConfirmModal';
+import TaskPreviewModal from '@/components/modal/TaskPreviewModal';
 
 const modalMap: Record<AvailableModals, React.FC<ModalProps & any>> = {
   confirm: ConfirmModal,
   'add-task': AddTaskModal,
+  'task-preview': TaskPreviewModal,
 };
 
 interface ModalProviderProps extends PropsWithChildren {}
 
 const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
-  const { type, props: modalProps, closeModal } = useModalStore();
+  const type = useModalStore((state) => state.type);
+  const modalProps = useModalStore((state) => state.props);
+  const closeModal = useModalStore((state) => state.closeModal);
 
   const ModalToRender = useMemo(() => (type ? modalMap[type] : null), [type]);
 

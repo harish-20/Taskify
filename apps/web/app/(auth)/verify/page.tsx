@@ -1,13 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+
+
+import Failed from "./components/Failed";
+import Loading from "./components/Loading";
+import Success from "./components/Success";
 
 import { verifyToken } from "@/lib/services/api/auth";
-
-import Loading from "./components/Loading";
-import Failed from "./components/Failed";
-import Success from "./components/Success";
 
 type VerificationStatus = "pending" | "success" | "failure";
 

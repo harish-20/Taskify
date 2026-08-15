@@ -1,29 +1,27 @@
-import {
-  generateAccessToken,
-  generateRefreshToken,
-} from "../utils/verifyToken.js";
-import { InvalidArgument, NotFound } from "../utils/CustomError.js";
-import { sendMagicLink } from "../utils/mailer.js";
-import { sendResponse } from "../utils/response.js";
-import { getMilliSeconds } from "../utils/getMilliSeconds.js";
 
 import { ApiResponse } from "@repo/shared/types";
-import { registerSchema, RegisterBody } from "../schemas/auth.schema.js";
-
 import { RequestHandler, Response } from "express";
 import jwt from "jsonwebtoken";
 
+import { AccountStatus, IUser } from "../models/user.model.js";
+import { registerSchema, RegisterBody } from "../schemas/auth.schema.js";
+import {
+  createMagicToken,
+  verifyMagicToken,
+} from "../services/magicToken.service.js";
 import {
   createUser,
   findUserById,
   setAccountStatus,
 } from "../services/user.service.js";
-import { AccountStatus, IUser } from "../models/user.model.js";
-
+import { InvalidArgument, NotFound } from "../utils/CustomError.js";
+import { getMilliSeconds } from "../utils/getMilliSeconds.js";
+import { sendMagicLink } from "../utils/mailer.js";
+import { sendResponse } from "../utils/response.js";
 import {
-  createMagicToken,
-  verifyMagicToken,
-} from "../services/magicToken.service.js";
+  generateAccessToken,
+  generateRefreshToken,
+} from "../utils/verifyToken.js";
 
 export const setRefreshTokenCookie = (res: Response, refreshToken: string) => {
   res.cookie("refreshToken", refreshToken, {

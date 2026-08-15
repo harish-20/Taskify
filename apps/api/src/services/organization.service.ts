@@ -1,5 +1,6 @@
-import { IOrganization, Organization } from "../models/organization.model.js";
 import { Types } from "mongoose";
+
+import { IOrganization, Organization } from "../models/organization.model.js";
 import {
   IOrganizationProfile,
   OrganizationProfile,

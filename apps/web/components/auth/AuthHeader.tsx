@@ -1,6 +1,8 @@
-import FullLogo from "@/components/logos/FullLogo";
-import Button from "../UI/Button";
 import Link from "next/link";
+
+import Button from "../UI/Button";
+
+import FullLogo from "@/components/logos/FullLogo";
 
 const AuthHeader = () => {
   return (

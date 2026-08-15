@@ -1,8 +1,8 @@
-import { Forbidden, NotFound } from "../utils/CustomError.js";
 
 import { RequestHandler } from "express";
 
 import { UserRole } from "../models/user.model.js";
+import { Forbidden, NotFound } from "../utils/CustomError.js";
 
 type RoleAuthMiddleware = (roles: UserRole[]) => RequestHandler;
 

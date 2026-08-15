@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+
 import type { NavlinkComponent } from '@/lib/types/components';
 
 interface NavLinkProps {

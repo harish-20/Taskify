@@ -1,10 +1,9 @@
-import Title from "@/components/UI/Title";
-import Office from "@/components/icons/Office";
+import Confirm from "@/components/icons/Confirm";
 import Email from "@/components/icons/Email";
 import Location from "@/components/icons/Location";
+import Office from "@/components/icons/Office";
 import Technology from "@/components/icons/Technology";
-import Confirm from "@/components/icons/Confirm";
-
+import Title from "@/components/UI/Title";
 import useOranization from "@/lib/store/organization";
 
 interface Step5Props {}

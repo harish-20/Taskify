@@ -1,4 +1,4 @@
-export type AvailableModals = 'confirm' | 'add-task';
+export type AvailableModals = 'confirm' | 'add-task' | 'task-preview';
 
 export interface ModalState {
   type: AvailableModals | null;
@@ -6,7 +6,7 @@ export interface ModalState {
 }
 
 export interface ModalActions {
-  openModal: (type: AvailableModals) => void;
+  openModal: (type: AvailableModals, props?: ModalState['props']) => void;
   closeModal: () => void;
 }
 

@@ -1,44 +1,108 @@
-type LogLevel = "INFO" | "WARN" | "ERROR" | "DEBUG";
+import winston from "winston";
+import DailyRotateFile from "winston-daily-rotate-file";
 
-class Logger {
-  private reset = "\x1b[0m";
+const fileLogFormat = winston.format.printf(
+  ({ timestamp, level, message, stack, ...meta }) => {
+    const renderedMessage = stack ?? message;
+    let metadata = "";
 
-  private colors: Record<LogLevel, string> = {
-    INFO: "\x1b[32m", // green
-    WARN: "\x1b[33m", // yellow
-    ERROR: "\x1b[31m", // red
-    DEBUG: "\x1b[36m", // cyan
-  };
-
-  private gray = "\x1b[90m"; // gray for timestamp
-
-  private format(level: LogLevel, args: any[]) {
-    const now = new Date();
-    const color = this.colors[level];
-
-    console.log(
-      `${color}[${level}]${this.reset} ${this.gray}${now.toLocaleString()}${this.reset} -`,
-      ...args
-    );
-  }
-
-  info(...args: any[]) {
-    this.format("INFO", args);
-  }
-
-  warn(...args: any[]) {
-    this.format("WARN", args);
-  }
-
-  error(...args: any[]) {
-    this.format("ERROR", args);
-  }
-
-  debug(...args: any[]) {
-    if (process.env.NODE_ENV === "development") {
-      this.format("DEBUG", args);
+    if (Object.keys(meta).length > 0) {
+      try {
+        metadata = `\n${JSON.stringify(meta, null, 2)}`;
+      } catch {
+        metadata = "\n[unserializable metadata]";
+      }
     }
-  }
-}
 
-export default new Logger();
+    return `${timestamp} [${level.toUpperCase()}] ${renderedMessage}${metadata}`;
+  },
+);
+
+const appTransport = new DailyRotateFile({
+  filename: "logs/application/app-%DATE%.log",
+  datePattern: "YYYY-MM-DD",
+  zippedArchive: true,
+  maxSize: "20m",
+  maxFiles: "30d",
+  level: "info",
+  format: winston.format.combine(
+    winston.format.timestamp({ format: "YYYY-MM-DD hh:mm:ss a" }),
+    winston.format.errors({ stack: true }),
+    fileLogFormat,
+  ),
+});
+
+const errorTransport = new DailyRotateFile({
+  filename: "logs/errors/error-%DATE%.log",
+  datePattern: "YYYY-MM-DD",
+  zippedArchive: true,
+  maxSize: "20m",
+  maxFiles: "60d",
+  level: "error",
+  format: winston.format.combine(
+    winston.format.timestamp({ format: "YYYY-MM-DD hh:mm:ss a" }),
+    winston.format.errors({ stack: true }),
+    fileLogFormat,
+  ),
+});
+
+export const logger = winston.createLogger({
+  level: process.env.NODE_ENV === "production" ? "info" : "debug",
+  format: winston.format.combine(
+    winston.format.errors({ stack: true }),
+    winston.format.splat(),
+  ),
+  defaultMeta: {
+    service: "taskify-api",
+  },
+  transports: [
+    appTransport,
+    errorTransport,
+    new winston.transports.Console({
+      format: winston.format.combine(
+        winston.format.colorize(),
+        winston.format.timestamp({
+          format: "hh:mm:ss a",
+        }),
+        winston.format.printf(
+          ({ timestamp, level, message, service, ...meta }) => {
+            const metadata =
+              Object.keys(meta).length > 0
+                ? `\n${JSON.stringify(meta, null, 2)}`
+                : "";
+
+            return `${timestamp} ${level}: ${message}${metadata}`;
+          },
+        ),
+      ),
+    }),
+  ],
+  exceptionHandlers: [
+    new DailyRotateFile({
+      filename: "logs/exceptions/exception-%DATE%.log",
+      datePattern: "YYYY-MM-DD",
+      zippedArchive: true,
+      maxFiles: "90d",
+      format: winston.format.combine(
+        winston.format.timestamp({ format: "YYYY-MM-DD hh:mm:ss a" }),
+        winston.format.errors({ stack: true }),
+        fileLogFormat,
+      ),
+    }),
+  ],
+  rejectionHandlers: [
+    new DailyRotateFile({
+      filename: "logs/rejections/rejection-%DATE%.log",
+      datePattern: "YYYY-MM-DD",
+      zippedArchive: true,
+      maxFiles: "90d",
+      format: winston.format.combine(
+        winston.format.timestamp({ format: "YYYY-MM-DD hh:mm:ss a" }),
+        winston.format.errors({ stack: true }),
+        fileLogFormat,
+      ),
+    }),
+  ],
+});
+
+export default logger;

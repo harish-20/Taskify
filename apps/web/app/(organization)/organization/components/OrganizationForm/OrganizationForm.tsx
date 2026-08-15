@@ -1,14 +1,15 @@
 "use client";
 
-import { useEffect } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 import stepComponent from "./Steps/Index";
+
 import Button from "@/components/UI/Button";
 import ErrorText from "@/components/UI/ErrorText";
-
 import useOranization from "@/lib/store/organization";
+
 interface OrganizationFormProps {}
 
 const OrganizationForm: React.FC<OrganizationFormProps> = () => {

@@ -1,8 +1,8 @@
 "use client";
 
-import React from "react";
 import { cva, VariantProps } from "class-variance-authority";
 import { motion } from "motion/react";
+import React from "react";
 
 const titleStyles = cva("transition-all", {
   variants: {

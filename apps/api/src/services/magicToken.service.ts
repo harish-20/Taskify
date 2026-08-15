@@ -1,4 +1,5 @@
 import crypto from "node:crypto";
+
 import { MagicToken } from "../models/magicToken.model.js";
 import { getMilliSeconds } from "../utils/getMilliSeconds.js";
 

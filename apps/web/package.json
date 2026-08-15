@@ -8,28 +8,32 @@
     "storybook": "storybook dev -p 6006",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint --max-warnings 0",
+    "lint": "eslint .",
+    "lint:strict": "eslint . --max-warnings 0",
+    "lint:fix": "eslint . --fix",
     "check-types": "tsc --noEmit",
-    "build-storybook": "storybook build",
-    "prepare": "husky"
-  },
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.{json,css,scss,md}": [
-      "prettier --write"
-    ]
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@dnd-kit/react": "^0.5.0",
+    "@hookform/resolvers": "^5.2.2",
     "@repo/ui": "*",
-    "lucide-react": "^1.24.0",
+    "@tiptap/extension-placeholder": "^3.29.0",
+    "@tiptap/pm": "^3.29.0",
+    "@tiptap/react": "^3.29.0",
+    "@tiptap/starter-kit": "^3.29.0",
+    "axios": "^1.12.2",
+    "class-variance-authority": "^0.7.1",
+    "clx": "^1.0.0",
+    "lucide-react": "^1.26.0",
     "motion": "^12.23.14",
     "next": "^15.5.0",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-calendar": "^6.0.1",
+    "react-dom": "^19.1.0",
+    "react-hook-form": "^7.63.0",
+    "zod": "^4.1.1",
+    "zustand": "^5.0.8"
   },
   "devDependencies": {
     "@repo/eslint-config": "*",
@@ -37,10 +41,14 @@
     "@repo/typescript-config": "*",
     "@storybook/builder-vite": "^10.4.6",
     "@storybook/nextjs-vite": "^10.4.6",
+    "@tailwindcss/postcss": "^4.1.13",
+    "@tailwindcss/typography": "^0.5.20",
     "@types/node": "^22.15.3",
     "@types/react": "19.1.0",
     "@types/react-dom": "19.1.1",
     "eslint": "^9.33.0",
+    "eslint-import-resolver-typescript": "^4.4.5",
+    "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-storybook": "^10.4.6",
     "husky": "^9.1.7",
     "storybook": "^10.4.6",

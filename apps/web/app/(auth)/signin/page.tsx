@@ -1,12 +1,14 @@
 "use client";
 
-import SigninTitle from "./components/SigninTitle";
-import SocialMediaLogin from "../../../components/auth/SocialMediaLogin";
-import SigninForm from "./components/SigninForm";
 import FooterText from "../../../components/auth/FooterText";
+import SocialMediaLogin from "../../../components/auth/SocialMediaLogin";
 
-import ShortLogo from "@/components/logos/ShortLogo";
+import SigninForm from "./components/SigninForm";
+import SigninTitle from "./components/SigninTitle";
+
+
 import FadeIn from "@/components/animations/FadeIn";
+import ShortLogo from "@/components/logos/ShortLogo";
 
 const SigninPage = () => {
   return (

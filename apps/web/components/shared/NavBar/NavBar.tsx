@@ -2,12 +2,13 @@
 
 import { AnimatePresence, motion } from "motion/react";
 
-import useBreakPoints from "@/lib/hooks/useBreakpoints";
+import NavLinks from "./NavLinks";
 
 import FullLogo from "@/components/logos/FullLogo";
 import Backdrop from "@/components/UI/Backdrop";
+import useBreakPoints from "@/lib/hooks/useBreakpoints";
 
-import NavLinks from "./NavLinks";
+
 
 interface NavBarProps {
   isNavOpen: boolean;

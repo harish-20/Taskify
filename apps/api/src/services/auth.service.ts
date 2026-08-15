@@ -1,4 +1,5 @@
 import { compare } from "bcrypt";
+
 import { AuthProvider, IUser, User } from "../models/user.model.js";
 import {
   AccountNotExists,

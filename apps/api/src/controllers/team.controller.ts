@@ -1,15 +1,13 @@
 import { ApiResponse } from "@repo/shared/types";
-
-import { NotFound, Unauthorized } from "../utils/CustomError.js";
-import { sendResponse } from "../utils/response.js";
-
 import { RequestHandler } from "express";
 
 import {
   createTeam,
   getTeam as getTeamService,
 } from "../services/team.service.js";
+import { NotFound, Unauthorized } from "../utils/CustomError.js";
 import logger from "../utils/logger.js";
+import { sendResponse } from "../utils/response.js";
 
 export const getTeam: RequestHandler = async (req, res, next) => {
   try {

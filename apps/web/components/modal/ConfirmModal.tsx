@@ -1,5 +1,7 @@
 import Button from '../UI/Button';
+
 import BaseModal from './BaseModal';
+
 import type { ModalProps } from '@/lib/types/components';
 
 interface ConfirmModalProps extends ModalProps {

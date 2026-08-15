@@ -1,4 +1,5 @@
 import { StateCreator } from "zustand";
+
 import { OrganizationStore, OrganizationActions } from "./types";
 
 export const organizationActions: StateCreator<
