@@ -21,7 +21,9 @@ const modalMap: Record<AvailableModals, React.FC<ModalProps & any>> = {
 interface ModalProviderProps extends PropsWithChildren {}
 
 const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
-  const { type, props: modalProps, closeModal } = useModalStore();
+  const type = useModalStore((state) => state.type);
+  const modalProps = useModalStore((state) => state.props);
+  const closeModal = useModalStore((state) => state.closeModal);
 
   const ModalToRender = useMemo(() => (type ? modalMap[type] : null), [type]);
 

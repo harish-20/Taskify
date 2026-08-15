@@ -23,7 +23,7 @@ interface TaskItemProps {
 }
 
 const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
-  const { openModal } = useModalStore();
+  const openModal = useModalStore((state) => state.openModal);
   const updateTask = useTaskBoardStore((state) => state.updateTask);
   const organizationUsers = useTaskBoardStore((state) => state.organizationUsers);
   const setDraggedTaskHeight = useTaskBoardStore((state) => state.setDraggedTaskHeight);

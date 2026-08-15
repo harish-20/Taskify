@@ -34,7 +34,7 @@ const TaskMainContent: React.FC<TaskMainContentProps> = ({
     [taskFieldUpdater],
   );
 
-  const { closeModal } = useModalStore();
+  const closeModal = useModalStore((state) => state.closeModal);
 
   return (
     <div className="space-y-6">

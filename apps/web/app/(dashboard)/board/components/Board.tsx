@@ -14,7 +14,10 @@ import useTaskBoardStore from '@/lib/store/board';
 import { Task, TaskStatus } from '@/lib/types/task';
 
 const Board: React.FC = () => {
-  const { tasks, updateTask, setDraggedTask, setFeedbackTaskPosition } = useTaskBoardStore();
+  const tasks = useTaskBoardStore((state) => state.tasks);
+  const updateTask = useTaskBoardStore((state) => state.updateTask);
+  const setDraggedTask = useTaskBoardStore((state) => state.setDraggedTask);
+  const setFeedbackTaskPosition = useTaskBoardStore((state) => state.setFeedbackTaskPosition);
 
   const groupedTasks: Record<TaskStatus, Task[]> = {
     todo: [],

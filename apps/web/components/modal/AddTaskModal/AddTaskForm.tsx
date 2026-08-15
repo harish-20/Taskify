@@ -66,7 +66,7 @@ const AddTaskForm: FC<AddTaskFormProps> = ({ onClose, defaultStatus = 'todo' }) 
   const [organizationUsers, setOrganizationUsers] = useState<Task['assignees']>([]);
   const [loadingAssignees, setLoadingAssignees] = useState(true);
 
-  const { addTask } = useTaskBoardStore();
+  const addTask = useTaskBoardStore((state) => state.addTask);
 
   const {
     control,

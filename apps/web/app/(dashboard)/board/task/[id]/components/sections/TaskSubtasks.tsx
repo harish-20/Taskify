@@ -22,7 +22,7 @@ const TaskSubtasks: React.FC<TaskSubtasksProps> = ({ taskId, subTasks, onTaskUpd
   const [isSelectOpen, setIsSelectOpen] = useState(false);
   const [isUnlinkingTaskId, setIsUnlinkingTaskId] = useState<string | null>(null);
 
-  const { closeModal } = useModalStore();
+  const closeModal = useModalStore((state) => state.closeModal);
 
   const subtasksCardRef = useRef<HTMLDivElement>(null);
 

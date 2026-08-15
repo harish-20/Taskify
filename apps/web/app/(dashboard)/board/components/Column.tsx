@@ -22,7 +22,7 @@ const Column: React.FC<ColumnProps> = ({ status, tasks }) => {
   });
 
   const feedbackTaskPosition = useTaskBoardStore((state) => state.feedbackTaskPosition);
-  const { openModal } = useModalStore();
+  const openModal = useModalStore((state) => state.openModal);
 
   const { source } = useDragOperation();
 

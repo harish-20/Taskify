@@ -6,7 +6,7 @@ import useModalStore from '@/lib/store/modal';
 interface HeadSectionProps {}
 
 const HeadSection: React.FC<HeadSectionProps> = () => {
-  const { openModal } = useModalStore();
+  const openModal = useModalStore((state) => state.openModal);
 
   const handleCreateTask = () => {
     openModal('add-task');
