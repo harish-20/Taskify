@@ -1,11 +1,11 @@
 import { ErrorCode } from "@repo/shared/errors";
-
 import { StateCreator } from "zustand";
+
+import { AuthAsyncActions, AuthStore } from "./types";
 
 import { signin, signup } from "@/lib/services/api/auth";
 import { customLocalStorage } from "@/lib/services/localStorage";
 
-import { AuthAsyncActions, AuthStore } from "./types";
 
 const getErrorMessage = (code: ErrorCode) => {
   const messageMap: Partial<Record<ErrorCode, string>> = {

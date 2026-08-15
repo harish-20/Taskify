@@ -1,5 +1,4 @@
 import { RequestHandler } from "express";
-
 import mongoose from "mongoose";
 
 export const getHealthInfo: RequestHandler = async (req, res) => {

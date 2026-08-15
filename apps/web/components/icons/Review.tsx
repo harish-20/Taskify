@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'motion/react';
+
 import type { TargetAndTransition, Transition } from 'motion';
 
 interface ReviewProps {

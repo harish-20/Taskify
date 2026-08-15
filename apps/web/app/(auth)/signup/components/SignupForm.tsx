@@ -1,19 +1,19 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 
-import TextInput from "@/components/UI/TextInput";
-import Button from "@/components/UI/Button";
-import FadeIn from "@/components/animations/FadeIn";
-import ErrorText from "@/components/UI/ErrorText";
+import SignupSchema, { SignupType } from "../schemas/SignupSchema";
 
 import SignupDone from "./SignupDone";
 
+import FadeIn from "@/components/animations/FadeIn";
+import Button from "@/components/UI/Button";
+import ErrorText from "@/components/UI/ErrorText";
+import TextInput from "@/components/UI/TextInput";
 import { useAuthStore } from "@/lib/providers/auth-store-provider";
 
-import SignupSchema, { SignupType } from "../schemas/SignupSchema";
 
 const SignupForm = () => {
   const signupWithEmail = useAuthStore((state) => state.signupWithEmail);

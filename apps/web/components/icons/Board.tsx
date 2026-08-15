@@ -1,5 +1,6 @@
 'use client';
 import { motion } from 'motion/react';
+
 import type { NavlinkComponent } from '@/lib/types/components';
 
 interface CheckboxProps extends NavlinkComponent {}

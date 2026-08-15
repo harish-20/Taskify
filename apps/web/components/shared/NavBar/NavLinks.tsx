@@ -1,7 +1,8 @@
 import { links } from './links';
+import NavLink from './NavLink';
+
 import type { NavlinkComponent } from '@/lib/types/components';
 
-import NavLink from './NavLink';
 
 const NavLinks = () => {
   return (

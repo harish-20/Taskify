@@ -1,4 +1,5 @@
 import { ErrorCode, ErrorMessages } from "@repo/shared/errors";
+
 import { AuthProvider } from "../models/user.model.js";
 
 export class CustomError extends Error {

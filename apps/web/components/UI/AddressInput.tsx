@@ -1,7 +1,9 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+
 import type { Address } from '@/lib/types';
+
 import TextInput from '@/components/UI/TextInput';
 import { searchAddress } from '@/lib/services/api/external/address';
 

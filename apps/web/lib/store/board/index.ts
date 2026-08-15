@@ -1,8 +1,8 @@
 import { create } from 'zustand';
 
-import { defaultState } from './state';
 import { boardActions } from './actions';
 import { boardAsyncActions } from './asyncActions';
+import { defaultState } from './state';
 import { BoardStore } from './types';
 
 export const useTaskBoardStore = create<BoardStore>((set, get, store) => ({

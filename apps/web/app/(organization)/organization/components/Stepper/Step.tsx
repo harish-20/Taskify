@@ -1,8 +1,9 @@
-import { FC, useLayoutEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
+import { FC, useLayoutEffect, useRef, useState } from "react";
+
 import Tooltip from "@/components/UI/Tooltip";
-import { Step as StepType } from "@/lib/types/organization";
 import useOranization from "@/lib/store/organization";
+import { Step as StepType } from "@/lib/types/organization";
 
 interface StepProps extends StepType {
   label: string;

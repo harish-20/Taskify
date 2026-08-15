@@ -1,4 +1,5 @@
 import { z } from "zod";
+
 import { MONGO_DB_ID_RX } from "../constants/MongoDbIdRegex.js";
 
 export const createTeamSchema = z.object({

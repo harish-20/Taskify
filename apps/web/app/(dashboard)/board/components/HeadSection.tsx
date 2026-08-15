@@ -1,13 +1,12 @@
+import Plus from '../../../../components/icons/Plus';
+import Button from '../../../../components/UI/Button';
+
 import useModalStore from '@/lib/store/modal';
-
-import Button from '../UI/Button';
-
-import Plus from '../icons/Plus';
 
 interface HeadSectionProps {}
 
 const HeadSection: React.FC<HeadSectionProps> = () => {
-  const { openModal } = useModalStore();
+  const openModal = useModalStore((state) => state.openModal);
 
   const handleCreateTask = () => {
     openModal('add-task');

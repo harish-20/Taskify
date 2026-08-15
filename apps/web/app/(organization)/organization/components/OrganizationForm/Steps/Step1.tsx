@@ -1,7 +1,6 @@
-import TextInput from '@/components/UI/TextInput';
 import Select from '@/components/UI/CardSelect';
+import TextInput from '@/components/UI/TextInput';
 import Title from '@/components/UI/Title';
-
 import useOrganization from '@/lib/store/organization';
 import { CompanySize } from '@/lib/types/organization';
 

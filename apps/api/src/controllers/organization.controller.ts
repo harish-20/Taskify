@@ -1,8 +1,4 @@
 import { ApiResponse } from "@repo/shared/types";
-
-import { Conflict, Unauthorized } from "../utils/CustomError.js";
-import { sendResponse } from "../utils/response.js";
-
 import { RequestHandler } from "express";
 
 import { CreateOrganizationInput } from "../schemas/organization.schema.js";
@@ -10,7 +6,10 @@ import {
   createOrganization,
   createOrganizationProfile,
   getOrganization as getOrganizationService,
+  getOrganizationUsers as getOrganizationUsersService,
 } from "../services/organization.service.js";
+import { Conflict, Unauthorized } from "../utils/CustomError.js";
+import { sendResponse } from "../utils/response.js";
 
 export const getOrganization: RequestHandler = async (req, res, next) => {
   try {
@@ -21,7 +20,7 @@ export const getOrganization: RequestHandler = async (req, res, next) => {
       message: "Organization fetched successfully",
       data: organizations,
     };
-    sendResponse(res, 200, payload);
+    return sendResponse(res, 200, payload);
   } catch (err) {
     next(err);
   }
@@ -53,12 +52,12 @@ export const registerOrganization: RequestHandler = async (req, res, next) => {
 
     const organization = await createOrganization(
       { name, description, address, contactEmail, phoneNumber, website },
-      user._id
+      user._id,
     );
 
     const organizationProfile = await createOrganizationProfile(
       { size, techStack, industry, interests },
-      organization.id
+      organization.id,
     );
 
     const payload: ApiResponse = {
@@ -68,6 +67,28 @@ export const registerOrganization: RequestHandler = async (req, res, next) => {
     };
 
     return sendResponse(res, 201, payload);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getOrganizationUsers: RequestHandler = async (req, res, next) => {
+  try {
+    const user = req.userObj;
+    if (!user) {
+      throw new Unauthorized();
+    }
+
+    const organizationUsers = await getOrganizationUsersService(
+      user.organizationId,
+    );
+
+    const payload: ApiResponse = {
+      success: true,
+      message: "Organinzation users fetched successfully",
+      data: [...organizationUsers],
+    };
+    return sendResponse(res, 200, payload);
   } catch (err) {
     next(err);
   }

@@ -1,0 +1,19 @@
+{
+  "apps/web/**/*.{js,jsx,ts,tsx}": [
+    "eslint --no-config-lookup --config apps/web/eslint.config.js --fix",
+    "prettier --write"
+  ],
+  "apps/api/**/*.{js,jsx,ts,tsx}": [
+    "eslint --no-config-lookup --config apps/api/eslint.config.js --fix",
+    "prettier --write"
+  ],
+  "packages/ui/**/*.{js,jsx,ts,tsx}": [
+    "eslint --no-config-lookup --config packages/ui/eslint.config.mjs --fix",
+    "prettier --write"
+  ],
+  "packages/shared/**/*.{js,jsx,ts,tsx}": [
+    "eslint --no-config-lookup --config apps/api/eslint.config.js --fix",
+    "prettier --write"
+  ],
+  "*.{json,css,scss,md}": ["prettier --write"]
+}

@@ -1,8 +1,8 @@
 import { StateCreator } from 'zustand';
 
-import { TaskStatus } from '@/lib/types/task';
-
 import { BoardActions, BoardStore } from './types';
+
+import { TaskStatus } from '@/lib/types/task';
 
 export const boardActions: StateCreator<BoardStore, [], [], BoardActions> = (set) => ({
   setTasks: (tasks) =>
@@ -10,6 +10,10 @@ export const boardActions: StateCreator<BoardStore, [], [], BoardActions> = (set
       tasks: typeof tasks === 'function' ? tasks(state.tasks) : tasks,
     })),
   setDraggedTask: (taskId) => set({ draggedTask: taskId }),
+  setDraggedTaskHeight: (height) => set({ draggedTaskHeight: height }),
+  setFeedbackTaskPosition: (position) => {
+    set({ feedbackTaskPosition: position });
+  },
   setDraggedOverColumn: (status) => set({ draggedOverColumn: status }),
   setIsDragging: (isDragging) => set({ isDragging }),
   moveTask: (taskId, status) =>

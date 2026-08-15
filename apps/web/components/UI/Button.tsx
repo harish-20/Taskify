@@ -1,12 +1,13 @@
 'use client';
 
-import { PropsWithChildren } from 'react';
-import { AnimatePresence, HTMLMotionProps, motion } from 'motion/react';
 import { cva, VariantProps } from 'class-variance-authority';
+import { AnimatePresence, HTMLMotionProps, motion } from 'motion/react';
+import { PropsWithChildren } from 'react';
+
+import Done from '../icons/Done';
 
 import Spinner from './Spinner';
 
-import Done from '../icons/Done';
 
 const buttonStyles = cva(
   'relative overflow-clip inline-flex items-center justify-center font-medium rounded-md transition-colors cursor-pointer',
@@ -71,7 +72,9 @@ const Button: React.FC<ButtonProps> = (props) => {
     >
       <AnimatePresence>
         {done && (
-          <div className="absolute flex items-center justify-center w-full h-full bg-black">
+          <div
+            className={`absolute flex items-center justify-center w-full h-full ${variant === 'primary' ? 'bg-black' : 'bg-primary-light'}`}
+          >
             <Done
               className="h-5 w-5"
               animate={{ pathLength: [0, 1] }}
