@@ -19,9 +19,9 @@ export const TaskDropIndicator: React.FC<TaskDropIndicatorProps> = ({ label = 'D
       animate={{ opacity: 1, scaleY: 1 }}
       exit={{ opacity: 0, scaleY: 0.96 }}
       style={{ height: draggedTaskHeight ?? undefined }}
-      className="flex items-center justify-center rounded-xl border border-dashed border-blue-300 bg-gradient-to-b from-blue-50 to-white p-6 shadow-sm"
+      className="flex items-center justify-center rounded-xl border border-dashed border-blue-600 bg-white p-6 shadow-sm"
     >
-      <div className="rounded-full bg-blue-200 px-3 py-2 font-medium text-blue-600">{label}</div>
+      <div className="font-semibold text-blue-600">{label}</div>
     </motion.div>
   );
 };
