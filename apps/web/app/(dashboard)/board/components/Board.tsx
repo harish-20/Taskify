@@ -46,49 +46,11 @@ const Board: React.FC = () => {
       const draggedTask = event.operation.source?.data as Task;
       if (!draggedTask) return;
 
-      /*
-       * The collision target is the element currently under
-       * the dragged item.
-       */
-      const targetId = event.operation?.target?.id as string | undefined;
-
-      if (!targetId) return;
-
-      /*
-       * The target can either be:
-       *
-       *   task
-       *   column
-       *
-       * Determine which one we have.
-       */
-      const targetTask = tasks.find((task) => task._id === targetId);
-
-      let targetStatus: TaskStatus | undefined;
-
-      if (targetTask) {
-        targetStatus = targetTask.status;
-      } else if (isTaskStatus(targetId)) {
-        targetStatus = targetId;
-      }
-
+      const targetStatus = event.operation.target?.id as TaskStatus;
       if (!targetStatus) return;
 
-      /*
-       * Get the current pointer Y position.
-       *
-       * This should be the Y coordinate of the drag operation.
-       */
       const pointerY = event.operation?.position?.current?.y;
-
       if (pointerY == null) return;
-
-      /*
-       * Find the task whose midpoint is below the pointer.
-       *
-       * If undefined, the item is being dropped at the end
-       * of the column.
-       */
 
       const feedbackTask = getTargetTask(tasks, targetStatus, pointerY, draggedTask._id);
 
@@ -99,55 +61,19 @@ const Board: React.FC = () => {
       const draggedTask = event.operation.source?.data as Task;
       if (!draggedTask) return;
 
-      /*
-       * The collision target is the element currently under
-       * the dragged item.
-       */
-      const targetId = event.operation?.target?.id as string | undefined;
-
-      if (!targetId) return;
-
-      /*
-       * The target can either be:
-       *
-       *   task
-       *   column
-       *
-       * Determine which one we have.
-       */
-      const targetTask = tasks.find((task) => task._id === targetId);
-
-      let targetStatus: TaskStatus | undefined;
-
-      if (targetTask) {
-        targetStatus = targetTask.status;
-      } else if (isTaskStatus(targetId)) {
-        targetStatus = targetId;
-      }
-
+      const targetStatus = event.operation.target?.id as TaskStatus;
       if (!targetStatus) return;
 
-      /*
-       * Get the current pointer Y position.
-       *
-       * This should be the Y coordinate of the drag operation.
-       */
       const pointerY = event.operation?.position?.current?.y;
-
       if (pointerY == null) return;
 
-      /*
-       * Find the task whose midpoint is below the pointer.
-       *
-       * If undefined, the item is being dropped at the end
-       * of the column.
-       */
       const dropTargetTask = getTaskAtDropPosition(tasks, targetStatus, pointerY, draggedTask._id);
 
       const position = getNextPosition(tasks, draggedTask, dropTargetTask, targetStatus);
 
-      if (draggedTask.position === position && draggedTask.status === targetStatus)
-        console.log('its the same blud');
+      // avoiding api unwanted api call
+      if (draggedTask.position === position && draggedTask.status === targetStatus) return;
+
       updateTask(draggedTask._id, {
         status: targetStatus,
         position,
