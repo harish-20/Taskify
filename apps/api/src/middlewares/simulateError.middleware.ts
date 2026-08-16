@@ -6,8 +6,19 @@ export const simulateErrorMiddleware = (
   next: NextFunction,
 ) => {
   const simulateError = req.query.simulateError === "true";
-  if (simulateError) {
-    throw new Error("Simulated error");
+  const staleTime = req.query.staleTime
+    ? parseInt(req.query.staleTime as string, 10)
+    : 0;
+
+  if (staleTime > 0) {
+    setTimeout(() => {
+      if (simulateError) {
+        throw new Error("Simulated error");
+      }
+
+      next();
+    }, staleTime);
+  } else {
+    next();
   }
-  next();
 };

@@ -96,7 +96,7 @@ export const boardAsyncActions: StateCreator<BoardStore, [], [], BoardAsyncActio
             },
           };
         });
-      }, 500);
+      }, 1000);
     }
   },
 });
