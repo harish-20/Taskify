@@ -8,7 +8,6 @@ import {
   getTaskById,
   removeSubTask,
   updateTask,
-  updateTaskStatus,
   getAvailableSubtasks,
 } from "../controllers/task.controller.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
@@ -22,7 +21,6 @@ import {
   removeSubTaskSchema,
   taskIdParamSchema,
   updateTaskSchema,
-  updateTaskStatusSchema,
 } from "../schemas/task.schema.js";
 
 const taskRouter = Router();
@@ -40,13 +38,6 @@ taskRouter.post(
   authMiddleware,
   validateRequest(createTaskSchema),
   createTask,
-);
-taskRouter.patch(
-  "/status/:taskId",
-  authMiddleware,
-  validateParams(taskIdParamSchema),
-  validateRequest(updateTaskStatusSchema),
-  updateTaskStatus,
 );
 taskRouter.patch(
   "/:taskId",

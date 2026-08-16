@@ -11,7 +11,6 @@ const pathMap = {
   task: {
     list: '/task',
     create: '/task',
-    updateStatus: '/task/status',
   },
 };
 
