@@ -1,11 +1,13 @@
-"use client";
+'use client';
 
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
-import { customLocalStorage } from "@/lib/services/localStorage";
+import { useAuthStore } from '@/lib/providers/auth-store-provider';
+import { getMe } from '@/lib/services/api/auth';
+import { customLocalStorage } from '@/lib/services/localStorage';
 
-type AuthMode = "auth" | "unauth";
+type AuthMode = 'auth' | 'unauth';
 
 interface AuthGuardProps {
   mode: AuthMode;
@@ -14,22 +16,38 @@ interface AuthGuardProps {
 
 const AuthGuard: React.FC<AuthGuardProps> = (props) => {
   const { mode, children } = props;
+  const setUser = useAuthStore((state) => state.setUser);
 
   const router = useRouter();
 
   useEffect(() => {
-    const accessToken = customLocalStorage.getValue("accessToken");
-    if (mode === "auth") {
+    const validateAccessToken = async () => {
+      try {
+        const response = await getMe();
+        if (response.success && response.data) {
+          setUser(response.data);
+          return true;
+        }
+      } catch (error) {
+        customLocalStorage.removeValue('accessToken');
+        router.replace('/signin');
+      }
+    };
+
+    const accessToken = customLocalStorage.getValue('accessToken');
+    if (mode === 'auth') {
       if (!accessToken) {
-        router.replace("/signin");
+        router.replace('/signin');
+      } else {
+        validateAccessToken();
       }
     }
-    if (mode === "unauth") {
+    if (mode === 'unauth') {
       if (accessToken) {
-        router.replace("/dashboard");
+        router.replace('/dashboard');
       }
     }
-  }, [router]);
+  }, [router, setUser, mode]);
 
   return <>{children}</>;
 };

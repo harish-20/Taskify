@@ -3,6 +3,7 @@ const pathMap = {
     signin: '/auth/login',
     signup: '/auth/register',
     verifyToken: '/auth/verify',
+    me: '/me',
   },
   organization: {
     create: '/organization',
