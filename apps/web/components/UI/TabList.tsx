@@ -9,9 +9,9 @@ const tabListVariants = cva('flex items-center border-b border-gray-200', {
       pills: 'gap-1 border-none',
     },
     size: {
-      sm: 'gap-4',
-      md: 'gap-6',
-      lg: 'gap-8',
+      sm: '',
+      md: '',
+      lg: '',
     },
   },
   defaultVariants: {
@@ -21,11 +21,11 @@ const tabListVariants = cva('flex items-center border-b border-gray-200', {
 });
 
 const tabVariants = cva(
-  'relative inline-flex items-center justify-center gap-2 font-medium transition-colors whitespace-nowrap',
+  'relative inline-flex items-center justify-center gap-2 font-medium transition-colors whitespace-nowrap cursor-pointer',
   {
     variants: {
       active: {
-        true: 'text-violet-600',
+        true: 'text-primary',
         false: 'text-gray-500 hover:text-gray-900',
       },
       variant: {
@@ -33,9 +33,9 @@ const tabVariants = cva(
         pills: 'rounded-md px-3 py-2',
       },
       size: {
-        sm: 'text-xs',
-        md: 'text-sm',
-        lg: 'text-base',
+        sm: 'text-xs px-2 py-1',
+        md: 'text-sm px-3 py-2',
+        lg: 'text-base px-4 py-3',
       },
     },
     defaultVariants: {
@@ -71,7 +71,7 @@ const TabList: React.FC<TabListProps> = ({
   ...props
 }) => {
   return (
-    <div role="tablist" className={clsx(tabListVariants({ variant, size }), className)} {...props}>
+    <div role="tablist" className={clsx(tabListVariants({ variant }), className)} {...props}>
       {tabs.map((tab) => {
         const isActive = value === tab.value;
 

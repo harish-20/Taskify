@@ -1,6 +1,8 @@
 import Plus from '../../../../components/icons/Plus';
 import Button from '../../../../components/UI/Button';
 
+import Subtitle from '@/components/UI/SubTitle';
+import Title from '@/components/UI/Title';
 import useModalStore from '@/lib/store/modal';
 
 interface HeadSectionProps {}
@@ -14,8 +16,8 @@ const HeadSection: React.FC<HeadSectionProps> = () => {
   return (
     <div className="flex justify-between items-end">
       <div>
-        <h2 className="text-2xl font-medium">Task Board</h2>
-        <p className="text-gray-600">Manage your tasks efficiently</p>
+        <Title>Task Board</Title>
+        <Subtitle>Manage your tasks efficiently</Subtitle>
       </div>
 
       <Button className="flex items-center" variant="primary" onClick={handleCreateTask}>
