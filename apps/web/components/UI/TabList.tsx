@@ -1,6 +1,6 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 import clsx from 'clsx';
-import React from 'react';
+import React, { ReactElement, ReactNode } from 'react';
 
 const tabListVariants = cva('flex items-center border-b border-gray-200', {
   variants: {
@@ -49,7 +49,7 @@ const tabVariants = cva(
 export interface TabItem {
   value: string;
   label: string;
-  icon?: React.ReactNode;
+  icon: ReactNode;
   disabled?: boolean;
 }
 

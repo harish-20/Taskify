@@ -1,4 +1,3 @@
-
 import bcrypt from "bcrypt";
 import { Types } from "mongoose";
 import { Profile } from "passport-google-oauth20";
@@ -174,4 +173,17 @@ export const createTestUsers = async ({
     status: user.status,
     organizationId: user.organizationId,
   }));
+};
+
+export const updateUser = async (
+  userId: Types.ObjectId | string,
+  updateData: Partial<IUser>,
+): Promise<IUser> => {
+  const user = await User.findByIdAndUpdate(userId, updateData, {
+    new: true,
+  });
+  if (!user) {
+    throw new NotFound("User not found");
+  }
+  return user;
 };

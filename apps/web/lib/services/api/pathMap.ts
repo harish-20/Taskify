@@ -4,6 +4,8 @@ const pathMap = {
     signup: '/auth/register',
     verifyToken: '/auth/verify',
     me: '/me',
+    updateMe: '/me',
+    updateAvatar: '/me/avatar',
   },
   organization: {
     create: '/organization',

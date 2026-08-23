@@ -46,3 +46,16 @@ export const getMe = async () => {
   const response = await Api.get<ApiResponse<User>>(pathMap.auth.me);
   return response.data;
 };
+
+export const updateMe = async (name: string) => {
+  const response = await Api.patch<ApiResponse<User>>(pathMap.auth.updateMe, { name });
+  return response.data;
+};
+
+export const updateAvatar = async (file: File) => {
+  const formData = new FormData();
+  formData.append('avatar', file);
+
+  const response = await Api.put<ApiResponse<User>>(pathMap.auth.updateAvatar, formData);
+  return response.data;
+};

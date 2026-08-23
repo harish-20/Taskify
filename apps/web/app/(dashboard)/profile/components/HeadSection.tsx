@@ -8,8 +8,8 @@ const HeadSection: React.FC<HeadSectionProps> = (props) => {
 
   return (
     <div className="flex flex-col gap-1">
-      <Title>Task Board</Title>
-      <Subtitle>Manage your tasks efficiently</Subtitle>
+      <Title>Profile settings</Title>
+      <Subtitle>Keep your personal information up to date</Subtitle>
     </div>
   );
 };

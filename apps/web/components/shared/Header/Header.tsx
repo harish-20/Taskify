@@ -19,7 +19,7 @@ const Header: React.FC<HeaderProps> = (props) => {
       <NavToggler isNavOpen={isNavOpen} toggleNav={toggleNav} />
 
       <Link href="/profile" className="ml-4">
-        <Avatar name={user?.name} className="ml-auto" size="sm" />
+        <Avatar name={user?.name} src={user?.avatarUrl} className="ml-auto" size="sm" />
       </Link>
     </header>
   );
