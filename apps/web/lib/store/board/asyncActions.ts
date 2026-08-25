@@ -3,12 +3,7 @@ import { StateCreator } from 'zustand';
 import { BoardAsyncActions, BoardStore } from './types';
 
 import { getOrganizationUsers } from '@/lib/services/api/organization';
-import {
-  createTask,
-  getTasks,
-  updateTask as updateTaskApi,
-  updateTaskStatus as updateTaskStatusApi,
-} from '@/lib/services/api/task';
+import { createTask, getTasks, updateTask as updateTaskApi } from '@/lib/services/api/task';
 
 export const boardAsyncActions: StateCreator<BoardStore, [], [], BoardAsyncActions> = (
   set,
@@ -50,29 +45,6 @@ export const boardAsyncActions: StateCreator<BoardStore, [], [], BoardAsyncActio
     }
   },
 
-  updateTaskStatus: async (taskId, status) => {
-    const prevTask = get().tasks.find((task) => task._id === taskId);
-
-    set((state) => ({
-      tasks: state.tasks.map((task) => (task._id === taskId ? { ...task, status } : task)),
-    }));
-
-    try {
-      const response = await updateTaskStatusApi(taskId, status);
-
-      if (!response.success) {
-        throw new Error('Update failed');
-      }
-    } catch (error) {
-      console.error('Failed to update task status', error);
-      if (!prevTask) return;
-
-      set((state) => ({
-        tasks: [...state.tasks.filter((task) => task._id !== taskId), prevTask],
-      }));
-    }
-  },
-
   updateTask: async (taskId, taskData) => {
     const prevTask = get().tasks.find((task) => task._id === taskId);
 
@@ -81,6 +53,12 @@ export const boardAsyncActions: StateCreator<BoardStore, [], [], BoardAsyncActio
     }));
 
     try {
+      set((state) => ({
+        tasksMovingStatus: {
+          ...state.tasksMovingStatus,
+          [taskId]: { status: 'loading' },
+        },
+      }));
       const response = await updateTaskApi(taskId, taskData);
 
       if (!response.success || !response.data) {
@@ -91,6 +69,10 @@ export const boardAsyncActions: StateCreator<BoardStore, [], [], BoardAsyncActio
         tasks: state.tasks.map((task) =>
           task._id === taskId ? (response.data as BoardStore['tasks'][number]) : task,
         ),
+        tasksMovingStatus: {
+          ...state.tasksMovingStatus,
+          [taskId]: { status: 'success' },
+        },
       }));
     } catch (error) {
       console.error('Failed to update task', error);
@@ -99,7 +81,22 @@ export const boardAsyncActions: StateCreator<BoardStore, [], [], BoardAsyncActio
 
       set((state) => ({
         tasks: state.tasks.map((task) => (task._id === taskId ? prevTask : task)),
+        tasksMovingStatus: {
+          ...state.tasksMovingStatus,
+          [taskId]: { status: 'failed' },
+        },
       }));
+    } finally {
+      setTimeout(() => {
+        set((state) => {
+          const { [taskId]: _, ...rest } = state.tasksMovingStatus;
+          return {
+            tasksMovingStatus: {
+              ...rest,
+            },
+          };
+        });
+      }, 1000);
     }
   },
 });

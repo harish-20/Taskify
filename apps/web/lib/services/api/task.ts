@@ -62,14 +62,6 @@ export const updateTask = async (taskId: string, taskData: Partial<Task>) => {
   return response.data;
 };
 
-export const updateTaskStatus = async (taskId: string, status: Task['status']) => {
-  const response = await Api.patch<ApiResponse<Task>>(`${pathMap.task.updateStatus}/${taskId}`, {
-    status,
-  });
-
-  return response.data;
-};
-
 export const deleteTask = async (taskId: string) => {
   const response = await Api.delete<ApiResponse<null>>(`${pathMap.task.list}/${taskId}`);
 

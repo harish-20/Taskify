@@ -9,7 +9,6 @@ import {
   getTasks as getTasksService,
   removeSubTask as removeSubTaskService,
   updateTask as updateTaskService,
-  updateTaskStatus as updateTaskStatusService,
   getAvailableSubtasks as getAvailableSubtasksService,
 } from "../services/task.service.js";
 import { Unauthorized } from "../utils/CustomError.js";
@@ -73,29 +72,6 @@ export const getTaskById: RequestHandler = async (req, res, next) => {
     next(err);
   }
 };
-export const updateTaskStatus: RequestHandler = async (req, res, next) => {
-  try {
-    const user = req.userObj;
-    if (!user) throw new Unauthorized();
-
-    const task = await updateTaskStatusService(
-      req.params.taskId,
-      req.body.status,
-      user.organizationId,
-    );
-
-    const payload: ApiResponse = {
-      success: true,
-      message: "Task status updated successfully",
-      data: task,
-    };
-
-    return sendResponse(res, 200, payload);
-  } catch (err) {
-    next(err);
-  }
-};
-
 export const updateTask: RequestHandler = async (req, res, next) => {
   try {
     const user = req.userObj;

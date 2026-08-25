@@ -56,10 +56,6 @@ export const createTaskSchema = z.object({
   organizationId: z.undefined(),
 });
 
-export const updateTaskStatusSchema = z.object({
-  status: z.enum(TaskStatus),
-});
-
 export const addSubTaskSchema = z.object({
   subTaskId: z.string().regex(MONGO_DB_ID_RX, "Invalid sub-task ID"),
 });

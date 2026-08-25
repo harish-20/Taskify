@@ -2,6 +2,7 @@ import { BoardState } from './types';
 
 export const defaultState: BoardState = {
   tasks: [],
+  tasksMovingStatus: {},
   organizationUsers: [],
   draggedTask: null,
   draggedTaskHeight: null,

@@ -1,6 +1,6 @@
 import { Feedback } from '@dnd-kit/dom';
 import { useDraggable } from '@dnd-kit/react';
-import { ClockAlert } from 'lucide-react';
+import { Check, ClockAlert, X } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useEffect, useRef, useState, useCallback } from 'react';
 
@@ -11,6 +11,7 @@ import PeekChecklist from './PeekChecklist';
 import { TaskDropIndicator } from './TaskDropZone';
 
 import StopPropagation from '@/components/shared/StopPropagation';
+import Spinner from '@/components/UI/Spinner';
 import Tooltip from '@/components/UI/Tooltip';
 import useTaskBoardStore from '@/lib/store/board';
 import useModalStore from '@/lib/store/modal';
@@ -29,6 +30,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
   const setDraggedTaskHeight = useTaskBoardStore((state) => state.setDraggedTaskHeight);
   const draggedTask = useTaskBoardStore((state) => state.draggedTask);
   const feedbackTaskPosition = useTaskBoardStore((state) => state.feedbackTaskPosition);
+  const taskMovingStatus = useTaskBoardStore((state) => state.tasksMovingStatus[task._id]);
   const { ref, isDragging } = useDraggable({
     id: task._id,
     data: task,
@@ -129,7 +131,14 @@ const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
           <div className="flex justify-between">
             <Tooltip content={task.type}>
               <div className="flex items-center gap-2">
-                <TaskTypeIcon className="stroke-2 h-5 w-5" />
+                {!taskMovingStatus && <TaskTypeIcon className="stroke-2 h-5 w-5" />}
+                {taskMovingStatus?.status === 'loading' && (
+                  <Spinner className="border-primary h-5 w-5" />
+                )}
+                {taskMovingStatus?.status === 'success' && (
+                  <Check className="stroke-green-600 h-5 w-5" />
+                )}
+                {taskMovingStatus?.status === 'failed' && <X className="stroke-red-600 h-5 w-5" />}
                 <span className="text-xs font-semibold text-gray-600">{task.ticketId}</span>
               </div>
             </Tooltip>

@@ -106,28 +106,6 @@ export const getTask = async (
   return task;
 };
 
-export const updateTaskStatus = async (
-  taskId: string,
-  status: TaskStatus,
-  organizationId: Types.ObjectId,
-) => {
-  const task = await Task.findOne({
-    _id: taskId,
-    organizationId: organizationId,
-    isDeleted: false,
-  });
-
-  if (!task) {
-    throw new NotFound("Task not found");
-  }
-
-  task.status = status;
-  const updatedTask = await task.save();
-  await updatedTask.populate(TASK_POPULATE_OPTIONS);
-
-  return updatedTask;
-};
-
 export const updateTask = async (
   taskId: string,
   taskData: UpdateTaskSchema,

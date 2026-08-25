@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 interface AvatarProps {
   name?: string | null;
@@ -81,11 +81,16 @@ const Avatar: React.FC<AvatarProps> = ({
 
   const initials = useMemo(() => getInitials(name), [name]);
   const bgColor = useMemo(() => getColor(name), [name]);
+  const imageSource = src ?? null;
+
+  useEffect(() => {
+    setImageError(false);
+  }, [imageSource]);
 
   const avatar =
-    src && !imageError ? (
+    imageSource && !imageError ? (
       <img
-        src={src}
+        src={imageSource}
         alt={name ?? 'User avatar'}
         loading="lazy"
         draggable={false}

@@ -1,5 +1,5 @@
 {
-    "typescript.tsdk": "node_modules\\typescript\\lib",
-    "window.zoomLevel": -0.25,
-    "editor.mouseWheelScrollSensitivity": 5
+  "js/ts.tsdk.path": "node_modules\\typescript\\lib",
+  "window.zoomLevel": -0.25,
+  "editor.mouseWheelScrollSensitivity": 5
 }
