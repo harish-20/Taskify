@@ -177,6 +177,11 @@ const UserSettings = () => {
         <p className="mt-1 text-sm text-gray-500">
           Signed in with {user?.provider ?? 'your account'}.
         </p>
+        {user?.role && (
+          <span className="mt-3 inline-block rounded-full bg-primary-light px-3 py-1 text-xs font-medium capitalize text-primary">
+            {user.role}
+          </span>
+        )}
       </aside>
     </section>
   );
