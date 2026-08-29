@@ -1,17 +1,16 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
 
-import SigninSchema, { SigninType } from "../schemas/SigninSchema";
+import SigninSchema, { SigninType } from '../schemas/SigninSchema';
 
-import FadeIn from "@/components/animations/FadeIn";
-import Button from "@/components/UI/Button";
-import ErrorText from "@/components/UI/ErrorText";
-import TextInput from "@/components/UI/TextInput";
-import { useAuthStore } from "@/lib/providers/auth-store-provider";
-import { customLocalStorage } from "@/lib/services/localStorage";
-
+import FadeIn from '@/components/animations/FadeIn';
+import Button from '@/components/UI/Button';
+import ErrorText from '@/components/UI/ErrorText';
+import TextInput from '@/components/UI/TextInput';
+import { useAuthStore } from '@/lib/providers/auth-store-provider';
+import { customLocalStorage } from '@/lib/services/localStorage';
 
 const SigninForm = () => {
   const isSigningIn = useAuthStore((state) => state.isSigningIn);
@@ -23,9 +22,9 @@ const SigninForm = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const accessToken = customLocalStorage.getValue("accessToken");
+    const accessToken = customLocalStorage.getValue('accessToken');
     if (accessToken) {
-      router.push("/dashboard");
+      router.push('/dashboard');
     }
   }, [user]);
 
@@ -44,16 +43,13 @@ const SigninForm = () => {
 
   return (
     <FadeIn className="w-full" startDelay={0.2}>
-      <form
-        className="flex flex-col w-full gap-3"
-        onSubmit={formSubmit(handleSubmit)}
-      >
+      <form className="flex flex-col w-full gap-3" onSubmit={formSubmit(handleSubmit)}>
         {error && <ErrorText>{error}</ErrorText>}
         <TextInput
           label="Email"
           id="email"
           placeholder="name@example.com"
-          {...register("email")}
+          {...register('email')}
           error={errors.email?.message}
         />
         <TextInput
@@ -61,11 +57,11 @@ const SigninForm = () => {
           type="password"
           id="password"
           placeholder="At least 8 characters"
-          {...register("password")}
+          {...register('password')}
           error={errors.password?.message}
         />
 
-        <Button className="mt-3" loading={isSigningIn} done={!!user}>
+        <Button variant="primary" className="mt-3" loading={isSigningIn} done={!!user}>
           Sign in
         </Button>
       </form>
