@@ -20,7 +20,7 @@ export const createOrganizationSchema = z.object({
     .max(32)
     .refine(
       (v) => !v || /^[+()0-9\s\-]{6,32}$/.test(v),
-      "phoneNumber must contain only digits, spaces, parentheses, + or -"
+      "phoneNumber must contain only digits, spaces, parentheses, + or -",
     ),
 
   website: z.url("Invalid URL"),
@@ -45,5 +45,12 @@ export const createOrganizationSchema = z.object({
 
 export const updateOrganizationSchema = createOrganizationSchema.partial();
 
+export const inviteMemberSchema = z.object({
+  name: z.string().min(1, "Name is required").trim(),
+  email: z.email("Invalid email"),
+  role: z.enum(["admin", "manager", "lead", "member"]).optional(),
+});
+
 export type CreateOrganizationInput = z.infer<typeof createOrganizationSchema>;
 export type UpdateOrganizationInput = z.infer<typeof updateOrganizationSchema>;
+export type InviteMemberInput = z.infer<typeof inviteMemberSchema>;

@@ -76,6 +76,16 @@ export type CompanySize =
   | '1000-2000'
   | '2000+';
 
+export interface Team {
+  _id: string;
+  name: string;
+  description?: string;
+  organization: string;
+  members: string[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export type Step = {
   label: string;
   Icon: FC<any>;

@@ -7,6 +7,7 @@ import Api from '.';
 import type { ChecklistItem, Task } from '@/lib/types/task';
 
 export interface CreateTaskInput {
+  board: string;
   title: string;
   description?: string;
   type?: Task['type'];
@@ -31,8 +32,10 @@ export interface CreateTaskInput {
   isArchived?: boolean;
 }
 
-export const getTasks = async () => {
-  const response = await Api.get<ApiResponse<Task[]>>(pathMap.task.list);
+export const getTasks = async (boardId: string) => {
+  const response = await Api.get<ApiResponse<Task[]>>(pathMap.task.list, {
+    params: { boardId },
+  });
 
   return response.data;
 };

@@ -52,6 +52,7 @@ export interface Task {
   watchers: User[];
   createdBy: User;
   organizationId: string;
+  board: string;
   tags: string[];
   attachments: Attachment[];
   comments: Comment[];

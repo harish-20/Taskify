@@ -45,7 +45,11 @@ export const getTasks: RequestHandler<{}, { tasks: any[] }> = async (
   try {
     const user = req.userObj;
     if (!user) throw new Unauthorized();
-    const tasks = await getTasksService(user.organizationId);
+    const boardId = req.query.boardId;
+    if (typeof boardId !== "string") {
+      throw new Unauthorized("A board ID is required");
+    }
+    const tasks = await getTasksService(user.organizationId, boardId);
     const payload: ApiResponse = {
       success: true,
       message: "Tasks retrieved successfully",

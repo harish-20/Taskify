@@ -1,5 +1,6 @@
 import { PopulateOptions, Types } from "mongoose";
 
+import { Board } from "../models/board.model.js";
 import { Task, TaskStatus } from "../models/task.model.js";
 import { TaskCounter } from "../models/taskCounter.model.js";
 import { TaskSchema, UpdateTaskSchema } from "../schemas/task.schema.js";
@@ -63,6 +64,15 @@ export const createTask = async (
     throw new NotFound("User not found");
   }
 
+  const board = await Board.exists({
+    _id: taskData.board,
+    organization: organizationId,
+    isArchived: false,
+  });
+  if (!board) {
+    throw new NotFound("Board not found");
+  }
+
   const counter = await TaskCounter.findOneAndUpdate(
     { organizationId: organizationId },
     { $inc: { seq: 1 } },
@@ -80,9 +90,22 @@ export const createTask = async (
   return task;
 };
 
-export const getTasks = async (organizationId: Types.ObjectId) => {
+export const getTasks = async (
+  organizationId: Types.ObjectId,
+  boardId: string,
+) => {
+  const board = await Board.exists({
+    _id: boardId,
+    organization: organizationId,
+    isArchived: false,
+  });
+  if (!board) {
+    throw new NotFound("Board not found");
+  }
+
   const tasks = await Task.find({
     organizationId: organizationId,
+    board: boardId,
     isDeleted: false,
   }).populate(TASK_POPULATE_OPTIONS);
 

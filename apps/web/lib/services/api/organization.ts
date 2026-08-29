@@ -6,7 +6,6 @@ import Api from '.';
 
 import type { Organization, OrganizationProfile } from '@/lib/types/organization';
 
-
 interface OrganizationResponse {
   organization: Organization;
   organizationProfile: OrganizationProfile;
@@ -37,6 +36,16 @@ export const createOrganization = async (organizationDetails: {
 
 export const getOrganizationUsers = async () => {
   const response = await Api.get<ApiResponse>(pathMap.organization.getOrganizationUsers);
+
+  return response.data;
+};
+
+export const inviteMember = async (memberDetails: {
+  name: string;
+  email: string;
+  role?: string;
+}) => {
+  const response = await Api.post<ApiResponse>(pathMap.organization.inviteMember, memberDetails);
 
   return response.data;
 };

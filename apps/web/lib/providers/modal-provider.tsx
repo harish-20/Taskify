@@ -10,12 +10,16 @@ import type { ModalProps } from '@/lib/types/components';
 
 import AddTaskModal from '@/components/modal/AddTaskModal/AddTaskModal';
 import ConfirmModal from '@/components/modal/ConfirmModal';
+import CreateTeamModal from '@/components/modal/CreateTeamModal';
+import InviteMemberModal from '@/components/modal/InviteMemberModal';
 import TaskPreviewModal from '@/components/modal/TaskPreviewModal';
 
 const modalMap: Record<AvailableModals, React.FC<ModalProps & any>> = {
   confirm: ConfirmModal,
   'add-task': AddTaskModal,
   'task-preview': TaskPreviewModal,
+  'invite-member': InviteMemberModal,
+  'create-team': CreateTeamModal,
 };
 
 interface ModalProviderProps extends PropsWithChildren {}

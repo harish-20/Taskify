@@ -1,4 +1,9 @@
-export type AvailableModals = 'confirm' | 'add-task' | 'task-preview';
+export type AvailableModals =
+  | 'confirm'
+  | 'add-task'
+  | 'task-preview'
+  | 'invite-member'
+  | 'create-team';
 
 export interface ModalState {
   type: AvailableModals | null;

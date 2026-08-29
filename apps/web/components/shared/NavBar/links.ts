@@ -1,8 +1,8 @@
 import Board from '@/components/icons/Board';
 import Graph from '@/components/icons/Graph';
 import Home from '@/components/icons/Home';
+import Organization from '@/components/icons/Organization';
 import { Link } from '@/lib/types/components';
-
 
 export const links: Link[] = [
   {
@@ -22,5 +22,11 @@ export const links: Link[] = [
     label: 'Board',
     link: '/board',
     Icon: Board,
+  },
+  {
+    id: 4,
+    label: 'Organization',
+    link: '/organization/manage',
+    Icon: Organization,
   },
 ];
