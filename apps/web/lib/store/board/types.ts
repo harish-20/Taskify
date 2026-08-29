@@ -22,6 +22,7 @@ export interface BoardState {
 
 export interface BoardActions {
   setTasks: (tasks: Task[] | ((currentTasks: Task[]) => Task[])) => void;
+  syncTask: (task: Task) => void;
   setDraggedTask: (taskId: Task['_id'] | null) => void;
   setDraggedTaskHeight: (height: number | null) => void;
   setFeedbackTaskPosition: (position: Task['_id'] | null) => void;

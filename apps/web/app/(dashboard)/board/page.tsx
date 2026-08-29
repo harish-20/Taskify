@@ -49,7 +49,7 @@ export default function BoardPage() {
       message: `Delete ${board.name}? Tasks kept will move to Backlog.`,
       confirmLabel: 'Delete board',
       checkboxLabel: 'Delete all tasks in this board',
-      onConfirm: (deleteTasks) => void handleDelete(board._id, deleteTasks),
+      onConfirm: (deleteTasks: boolean) => void handleDelete(board._id, deleteTasks),
     });
   };
 
@@ -69,7 +69,7 @@ export default function BoardPage() {
   };
 
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 py-2">
+    <div className="mx-auto flex w-full flex-col gap-8 py-2">
       <header className="flex flex-wrap items-end justify-between gap-4 border-b border-gray-200 pb-6">
         <div className="flex items-center gap-3">
           <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary-light text-primary">
@@ -123,7 +123,7 @@ export default function BoardPage() {
             <button
               type="button"
               onClick={() => router.push('/board/backlog')}
-              className="mt-auto flex items-center gap-2 self-start text-sm font-semibold text-primary hover:underline"
+              className="mt-auto flex items-center gap-2 self-start text-sm font-semibold text-primary cursor-pointer hover:underline"
             >
               Open backlog <ArrowRight size={16} />
             </button>
@@ -172,7 +172,7 @@ export default function BoardPage() {
               <button
                 type="button"
                 onClick={() => router.push(`/board/${board._id}`)}
-                className="mt-auto flex items-center gap-2 self-start text-sm font-semibold text-primary hover:underline"
+                className="mt-auto flex items-center gap-2 self-start text-sm font-semibold text-primary cursor-pointer hover:underline"
               >
                 Open board <ArrowRight size={16} />
               </button>

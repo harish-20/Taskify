@@ -148,6 +148,17 @@ export const updateTask = async (
     throw new NotFound("Task not found");
   }
 
+  if (taskData.board) {
+    const board = await Board.exists({
+      _id: taskData.board,
+      organization: organizationId,
+      isArchived: false,
+    });
+    if (!board) {
+      throw new NotFound("Board not found");
+    }
+  }
+
   Object.assign(task, taskData);
   const updatedTask = await task.save();
   await updatedTask.populate(TASK_POPULATE_OPTIONS);
