@@ -53,9 +53,9 @@ const ManageOrganizationPage = () => {
   }, []);
 
   return (
-    <div className="mx-auto flex max-w-5xl flex-col gap-10 p-6">
+    <div className="w-full flex flex-col gap-10 p-6">
       <div className="flex items-center justify-between">
-        <Title size="lg">Manage Organization</Title>
+        <Title size="md">Manage Organization</Title>
       </div>
 
       <div className="flex flex-col gap-4">

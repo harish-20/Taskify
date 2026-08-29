@@ -67,7 +67,7 @@ const CreateTeamModal: React.FC<CreateTeamModalProps> = ({
 
   return (
     <BaseModal onClose={onClose}>
-      <div className="flex w-[min(96vw,28rem)] flex-col overflow-hidden rounded-[24px] border border-gray-200 bg-white shadow-2xl">
+      <div className="flex w-[min(96vw,28rem)] flex-col overflow-visible rounded-[24px] border border-gray-200 bg-white shadow-2xl">
         <div className="flex items-center justify-between border-b border-gray-200 px-5 py-4">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-light text-primary">
