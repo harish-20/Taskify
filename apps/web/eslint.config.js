@@ -61,6 +61,18 @@ export default [
       'import/first': 'error',
       'import/newline-after-import': 'error',
       'import/no-cycle': 'warn',
+
+      'no-unused-vars': [
+        'error',
+        {
+          vars: 'all',
+          args: 'after-used',
+          caughtErrors: 'all',
+          ignoreRestSiblings: false,
+          ignoreUsingDeclarations: false,
+          reportUsedIgnorePattern: false,
+        },
+      ],
     },
   },
 

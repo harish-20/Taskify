@@ -4,6 +4,7 @@ import { User } from '@/lib/types/user';
 
 export interface BoardState {
   tasks: Task[];
+  currentBoardId: string | null;
   tasksMovingStatus: Record<
     Task['_id'],
     {
@@ -21,6 +22,7 @@ export interface BoardState {
 
 export interface BoardActions {
   setTasks: (tasks: Task[] | ((currentTasks: Task[]) => Task[])) => void;
+  syncTask: (task: Task) => void;
   setDraggedTask: (taskId: Task['_id'] | null) => void;
   setDraggedTaskHeight: (height: number | null) => void;
   setFeedbackTaskPosition: (position: Task['_id'] | null) => void;
@@ -30,7 +32,7 @@ export interface BoardActions {
 }
 
 export interface BoardAsyncActions {
-  loadTasks: () => Promise<void>;
+  loadTasks: (boardId?: string) => Promise<void>;
   loadOrganizationUsers: () => Promise<void>;
   addTask: (taskData: CreateTaskInput) => Promise<void>;
   updateTask: (taskId: Task['_id'], taskData: Partial<Task>) => Promise<void>;

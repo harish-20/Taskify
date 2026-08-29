@@ -43,6 +43,7 @@ export interface ITask extends Document {
 
   createdBy: Types.ObjectId;
   organizationId: Types.ObjectId;
+  board?: Types.ObjectId;
 
   tags: string[];
 
@@ -214,6 +215,11 @@ const taskSchema = new Schema<ITask>(
       required: true,
     },
 
+    board: {
+      type: Schema.Types.ObjectId,
+      ref: "Board",
+    },
+
     tags: [
       {
         type: String,
@@ -290,7 +296,7 @@ const taskSchema = new Schema<ITask>(
   },
 );
 
-taskSchema.index({ organizationId: 1, status: 1 });
+taskSchema.index({ organizationId: 1, board: 1, status: 1 });
 taskSchema.index({ organizationId: 1, ticketId: 1 }, { unique: true });
 taskSchema.index({ assignees: 1 });
 taskSchema.index({ createdBy: 1 });

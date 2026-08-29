@@ -6,6 +6,7 @@ import TaskDetailsPanel from './TaskDetailsPanel';
 import TaskHeader from './TaskHeader';
 import TaskMainContent from './TaskMainContent';
 
+import useTaskBoardStore from '@/lib/store/board';
 import { Task } from '@/lib/types/task';
 
 interface TaskDetailLayoutProps {
@@ -14,7 +15,8 @@ interface TaskDetailLayoutProps {
 }
 
 const TaskDetailLayout: React.FC<TaskDetailLayoutProps> = ({ task, onTaskUpdate }) => {
-  const taskFieldUpdater = useTaskFields(task, onTaskUpdate);
+  const syncTask = useTaskBoardStore((state) => state.syncTask);
+  const taskFieldUpdater = useTaskFields(task, onTaskUpdate, syncTask);
 
   return (
     <div className="flex-1 flex flex-col gap-6 pb-8">

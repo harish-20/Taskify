@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { Check, ChevronDown, Inbox, LayoutDashboard, LoaderCircle } from 'lucide-react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 
 import { TaskFieldUpdater } from '../hooks/useTaskFields';
 
@@ -9,7 +10,10 @@ import DetailField from '@/components/UI/DetailField';
 import DurationInput from '@/components/UI/DurationInput';
 import TagInput from '@/components/UI/TagInput';
 import UsersListInput from '@/components/UI/UsersListInput';
+import useClickOutside from '@/lib/hooks/useClickoutside';
+import { getBoards } from '@/lib/services/api/board';
 import { getOrganizationUsers } from '@/lib/services/api/organization';
+import { Board } from '@/lib/types/board';
 import { Task } from '@/lib/types/task';
 
 interface TaskDetailsPanelProps {
@@ -17,8 +21,123 @@ interface TaskDetailsPanelProps {
   taskFieldUpdater: TaskFieldUpdater;
 }
 
+interface BoardAssignmentPickerProps {
+  boards: Board[];
+  boardId?: string | null;
+  isSaving: boolean;
+  onChange: (boardId: string | null) => void;
+}
+
+const BoardAssignmentPicker: React.FC<BoardAssignmentPickerProps> = ({
+  boards,
+  boardId,
+  isSaving,
+  onChange,
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const pickerRef = useRef<HTMLDivElement>(null);
+  const selectedBoard = boards.find((board) => board._id === boardId);
+
+  useClickOutside(pickerRef, () => setIsOpen(false), isOpen);
+
+  const selectBoard = (nextBoardId: string | null) => {
+    if (nextBoardId === boardId) {
+      setIsOpen(false);
+      return;
+    }
+
+    onChange(nextBoardId);
+    setIsOpen(false);
+  };
+
+  return (
+    <div ref={pickerRef} className="relative">
+      <p className="mb-2 text-xs font-semibold uppercase text-gray-500">Board</p>
+      <button
+        type="button"
+        aria-expanded={isOpen}
+        aria-haspopup="listbox"
+        aria-label="Change task board"
+        title="Change task board"
+        disabled={isSaving}
+        onClick={() => setIsOpen((current) => !current)}
+        className="flex min-h-12 w-full items-center gap-3 rounded-lg border border-gray-200 bg-gray-50 px-3 text-left transition-colors hover:border-primary/40 hover:bg-primary-light/40 focus:outline-none focus:ring-2 focus:ring-primary/30 disabled:cursor-not-allowed disabled:opacity-70"
+      >
+        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-white text-primary shadow-sm">
+          {selectedBoard ? <LayoutDashboard size={16} /> : <Inbox size={16} />}
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block truncate text-sm font-semibold text-gray-900">
+            {selectedBoard?.name || 'Backlog'}
+          </span>
+          <span className="block truncate text-xs text-gray-500">
+            {selectedBoard ? 'Assigned board' : 'Unassigned tasks'}
+          </span>
+        </span>
+        {isSaving ? (
+          <LoaderCircle size={17} className="shrink-0 animate-spin text-primary" />
+        ) : (
+          <ChevronDown
+            size={17}
+            className={`shrink-0 text-gray-500 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+          />
+        )}
+      </button>
+
+      {isOpen && (
+        <div
+          role="listbox"
+          aria-label="Task board"
+          className="absolute z-30 mt-2 w-full overflow-hidden rounded-lg border border-gray-200 bg-white p-1 shadow-lg"
+        >
+          <button
+            type="button"
+            role="option"
+            aria-selected={!boardId}
+            onClick={() => selectBoard(null)}
+            className={`flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-left transition-colors ${
+              !boardId ? 'bg-primary-light text-primary' : 'hover:bg-gray-50'
+            }`}
+          >
+            <Inbox size={16} className="shrink-0" />
+            <span className="min-w-0 flex-1">
+              <span className="block text-sm font-medium">Backlog</span>
+              <span className="block text-xs text-gray-500">Unassigned tasks</span>
+            </span>
+            {!boardId && <Check size={16} className="shrink-0" />}
+          </button>
+
+          {boards.length > 0 && <div className="mx-2 my-1 border-t border-gray-100" />}
+
+          {boards.map((board) => {
+            const isSelected = board._id === boardId;
+
+            return (
+              <button
+                key={board._id}
+                type="button"
+                role="option"
+                aria-selected={isSelected}
+                onClick={() => selectBoard(board._id)}
+                className={`flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-left transition-colors ${
+                  isSelected ? 'bg-primary-light text-primary' : 'hover:bg-gray-50'
+                }`}
+              >
+                <LayoutDashboard size={16} className="shrink-0" />
+                <span className="min-w-0 flex-1 truncate text-sm font-medium">{board.name}</span>
+                {isSelected && <Check size={16} className="shrink-0" />}
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+};
+
 const TaskDetailsPanel: React.FC<TaskDetailsPanelProps> = ({ task, taskFieldUpdater }) => {
   const [organizationUsers, setOrganizationUsers] = useState<Task['assignees']>([]);
+  const [boards, setBoards] = useState<Board[]>([]);
   const taskFields = task as unknown as Record<string, unknown>;
 
   const toDateInputValue = (value: unknown) => {
@@ -122,6 +241,19 @@ const TaskDetailsPanel: React.FC<TaskDetailsPanelProps> = ({ task, taskFieldUpda
     fetchOrganizationUsers();
   }, [task.organizationId]);
 
+  useEffect(() => {
+    const fetchBoards = async () => {
+      try {
+        const response = await getBoards();
+        setBoards(response.data || []);
+      } catch (error) {
+        console.error('Failed to fetch boards:', error);
+      }
+    };
+
+    fetchBoards();
+  }, [task.organizationId]);
+
   const normalizeFieldValue = useCallback((field: keyof Task, value: unknown) => {
     if (field === 'startDate' || field === 'dueDate' || field === 'completedAt') {
       if (!value) {
@@ -147,6 +279,16 @@ const TaskDetailsPanel: React.FC<TaskDetailsPanelProps> = ({ task, taskFieldUpda
 
   return (
     <div className="sticky top-6 space-y-4">
+      <Card className="flex flex-col gap-4">
+        <CardHeader>Location</CardHeader>
+        <BoardAssignmentPicker
+          boards={boards}
+          boardId={task.board}
+          isSaving={taskFieldUpdater.loading && !!taskFieldUpdater.updatingFields.board}
+          onChange={(boardId) => handleFieldUpdate('board', boardId)}
+        />
+      </Card>
+
       {/* Assignees */}
       <Card className="flex flex-col gap-4">
         <CardHeader>People</CardHeader>

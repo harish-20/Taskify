@@ -54,6 +54,7 @@ export const createTaskSchema = z.object({
   color: z.string().trim().optional(),
   isArchived: z.boolean().optional(),
   organizationId: z.undefined(),
+  board: z.string().regex(MONGO_DB_ID_RX, "Invalid board ID").optional(),
 });
 
 export const addSubTaskSchema = z.object({
@@ -68,6 +69,11 @@ export const updateTaskSchema = z
   .object({
     ticketId: z.undefined(),
     organizationId: z.undefined(),
+    board: z
+      .string()
+      .regex(MONGO_DB_ID_RX, "Invalid board ID")
+      .nullable()
+      .optional(),
     title: z.string().min(1, "Task title is required").trim().optional(),
     description: z.string().trim().optional(),
     type: z.enum(TaskType).optional(),

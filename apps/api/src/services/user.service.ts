@@ -1,4 +1,3 @@
-
 import bcrypt from "bcrypt";
 import { Types } from "mongoose";
 import { Profile } from "passport-google-oauth20";
@@ -62,6 +61,38 @@ export const createUser = async (input: CreateUserInput): Promise<IUser> => {
       provider === AuthProvider.LOCAL
         ? AccountStatus.VERIFICATION_EMAIL_SENT
         : AccountStatus.ACTIVE,
+  });
+
+  return user;
+};
+
+interface CreateInvitedUserInput {
+  name: string;
+  email: string;
+  role?: UserRole;
+  organizationId: Types.ObjectId;
+}
+
+export const createInvitedUser = async (
+  input: CreateInvitedUserInput,
+): Promise<IUser> => {
+  const { name, email, role, organizationId } = input;
+
+  const normalizedEmail = email.trim().toLowerCase();
+
+  const existingUser = await User.findOne({ email: normalizedEmail });
+  if (existingUser) {
+    throw new EmailAlreadyExists();
+  }
+
+  const user = await User.create({
+    name,
+    email: normalizedEmail,
+    provider: AuthProvider.LOCAL,
+    providerId: normalizedEmail,
+    role: role ?? UserRole.MEMBER,
+    status: AccountStatus.INVITE_SENT,
+    organizationId,
   });
 
   return user;
@@ -174,4 +205,17 @@ export const createTestUsers = async ({
     status: user.status,
     organizationId: user.organizationId,
   }));
+};
+
+export const updateUser = async (
+  userId: Types.ObjectId | string,
+  updateData: Partial<IUser>,
+): Promise<IUser> => {
+  const user = await User.findByIdAndUpdate(userId, updateData, {
+    new: true,
+  });
+  if (!user) {
+    throw new NotFound("User not found");
+  }
+  return user;
 };

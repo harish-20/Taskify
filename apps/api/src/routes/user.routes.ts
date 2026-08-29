@@ -11,11 +11,11 @@ const userRouter = Router();
 
 userRouter.get("/", authMiddleware, getUser);
 userRouter.post(
-	"/test-users",
-	authMiddleware,
-	roleAuthMiddleware([UserRole.ADMIN]),
-	validateRequest(createTestUsersSchema),
-	registerTestUsers,
+  "/test-users",
+  authMiddleware,
+  roleAuthMiddleware([UserRole.ADMIN]),
+  validateRequest(createTestUsersSchema),
+  registerTestUsers,
 );
 
 export default userRouter;

@@ -1,19 +1,18 @@
-"use client";
+'use client';
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
 
-import SignupSchema, { SignupType } from "../schemas/SignupSchema";
+import SignupSchema, { SignupType } from '../schemas/SignupSchema';
 
-import SignupDone from "./SignupDone";
+import SignupDone from './SignupDone';
 
-import FadeIn from "@/components/animations/FadeIn";
-import Button from "@/components/UI/Button";
-import ErrorText from "@/components/UI/ErrorText";
-import TextInput from "@/components/UI/TextInput";
-import { useAuthStore } from "@/lib/providers/auth-store-provider";
-
+import FadeIn from '@/components/animations/FadeIn';
+import Button from '@/components/UI/Button';
+import ErrorText from '@/components/UI/ErrorText';
+import TextInput from '@/components/UI/TextInput';
+import { useAuthStore } from '@/lib/providers/auth-store-provider';
 
 const SignupForm = () => {
   const signupWithEmail = useAuthStore((state) => state.signupWithEmail);
@@ -49,22 +48,19 @@ const SignupForm = () => {
   return (
     <FadeIn className="w-full" startDelay={0.2}>
       {error && <ErrorText>{error}</ErrorText>}
-      <form
-        className="flex flex-col w-full gap-3"
-        onSubmit={formSubmit(handleSubmit)}
-      >
+      <form className="flex flex-col w-full gap-3" onSubmit={formSubmit(handleSubmit)}>
         <TextInput
           label="Name"
           id="name"
           placeholder="John Doe"
-          {...register("name")}
+          {...register('name')}
           error={errors.name?.message}
         />
         <TextInput
           label="Email"
           id="email"
           placeholder="name@example.com"
-          {...register("email")}
+          {...register('email')}
           error={errors.email?.message}
         />
         <TextInput
@@ -72,12 +68,12 @@ const SignupForm = () => {
           type="password"
           id="password"
           placeholder="At least 8 characters"
-          {...register("password")}
+          {...register('password')}
           error={errors.password?.message}
         />
 
-        <Button loading={isSigningUp} className="mt-3">
-          Sign in
+        <Button variant="primary" loading={isSigningUp} className="mt-3">
+          Sign up
         </Button>
       </form>
     </FadeIn>
