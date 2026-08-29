@@ -31,7 +31,9 @@ export const updateBoard = async (boardId: string, board: BoardInput) => {
   return response.data;
 };
 
-export const deleteBoard = async (boardId: string) => {
-  const response = await Api.delete<ApiResponse<null>>(pathMap.board.byId(boardId));
+export const deleteBoard = async (boardId: string, deleteTasks = false) => {
+  const response = await Api.delete<ApiResponse<null>>(pathMap.board.byId(boardId), {
+    params: { deleteTasks },
+  });
   return response.data;
 };

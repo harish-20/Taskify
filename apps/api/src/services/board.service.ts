@@ -1,6 +1,7 @@
 import { Types } from "mongoose";
 
 import { Board } from "../models/board.model.js";
+import { Task } from "../models/task.model.js";
 import { CreateBoardInput, UpdateBoardInput } from "../schemas/board.schema.js";
 import { NotFound } from "../utils/CustomError.js";
 
@@ -67,6 +68,7 @@ export const updateBoard = async (
 export const archiveBoard = async (
   boardId: string,
   organizationId: Types.ObjectId,
+  deleteTasks = false,
 ) => {
   const board = await Board.findOneAndUpdate(
     { _id: boardId, organization: organizationId, isArchived: false },
@@ -77,6 +79,11 @@ export const archiveBoard = async (
   if (!board) {
     throw new NotFound("Board not found");
   }
+
+  await Task.updateMany(
+    { board: board._id, organizationId, isDeleted: false },
+    deleteTasks ? { isDeleted: true } : { $unset: { board: 1 } },
+  );
 
   return board;
 };

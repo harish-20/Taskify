@@ -46,8 +46,8 @@ export const getTasks: RequestHandler<{}, { tasks: any[] }> = async (
     const user = req.userObj;
     if (!user) throw new Unauthorized();
     const boardId = req.query.boardId;
-    if (typeof boardId !== "string") {
-      throw new Unauthorized("A board ID is required");
+    if (boardId !== undefined && typeof boardId !== "string") {
+      throw new Unauthorized("Invalid board ID");
     }
     const tasks = await getTasksService(user.organizationId, boardId);
     const payload: ApiResponse = {

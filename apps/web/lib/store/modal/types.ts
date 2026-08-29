@@ -3,7 +3,8 @@ export type AvailableModals =
   | 'add-task'
   | 'task-preview'
   | 'invite-member'
-  | 'create-team';
+  | 'create-team'
+  | 'create-board';
 
 export interface ModalState {
   type: AvailableModals | null;

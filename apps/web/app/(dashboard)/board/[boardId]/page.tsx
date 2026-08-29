@@ -24,11 +24,16 @@ export default function BoardKanbanPage({ params }: BoardKanbanPageProps) {
 
   useEffect(() => {
     if (!boardId) return;
-    void loadTasks(boardId);
+    const isBacklog = boardId === 'backlog';
+    void loadTasks(isBacklog ? undefined : boardId);
     void loadOrganizationUsers();
-    void getBoard(boardId).then((response) => {
-      if (response.data) setBoardName(response.data.name);
-    });
+    if (isBacklog) {
+      setBoardName('Backlog');
+    } else {
+      void getBoard(boardId).then((response) => {
+        if (response.data) setBoardName(response.data.name);
+      });
+    }
   }, [boardId, loadOrganizationUsers, loadTasks]);
 
   if (!boardId) return null;

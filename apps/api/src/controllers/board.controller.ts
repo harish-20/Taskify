@@ -89,7 +89,12 @@ export const updateBoard: RequestHandler = async (req, res, next) => {
 
 export const deleteBoard: RequestHandler = async (req, res, next) => {
   try {
-    await archiveBoard(req.params.boardId, getOrganizationId(req.userObj));
+    const deleteTasks = req.query.deleteTasks === "true";
+    await archiveBoard(
+      req.params.boardId,
+      getOrganizationId(req.userObj),
+      deleteTasks,
+    );
     return sendResponse(res, 200, {
       success: true,
       message: "Board deleted successfully",

@@ -105,9 +105,10 @@ const AddTaskForm: FC<AddTaskFormProps> = ({ onClose, defaultStatus = 'todo' }) 
   }, []);
 
   const onSubmit: SubmitHandler<TaskFormType> = async (data) => {
-    if (!currentBoardId) return;
-
-    const taskPayload: CreateTaskInput = { ...data, board: currentBoardId };
+    const taskPayload: CreateTaskInput = {
+      ...data,
+      ...(currentBoardId ? { board: currentBoardId } : {}),
+    };
     await addTask(taskPayload);
     onClose();
   };

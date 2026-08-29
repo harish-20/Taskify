@@ -54,7 +54,7 @@ export const createTaskSchema = z.object({
   color: z.string().trim().optional(),
   isArchived: z.boolean().optional(),
   organizationId: z.undefined(),
-  board: z.string().regex(MONGO_DB_ID_RX, "Invalid board ID"),
+  board: z.string().regex(MONGO_DB_ID_RX, "Invalid board ID").optional(),
 });
 
 export const addSubTaskSchema = z.object({

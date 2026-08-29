@@ -43,7 +43,7 @@ export interface ITask extends Document {
 
   createdBy: Types.ObjectId;
   organizationId: Types.ObjectId;
-  board: Types.ObjectId;
+  board?: Types.ObjectId;
 
   tags: string[];
 
@@ -218,7 +218,6 @@ const taskSchema = new Schema<ITask>(
     board: {
       type: Schema.Types.ObjectId,
       ref: "Board",
-      required: true,
     },
 
     tags: [

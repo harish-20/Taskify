@@ -64,13 +64,15 @@ export const createTask = async (
     throw new NotFound("User not found");
   }
 
-  const board = await Board.exists({
-    _id: taskData.board,
-    organization: organizationId,
-    isArchived: false,
-  });
-  if (!board) {
-    throw new NotFound("Board not found");
+  if (taskData.board) {
+    const board = await Board.exists({
+      _id: taskData.board,
+      organization: organizationId,
+      isArchived: false,
+    });
+    if (!board) {
+      throw new NotFound("Board not found");
+    }
   }
 
   const counter = await TaskCounter.findOneAndUpdate(
@@ -92,20 +94,22 @@ export const createTask = async (
 
 export const getTasks = async (
   organizationId: Types.ObjectId,
-  boardId: string,
+  boardId?: string,
 ) => {
-  const board = await Board.exists({
-    _id: boardId,
-    organization: organizationId,
-    isArchived: false,
-  });
-  if (!board) {
-    throw new NotFound("Board not found");
+  if (boardId) {
+    const board = await Board.exists({
+      _id: boardId,
+      organization: organizationId,
+      isArchived: false,
+    });
+    if (!board) {
+      throw new NotFound("Board not found");
+    }
   }
 
   const tasks = await Task.find({
     organizationId: organizationId,
-    board: boardId,
+    ...(boardId ? { board: boardId } : { board: { $in: [null] } }),
     isDeleted: false,
   }).populate(TASK_POPULATE_OPTIONS);
 

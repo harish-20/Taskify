@@ -1,31 +1,21 @@
 'use client';
 
-import { ArrowRight, LayoutDashboard, Pencil, Plus, Trash2, X } from 'lucide-react';
+import { ArrowRight, LayoutDashboard, Pencil, Plus, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { FormEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import type { Board } from '@/lib/types/board';
 
 import Button from '@/components/UI/Button';
 import { Card } from '@/components/UI/Card';
-import {
-  BoardInput,
-  createBoard,
-  deleteBoard,
-  getBoards,
-  updateBoard,
-} from '@/lib/services/api/board';
-
-const emptyBoard: BoardInput = { name: '', description: '' };
+import { deleteBoard, getBoards } from '@/lib/services/api/board';
+import useModalStore from '@/lib/store/modal';
 
 export default function BoardPage() {
   const router = useRouter();
+  const openModal = useModalStore((state) => state.openModal);
   const [boards, setBoards] = useState<Board[]>([]);
-  const [draft, setDraft] = useState<BoardInput>(emptyBoard);
-  const [editingBoardId, setEditingBoardId] = useState<string | null>(null);
-  const [isFormOpen, setIsFormOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const loadBoards = async () => {
@@ -44,52 +34,38 @@ export default function BoardPage() {
     void loadBoards();
   }, []);
 
-  const closeForm = () => {
-    setDraft(emptyBoard);
-    setEditingBoardId(null);
-    setIsFormOpen(false);
-  };
-
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setIsSaving(true);
-    setError(null);
-
+  const handleDelete = async (boardId: string, deleteTasks: boolean) => {
     try {
-      if (editingBoardId) {
-        const response = await updateBoard(editingBoardId, draft);
-        if (response.data) {
-          setBoards((currentBoards) =>
-            currentBoards.map((board) => (board._id === editingBoardId ? response.data! : board)),
-          );
-        }
-      } else {
-        const response = await createBoard(draft);
-        if (response.data) setBoards((currentBoards) => [response.data!, ...currentBoards]);
-      }
-      closeForm();
-    } catch {
-      setError('Unable to save the board.');
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  const handleDelete = async (boardId: string) => {
-    if (!window.confirm('Delete this board? Its tasks will be kept.')) return;
-
-    try {
-      await deleteBoard(boardId);
+      await deleteBoard(boardId, deleteTasks);
       setBoards((currentBoards) => currentBoards.filter((board) => board._id !== boardId));
     } catch {
       setError('Unable to delete the board.');
     }
   };
 
-  const startEditing = (board: Board) => {
-    setDraft({ name: board.name, description: board.description ?? '' });
-    setEditingBoardId(board._id);
-    setIsFormOpen(true);
+  const confirmDelete = (board: Board) => {
+    openModal('confirm', {
+      title: 'Delete board',
+      message: `Delete ${board.name}? Tasks kept will move to Backlog.`,
+      confirmLabel: 'Delete board',
+      checkboxLabel: 'Delete all tasks in this board',
+      onConfirm: (deleteTasks) => void handleDelete(board._id, deleteTasks),
+    });
+  };
+
+  const openBoardModal = (board?: Board) => {
+    openModal('create-board', {
+      board,
+      onSaved: (savedBoard: Board, isNew: boolean) => {
+        setBoards((currentBoards) =>
+          isNew
+            ? [savedBoard, ...currentBoards]
+            : currentBoards.map((currentBoard) =>
+                currentBoard._id === savedBoard._id ? savedBoard : currentBoard,
+              ),
+        );
+      },
+    });
   };
 
   return (
@@ -106,51 +82,12 @@ export default function BoardPage() {
         </div>
         <Button
           className="flex items-center gap-2"
-          onClick={() => setIsFormOpen(true)}
+          onClick={() => openBoardModal()}
           title="Create board"
         >
           <Plus size={18} /> Create board
         </Button>
       </header>
-
-      {isFormOpen && (
-        <form
-          onSubmit={handleSubmit}
-          className="grid gap-3 border-b border-gray-200 pb-6 md:grid-cols-[minmax(0,1fr)_minmax(0,1.5fr)_auto] md:items-end"
-        >
-          <label className="flex flex-col gap-1 text-sm font-medium text-gray-800">
-            Board name
-            <input
-              required
-              value={draft.name}
-              onChange={(event) => setDraft({ ...draft, name: event.target.value })}
-              className="min-h-10 rounded-md border border-gray-300 px-3 outline-none focus:border-black"
-            />
-          </label>
-          <label className="flex flex-col gap-1 text-sm font-medium text-gray-800">
-            Description
-            <input
-              value={draft.description}
-              onChange={(event) => setDraft({ ...draft, description: event.target.value })}
-              className="min-h-10 rounded-md border border-gray-300 px-3 outline-none focus:border-black"
-            />
-          </label>
-          <div className="flex gap-2">
-            <Button type="submit" disabled={isSaving}>
-              {isSaving ? 'Saving...' : 'Save'}
-            </Button>
-            <button
-              type="button"
-              onClick={closeForm}
-              className="rounded-md p-2 text-gray-600 hover:bg-gray-100"
-              aria-label="Cancel board editing"
-              title="Cancel"
-            >
-              <X size={20} />
-            </button>
-          </div>
-        </form>
-      )}
 
       {error && (
         <p className="text-sm text-red-600" role="alert">
@@ -166,6 +103,31 @@ export default function BoardPage() {
         </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <Card
+            padding="md"
+            radius="md"
+            hover
+            className="group flex min-h-44 flex-col gap-4 border-dashed"
+          >
+            <div className="flex items-start justify-between gap-3">
+              <button
+                type="button"
+                onClick={() => router.push('/board/backlog')}
+                className="min-w-0 text-left"
+                title="Open backlog"
+              >
+                <h2 className="truncate text-lg font-semibold text-gray-950">Backlog</h2>
+                <p className="mt-2 text-sm text-gray-600">Tasks not assigned to a board</p>
+              </button>
+            </div>
+            <button
+              type="button"
+              onClick={() => router.push('/board/backlog')}
+              className="mt-auto flex items-center gap-2 self-start text-sm font-semibold text-primary hover:underline"
+            >
+              Open backlog <ArrowRight size={16} />
+            </button>
+          </Card>
           {boards.map((board) => (
             <Card
               key={board._id}
@@ -189,7 +151,7 @@ export default function BoardPage() {
                 <div className="flex shrink-0 gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100">
                   <button
                     type="button"
-                    onClick={() => startEditing(board)}
+                    onClick={() => openBoardModal(board)}
                     className="rounded-md p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-950"
                     aria-label={`Edit ${board.name}`}
                     title="Edit board"
@@ -198,7 +160,7 @@ export default function BoardPage() {
                   </button>
                   <button
                     type="button"
-                    onClick={() => void handleDelete(board._id)}
+                    onClick={() => confirmDelete(board)}
                     className="rounded-md p-2 text-gray-500 hover:bg-red-50 hover:text-red-600"
                     aria-label={`Delete ${board.name}`}
                     title="Delete board"

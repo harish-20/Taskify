@@ -1,7 +1,8 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Check, ImagePlus, LockKeyhole, UserRound } from 'lucide-react';
+import { Check, ImagePlus, LockKeyhole, LogOut, UserRound } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -15,6 +16,8 @@ import Title from '@/components/UI/Title';
 import { useApi } from '@/lib/hooks/useApi';
 import { useAuthStore } from '@/lib/providers/auth-store-provider';
 import { updateAvatar, updateMe } from '@/lib/services/api/auth';
+import { customLocalStorage } from '@/lib/services/localStorage';
+import useModalStore from '@/lib/store/modal';
 
 const settingsSchema = z.object({
   name: z.string().trim().min(1, 'Name is required').max(80, 'Name is too long'),
@@ -23,8 +26,11 @@ const settingsSchema = z.object({
 type SettingsForm = z.infer<typeof settingsSchema>;
 
 const UserSettings = () => {
+  const router = useRouter();
   const user = useAuthStore((state) => state.user);
   const setUser = useAuthStore((state) => state.setUser);
+  const clearAuth = useAuthStore((state) => state.clearAuth);
+  const openModal = useModalStore((state) => state.openModal);
   const [saved, setSaved] = useState(false);
   const [avatarSaved, setAvatarSaved] = useState(false);
   const avatarInputRef = useRef<HTMLInputElement>(null);
@@ -74,6 +80,22 @@ const UserSettings = () => {
     } finally {
       event.target.value = '';
     }
+  };
+
+  const handleLogout = () => {
+    customLocalStorage.removeValue('accessToken');
+    customLocalStorage.removeValue('refreshToken');
+    clearAuth();
+    router.replace('/signin');
+  };
+
+  const confirmLogout = () => {
+    openModal('confirm', {
+      title: 'Log out',
+      message: 'Are you sure you want to log out?',
+      confirmLabel: 'Log out',
+      onConfirm: handleLogout,
+    });
   };
 
   return (
@@ -182,6 +204,15 @@ const UserSettings = () => {
             {user.role}
           </span>
         )}
+        <Button
+          type="button"
+          variant="secondary-dark"
+          className="mt-6 w-full"
+          onClick={confirmLogout}
+        >
+          <LogOut className="mr-2 h-4 w-4" aria-hidden="true" />
+          Log out
+        </Button>
       </aside>
     </section>
   );

@@ -31,7 +31,7 @@ export interface BoardActions {
 }
 
 export interface BoardAsyncActions {
-  loadTasks: (boardId: string) => Promise<void>;
+  loadTasks: (boardId?: string) => Promise<void>;
   loadOrganizationUsers: () => Promise<void>;
   addTask: (taskData: CreateTaskInput) => Promise<void>;
   updateTask: (taskId: Task['_id'], taskData: Partial<Task>) => Promise<void>;
