@@ -12,3 +12,9 @@ export const createTeamSchema = z.object({
 });
 
 export type TeamSchema = z.infer<typeof createTeamSchema>;
+
+export const teamMemberSchema = z.object({
+  memberId: z.string().regex(MONGO_DB_ID_RX, "Invalid member ID"),
+});
+
+export type TeamMemberInput = z.infer<typeof teamMemberSchema>;

@@ -22,7 +22,11 @@ export interface TaskFieldUpdater {
   ) => Promise<void>;
 }
 
-export const useTaskFields = (task: Task, onTaskUpdate: (task: Task) => void): TaskFieldUpdater => {
+export const useTaskFields = (
+  task: Task,
+  onTaskUpdate: (task: Task) => void,
+  onTaskSaved?: (task: Task) => void,
+): TaskFieldUpdater => {
   const [updatingFields, setUpdatingFields] = useState<UpdatingFields>({});
   const { execute: updateTaskApi, loading } = useApi(updateTask);
 
@@ -56,6 +60,7 @@ export const useTaskFields = (task: Task, onTaskUpdate: (task: Task) => void): T
 
         if (response.success && response.data) {
           onTaskUpdate(response.data);
+          onTaskSaved?.(response.data);
         }
       } catch (error) {
         console.error(error);
@@ -66,7 +71,7 @@ export const useTaskFields = (task: Task, onTaskUpdate: (task: Task) => void): T
         setUpdatingFields((prev) => ({ ...prev, [field]: false }));
       }
     },
-    [onTaskUpdate, task, updateTaskApi],
+    [onTaskSaved, onTaskUpdate, task, updateTaskApi],
   );
 
   return useMemo(

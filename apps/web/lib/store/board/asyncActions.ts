@@ -9,12 +9,12 @@ export const boardAsyncActions: StateCreator<BoardStore, [], [], BoardAsyncActio
   set,
   get,
 ) => ({
-  loadTasks: async () => {
+  loadTasks: async (boardId) => {
     set({ isLoading: true });
 
     try {
-      const response = await getTasks();
-      set({ tasks: response.data ?? [], isLoading: false });
+      const response = await getTasks(boardId);
+      set({ tasks: response.data ?? [], currentBoardId: boardId ?? null, isLoading: false });
     } catch (error) {
       set({ isLoading: false });
       console.error('Failed to load tasks', error);

@@ -66,6 +66,38 @@ export const createUser = async (input: CreateUserInput): Promise<IUser> => {
   return user;
 };
 
+interface CreateInvitedUserInput {
+  name: string;
+  email: string;
+  role?: UserRole;
+  organizationId: Types.ObjectId;
+}
+
+export const createInvitedUser = async (
+  input: CreateInvitedUserInput,
+): Promise<IUser> => {
+  const { name, email, role, organizationId } = input;
+
+  const normalizedEmail = email.trim().toLowerCase();
+
+  const existingUser = await User.findOne({ email: normalizedEmail });
+  if (existingUser) {
+    throw new EmailAlreadyExists();
+  }
+
+  const user = await User.create({
+    name,
+    email: normalizedEmail,
+    provider: AuthProvider.LOCAL,
+    providerId: normalizedEmail,
+    role: role ?? UserRole.MEMBER,
+    status: AccountStatus.INVITE_SENT,
+    organizationId,
+  });
+
+  return user;
+};
+
 export const handleGoogleUser = async (profile: Profile) => {
   const user = await User.findOne({ providerId: profile.id }).lean<IUser>();
 

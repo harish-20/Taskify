@@ -26,10 +26,15 @@ interface TaskPreviewModalProps extends ModalProps {
 interface EditableTaskContentProps {
   task: Task;
   onTaskUpdate: (task: Task) => void;
+  onTaskSaved: (task: Task) => void;
 }
 
-const EditableTaskContent: React.FC<EditableTaskContentProps> = ({ task, onTaskUpdate }) => {
-  const taskFieldUpdater = useTaskFields(task, onTaskUpdate);
+const EditableTaskContent: React.FC<EditableTaskContentProps> = ({
+  task,
+  onTaskUpdate,
+  onTaskSaved,
+}) => {
+  const taskFieldUpdater = useTaskFields(task, onTaskUpdate, onTaskSaved);
 
   return (
     <div className="flex min-h-0 flex-col gap-6">
@@ -56,7 +61,7 @@ const TaskPreviewModal: React.FC<TaskPreviewModalProps> = ({ taskId, initialTask
   const router = useRouter();
   const { task: fetchedTask, loading, error } = useTask(taskId);
   const [task, setTask] = useState<Task | null>(initialTask ?? null);
-  const setTasks = useTaskBoardStore((state) => state.setTasks);
+  const syncTask = useTaskBoardStore((state) => state.syncTask);
 
   useEffect(() => {
     if (fetchedTask) {
@@ -66,11 +71,6 @@ const TaskPreviewModal: React.FC<TaskPreviewModalProps> = ({ taskId, initialTask
 
   const handleTaskUpdate = (nextTask: Task) => {
     setTask(nextTask);
-    setTasks((currentTasks) =>
-      currentTasks.map((currentTask) =>
-        currentTask._id === nextTask._id ? { ...currentTask, ...nextTask } : currentTask,
-      ),
-    );
   };
 
   const handleExpand = () => {
@@ -104,7 +104,13 @@ const TaskPreviewModal: React.FC<TaskPreviewModalProps> = ({ taskId, initialTask
             </div>
           )}
 
-          {task && <EditableTaskContent task={task} onTaskUpdate={handleTaskUpdate} />}
+          {task && (
+            <EditableTaskContent
+              task={task}
+              onTaskUpdate={handleTaskUpdate}
+              onTaskSaved={syncTask}
+            />
+          )}
         </div>
 
         <div className="flex items-center justify-end gap-3 border-t border-gray-200 px-5 py-4 lg:px-6">

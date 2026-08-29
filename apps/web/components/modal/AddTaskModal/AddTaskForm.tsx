@@ -67,6 +67,7 @@ const AddTaskForm: FC<AddTaskFormProps> = ({ onClose, defaultStatus = 'todo' }) 
   const [loadingAssignees, setLoadingAssignees] = useState(true);
 
   const addTask = useTaskBoardStore((state) => state.addTask);
+  const currentBoardId = useTaskBoardStore((state) => state.currentBoardId);
 
   const {
     control,
@@ -103,9 +104,12 @@ const AddTaskForm: FC<AddTaskFormProps> = ({ onClose, defaultStatus = 'todo' }) 
     fetchOrganizationMembers();
   }, []);
 
-  const onSubmit: SubmitHandler<TaskFormType> = (data) => {
-    const taskPayload: CreateTaskInput = data;
-    addTask(taskPayload);
+  const onSubmit: SubmitHandler<TaskFormType> = async (data) => {
+    const taskPayload: CreateTaskInput = {
+      ...data,
+      ...(currentBoardId ? { board: currentBoardId } : {}),
+    };
+    await addTask(taskPayload);
     onClose();
   };
 

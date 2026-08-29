@@ -1,12 +1,16 @@
 import { ApiResponse } from "@repo/shared/types";
 import { RequestHandler } from "express";
 
-import { CreateOrganizationInput } from "../schemas/organization.schema.js";
+import {
+  CreateOrganizationInput,
+  InviteMemberInput,
+} from "../schemas/organization.schema.js";
 import {
   createOrganization,
   createOrganizationProfile,
   getOrganization as getOrganizationService,
   getOrganizationUsers as getOrganizationUsersService,
+  inviteOrganizationMember,
 } from "../services/organization.service.js";
 import { Conflict, Unauthorized } from "../utils/CustomError.js";
 import { sendResponse } from "../utils/response.js";
@@ -89,6 +93,32 @@ export const getOrganizationUsers: RequestHandler = async (req, res, next) => {
       data: [...organizationUsers],
     };
     return sendResponse(res, 200, payload);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const inviteMember: RequestHandler = async (req, res, next) => {
+  try {
+    const user = req.userObj;
+    if (!user) {
+      throw new Unauthorized();
+    }
+    if (!user.organizationId) {
+      throw new Conflict("User has not joined any organization");
+    }
+
+    const invitedUser = await inviteOrganizationMember(
+      req.body as InviteMemberInput,
+      user.organizationId,
+    );
+
+    const payload: ApiResponse = {
+      success: true,
+      message: "Invitation sent successfully",
+      data: invitedUser,
+    };
+    return sendResponse(res, 201, payload);
   } catch (err) {
     next(err);
   }

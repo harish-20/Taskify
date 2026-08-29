@@ -5,9 +5,11 @@ import Subtitle from '@/components/UI/SubTitle';
 import Title from '@/components/UI/Title';
 import useModalStore from '@/lib/store/modal';
 
-interface HeadSectionProps {}
+interface HeadSectionProps {
+  boardName?: string;
+}
 
-const HeadSection: React.FC<HeadSectionProps> = () => {
+const HeadSection: React.FC<HeadSectionProps> = ({ boardName = 'Task Board' }) => {
   const openModal = useModalStore((state) => state.openModal);
 
   const handleCreateTask = () => {
@@ -16,7 +18,7 @@ const HeadSection: React.FC<HeadSectionProps> = () => {
   return (
     <div className="flex justify-between items-end">
       <div>
-        <Title>Task Board</Title>
+        <Title>{boardName}</Title>
         <Subtitle>Manage your tasks efficiently</Subtitle>
       </div>
 
