@@ -1,10 +1,11 @@
-
 import { ApiResponse } from "@repo/shared/types";
 import { RequestHandler, Response } from "express";
 import jwt from "jsonwebtoken";
 
 import { AccountStatus, IUser } from "../models/user.model.js";
-import { registerSchema, RegisterBody } from "../schemas/auth.schema.js";
+import { JOB_NAMES } from "../MQ/queue-meta.js";
+import { emailQueue } from "../MQ/queues/email.queue.js";
+import { RegisterBody } from "../schemas/auth.schema.js";
 import {
   createMagicToken,
   verifyMagicToken,
@@ -16,7 +17,7 @@ import {
 } from "../services/user.service.js";
 import { InvalidArgument, NotFound } from "../utils/CustomError.js";
 import { getMilliSeconds } from "../utils/getMilliSeconds.js";
-import { sendMagicLink } from "../utils/mailer.js";
+import { logger } from "../utils/logger.js";
 import { sendResponse } from "../utils/response.js";
 import {
   generateAccessToken,
@@ -42,7 +43,15 @@ export const registerUser: RequestHandler<
     const user = await createUser({ name, email, password });
 
     const magicToken = await createMagicToken(user.id);
-    await sendMagicLink(name, email, magicToken);
+    const result = await emailQueue.add(JOB_NAMES.SEND_MAGIC_LINK, {
+      name,
+      email,
+      magicToken,
+    });
+
+    logger.debug(
+      `Email job added to queue with result: ${JSON.stringify(result)}`,
+    );
 
     const payload: ApiResponse = {
       success: true,

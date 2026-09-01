@@ -2,7 +2,7 @@ import { Types } from "mongoose";
 
 import { getMilliSeconds } from "../utils/getMilliSeconds.js";
 
-import redis from "./redis.client.js";
+import redis from "./index.js";
 
 const getTaskCacheKey = (organizationId: Types.ObjectId) =>
   `tasks:${organizationId.toString()}`;

@@ -2,7 +2,7 @@ import { Types } from "mongoose";
 
 import { getMilliSeconds } from "../utils/getMilliSeconds.js";
 
-import redis from "./redis.client.js";
+import redis from "./index.js";
 
 const getBoardCacheKey = (organizationId: Types.ObjectId) =>
   `boards:${organizationId.toString()}`;

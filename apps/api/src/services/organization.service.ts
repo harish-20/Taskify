@@ -7,9 +7,10 @@ import {
   OrganizationProfile,
 } from "../models/organizationProfile.model.js";
 import { User, UserRole } from "../models/user.model.js";
+import { JOB_NAMES } from "../MQ/queue-meta.js";
+import { emailQueue } from "../MQ/queues/email.queue.js";
 import { InviteMemberInput } from "../schemas/organization.schema.js";
 import { NotFound } from "../utils/CustomError.js";
-import { sendMagicLink } from "../utils/mailer.js";
 
 import { createMagicToken } from "./magicToken.service.js";
 import { createInvitedUser } from "./user.service.js";
@@ -94,7 +95,11 @@ export const inviteOrganizationMember = async (
   });
 
   const magicToken = await createMagicToken(invitedUser.id);
-  await sendMagicLink(invitedUser.name, invitedUser.email, magicToken);
+  await emailQueue.add(JOB_NAMES.SEND_MAGIC_LINK, {
+    name: invitedUser.name,
+    email: invitedUser.email,
+    magicToken,
+  });
 
   return invitedUser;
 };
