@@ -2,6 +2,11 @@ import { Types } from "mongoose";
 
 import { Board } from "../models/board.model.js";
 import { Task } from "../models/task.model.js";
+import {
+  getCachedBoards,
+  cacheBoards,
+  invalidateBoardCache,
+} from "../redis/board.cache.js";
 import { CreateBoardInput, UpdateBoardInput } from "../schemas/board.schema.js";
 import { NotFound } from "../utils/CustomError.js";
 
@@ -21,6 +26,12 @@ export const getBoard = async (
   boardId: string,
   organizationId: Types.ObjectId,
 ) => {
+  const cachedBoard = await getCachedBoards(organizationId, boardId);
+
+  if (cachedBoard) {
+    return cachedBoard;
+  }
+
   const board = await Board.findOne({
     _id: boardId,
     organization: organizationId,
@@ -31,6 +42,7 @@ export const getBoard = async (
     throw new NotFound("Board not found");
   }
 
+  await cacheBoards(organizationId, boardId, board);
   return board;
 };
 
@@ -62,6 +74,7 @@ export const updateBoard = async (
     throw new NotFound("Board not found");
   }
 
+  await cacheBoards(organizationId, boardId, board);
   return board;
 };
 
@@ -85,5 +98,6 @@ export const archiveBoard = async (
     deleteTasks ? { isDeleted: true } : { $unset: { board: 1 } },
   );
 
+  await invalidateBoardCache(organizationId);
   return board;
 };
