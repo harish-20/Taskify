@@ -1,10 +1,13 @@
 import { ApiResponse } from "@repo/shared/types";
 import { RequestHandler } from "express";
 
+import { JOB_NAMES } from "../MQ/queue-meta.js";
+import { emailQueue } from "../MQ/queues/email.queue.js";
 import {
   CreateOrganizationInput,
   InviteMemberInput,
 } from "../schemas/organization.schema.js";
+import { createMagicToken } from "../services/magicToken.service.js";
 import {
   createOrganization,
   createOrganizationProfile,
@@ -13,6 +16,7 @@ import {
   inviteOrganizationMember,
 } from "../services/organization.service.js";
 import { Conflict, Unauthorized } from "../utils/CustomError.js";
+import { getMilliSeconds } from "../utils/getMilliSeconds.js";
 import { sendResponse } from "../utils/response.js";
 
 export const getOrganization: RequestHandler = async (req, res, next) => {
@@ -111,6 +115,23 @@ export const inviteMember: RequestHandler = async (req, res, next) => {
     const invitedUser = await inviteOrganizationMember(
       req.body as InviteMemberInput,
       user.organizationId,
+    );
+
+    const magicToken = await createMagicToken(invitedUser.id);
+    await emailQueue.add(
+      JOB_NAMES.SEND_MAGIC_LINK,
+      {
+        name: invitedUser.name,
+        email: invitedUser.email,
+        magicToken,
+      },
+      {
+        attempts: 3,
+        backoff: {
+          type: "exponential",
+          delay: getMilliSeconds({ seconds: 5 }),
+        },
+      },
     );
 
     const payload: ApiResponse = {

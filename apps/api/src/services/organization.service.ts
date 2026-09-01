@@ -7,12 +7,9 @@ import {
   OrganizationProfile,
 } from "../models/organizationProfile.model.js";
 import { User, UserRole } from "../models/user.model.js";
-import { JOB_NAMES } from "../MQ/queue-meta.js";
-import { emailQueue } from "../MQ/queues/email.queue.js";
 import { InviteMemberInput } from "../schemas/organization.schema.js";
 import { NotFound } from "../utils/CustomError.js";
 
-import { createMagicToken } from "./magicToken.service.js";
 import { createInvitedUser } from "./user.service.js";
 
 export const getOrganization = async () => {
@@ -92,13 +89,6 @@ export const inviteOrganizationMember = async (
 
   await Organization.findByIdAndUpdate(organizationId, {
     $addToSet: { members: invitedUser._id },
-  });
-
-  const magicToken = await createMagicToken(invitedUser.id);
-  await emailQueue.add(JOB_NAMES.SEND_MAGIC_LINK, {
-    name: invitedUser.name,
-    email: invitedUser.email,
-    magicToken,
   });
 
   return invitedUser;

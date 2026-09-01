@@ -43,11 +43,21 @@ export const registerUser: RequestHandler<
     const user = await createUser({ name, email, password });
 
     const magicToken = await createMagicToken(user.id);
-    const result = await emailQueue.add(JOB_NAMES.SEND_MAGIC_LINK, {
-      name,
-      email,
-      magicToken,
-    });
+    const result = await emailQueue.add(
+      JOB_NAMES.SEND_MAGIC_LINK,
+      {
+        name,
+        email,
+        magicToken,
+      },
+      {
+        attempts: 3,
+        backoff: {
+          type: "exponential",
+          delay: getMilliSeconds({ seconds: 5 }),
+        },
+      },
+    );
 
     logger.debug(
       `Email job added to queue with result: ${JSON.stringify(result)}`,
