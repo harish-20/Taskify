@@ -1,8 +1,13 @@
 import { PopulateOptions, Types } from "mongoose";
 
 import { Board } from "../models/board.model.js";
-import { Task, TaskStatus } from "../models/task.model.js";
+import { Task } from "../models/task.model.js";
 import { TaskCounter } from "../models/taskCounter.model.js";
+import {
+  getCachedTasks,
+  cacheTasks,
+  invalidateTaskCache,
+} from "../redis/task.cache.js";
 import { TaskSchema, UpdateTaskSchema } from "../schemas/task.schema.js";
 import { InvalidArgument, NotFound } from "../utils/CustomError.js";
 
@@ -96,12 +101,18 @@ export const getTasks = async (
   organizationId: Types.ObjectId,
   boardId?: string,
 ) => {
+  const cachedTasks = await getCachedTasks(organizationId, boardId);
+  if (cachedTasks) {
+    return cachedTasks;
+  }
+
   if (boardId) {
     const board = await Board.exists({
       _id: boardId,
       organization: organizationId,
       isArchived: false,
     });
+
     if (!board) {
       throw new NotFound("Board not found");
     }
@@ -112,6 +123,8 @@ export const getTasks = async (
     ...(boardId ? { board: boardId } : { board: { $in: [null] } }),
     isDeleted: false,
   }).populate(TASK_POPULATE_OPTIONS);
+
+  await cacheTasks(organizationId, boardId, tasks);
 
   return tasks;
 };
@@ -162,6 +175,8 @@ export const updateTask = async (
   Object.assign(task, taskData);
   const updatedTask = await task.save();
   await updatedTask.populate(TASK_POPULATE_OPTIONS);
+
+  await invalidateTaskCache(organizationId);
 
   return updatedTask;
 };
