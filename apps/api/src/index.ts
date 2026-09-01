@@ -10,6 +10,7 @@ import connectDB from "./db/connectDB.js";
 import { errorHandler } from "./middlewares/errorHandler.middleware.js";
 import { requestLogger } from "./middlewares/logger.middleware.js";
 import { simulateErrorMiddleware } from "./middlewares/simulateError.middleware.js";
+import { connectRedis } from "./redis/redis.client.js";
 import router from "./routes/index.routes.js";
 import logger from "./utils/logger.js";
 
@@ -33,6 +34,7 @@ app.use("/api/v1", router);
 app.use(errorHandler);
 
 connectDB();
+connectRedis();
 
 app.listen(PORT, () => {
   logger.info(`server kicking on PORT:${PORT}`);

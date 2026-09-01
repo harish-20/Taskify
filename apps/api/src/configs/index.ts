@@ -6,6 +6,7 @@ const {
   PORT = 8080,
   MONGO_URI,
   ENV_CHECK = false,
+  REDIS_URL = "redis://localhost:6379",
   // Email Configs
   GMAIL_EMAIL,
   GMAIL_APP_PASSWORD,
@@ -44,7 +45,8 @@ if (ENV_CHECK === "true") {
     !AWS_ACCESS_KEY_ID ||
     !AWS_SECRET_ACCESS_KEY ||
     !AWS_REGION ||
-    !AWS_BUCKET_NAME
+    !AWS_BUCKET_NAME ||
+    !REDIS_URL
   ) {
     throw new Error("Env is not configured");
   }
@@ -67,4 +69,5 @@ export {
   AWS_REGION,
   AWS_BUCKET_NAME,
   NODE_ENV,
+  REDIS_URL,
 };
