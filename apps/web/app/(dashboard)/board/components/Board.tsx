@@ -14,7 +14,6 @@ import useTaskBoardStore from '@/lib/store/board';
 import { Task, TaskStatus } from '@/lib/types/task';
 
 const Board: React.FC = () => {
-  const isTaskLoading = useTaskBoardStore((state) => state.isLoading);
   const tasks = useTaskBoardStore((state) => state.tasks);
   const updateTask = useTaskBoardStore((state) => state.updateTask);
   const setDraggedTask = useTaskBoardStore((state) => state.setDraggedTask);
@@ -86,15 +85,9 @@ const Board: React.FC = () => {
   return (
     <>
       <div className="overflow-y-auto grid flex-1 grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {isTaskLoading && (
-          <div className="col-span-full min-h-[40vh] flex items-center justify-center">
-            <Spinner size="md" />
-          </div>
-        )}
-        {!isTaskLoading &&
-          Object.entries(groupedTasks).map(([status, columnTasks]) => (
-            <Column key={status} status={status as TaskStatus} tasks={columnTasks} />
-          ))}
+        {Object.entries(groupedTasks).map(([status, columnTasks]) => (
+          <Column key={status} status={status as TaskStatus} tasks={columnTasks} />
+        ))}
       </div>
 
       <OverlayTaskItem />

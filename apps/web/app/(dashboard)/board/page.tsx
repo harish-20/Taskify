@@ -8,6 +8,7 @@ import type { Board } from '@/lib/types/board';
 
 import Button from '@/components/UI/Button';
 import { Card } from '@/components/UI/Card';
+import Spinner from '@/components/UI/Spinner';
 import { deleteBoard, getBoards } from '@/lib/services/api/board';
 import useModalStore from '@/lib/store/modal';
 
@@ -96,7 +97,9 @@ export default function BoardPage() {
       )}
 
       {isLoading ? (
-        <p className="text-sm text-gray-600">Loading boards...</p>
+        <div className="col-span-full min-h-[40vh] flex items-center justify-center">
+          <Spinner size="md" />
+        </div>
       ) : boards.length === 0 ? (
         <div className="border border-dashed border-gray-300 py-14 text-center text-sm text-gray-600">
           No boards yet.

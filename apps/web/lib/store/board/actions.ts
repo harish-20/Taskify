@@ -1,5 +1,6 @@
 import { StateCreator } from 'zustand';
 
+import { defaultState } from './state';
 import { BoardActions, BoardStore } from './types';
 
 import { TaskStatus } from '@/lib/types/task';
@@ -37,4 +38,5 @@ export const boardActions: StateCreator<BoardStore, [], [], BoardActions> = (set
         task._id === taskId ? { ...task, status: status as TaskStatus } : task,
       ),
     })),
+  reset: () => set(defaultState),
 });

@@ -29,6 +29,7 @@ export interface BoardActions {
   setDraggedOverColumn: (status: TaskStatus | null) => void;
   setIsDragging: (isDragging: boolean) => void;
   moveTask: (taskId: Task['_id'], status: TaskStatus) => void;
+  reset: () => void;
 }
 
 export interface BoardAsyncActions {
