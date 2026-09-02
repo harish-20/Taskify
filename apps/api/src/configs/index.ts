@@ -6,7 +6,7 @@ const {
   PORT = 8080,
   MONGO_URI,
   ENV_CHECK = false,
-  REDIS_URL = "redis://localhost:6379",
+  REDIS_URL,
   // Email Configs
   GMAIL_EMAIL,
   GMAIL_APP_PASSWORD,
@@ -25,7 +25,7 @@ const {
   AWS_REGION,
   AWS_BUCKET_NAME,
   // Node Environment
-  NODE_ENV = "development",
+  NODE_ENV,
 } = process.env;
 
 const FROM_EMAIL = `Taskify <${GMAIL_EMAIL}>`;
