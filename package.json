@@ -6,6 +6,7 @@
     "dev": "turbo run dev",
     "dev:web": "npm run dev --workspace=web",
     "dev:api": "npm run dev --workspace=api",
+    "workers": "npm run workers --workspace=api",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
