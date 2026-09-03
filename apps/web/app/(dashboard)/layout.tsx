@@ -1,14 +1,16 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { Inter } from 'next/font/google';
 import { PropsWithChildren } from 'react';
 
 import AuthGuard from '@/components/auth/AuthGuard';
-import AppLayout from '@/layouts/AppLayout';
 import { AuthStoreProvider } from '@/lib/providers/auth-store-provider';
 import ModalProvider from '@/lib/providers/modal-provider';
 
 import '@/app/globals.css';
+
+const AppLayout = dynamic(() => import('@/layouts/AppLayout'), { ssr: false });
 
 const inter = Inter();
 

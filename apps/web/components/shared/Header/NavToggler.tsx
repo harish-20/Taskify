@@ -1,4 +1,5 @@
 import DoubleArrow from '@/components/icons/DoubleArrow';
+import useBreakPoints from '@/lib/hooks/useBreakpoints';
 
 interface NavTogglerProps {
   toggleNav: () => void;
@@ -7,14 +8,18 @@ interface NavTogglerProps {
 
 const NavToggler: React.FC<NavTogglerProps> = (props) => {
   const { isNavOpen, toggleNav } = props;
+  const { isDesktop } = useBreakPoints();
 
-  const arrowAnimation = isNavOpen ? ['180deg', '0deg'] : ['0deg', '180deg'];
   return (
     <button
       className="rounded-lg hover:bg-gray border-2 border-transparent text-dark-gray cursor-pointer active:border-dark-gray"
       onClick={toggleNav}
     >
-      <DoubleArrow className="h-8 w-8 p-1" animate={{ rotate: arrowAnimation }} />
+      <DoubleArrow
+        className="h-8 w-8 p-1"
+        initial={{ rotate: isDesktop ? '180deg' : '0deg' }}
+        animate={{ rotate: isNavOpen ? '180deg' : '0deg' }}
+      />
     </button>
   );
 };

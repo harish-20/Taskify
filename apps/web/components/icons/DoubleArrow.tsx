@@ -1,12 +1,13 @@
-import { motion, TargetAndTransition } from "motion/react";
+import { motion, TargetAndTransition } from 'motion/react';
 
 interface DoubleArrowProps {
   className?: string;
   animate?: TargetAndTransition;
+  initial?: TargetAndTransition;
 }
 
 const DoubleArrow: React.FC<DoubleArrowProps> = (props) => {
-  const { className = "", animate = {} } = props;
+  const { className = '', animate = {}, initial = {} } = props;
 
   return (
     <svg
@@ -18,6 +19,7 @@ const DoubleArrow: React.FC<DoubleArrowProps> = (props) => {
       className={className}
     >
       <motion.path
+        initial={initial}
         animate={animate}
         d="M18 17L13 12L18 7M11 17L6 12L11 7"
         stroke="currentColor"
