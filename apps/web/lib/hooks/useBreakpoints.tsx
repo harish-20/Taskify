@@ -1,14 +1,12 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 const useBreakPoints = (breakpoint = 768, delay = 200) => {
   const [isDesktop, setIsDesktop] = useState<boolean>(false);
 
   useEffect(() => {
-    setIsDesktop(
-      typeof window !== "undefined" ? window.innerWidth >= breakpoint : false
-    );
+    setIsDesktop(typeof window !== 'undefined' ? window.innerWidth >= breakpoint : false);
   }, []);
 
   useEffect(() => {
@@ -22,9 +20,9 @@ const useBreakPoints = (breakpoint = 768, delay = 200) => {
       }, delay);
     };
 
-    window.addEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
     return () => {
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener('resize', handleResize);
       if (timeoutId) clearTimeout(timeoutId);
     };
   }, [breakpoint, delay]);
